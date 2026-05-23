@@ -115,9 +115,23 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. Running `python scripts/build.py` on a Windows machine with no prior build state produces `EleitorUM-1.0.0-win64.zip` (one-folder build); on a clean Windows VM with no Python installed, double-clicking the exe inside the ZIP opens the wizard window within 3 seconds; the window title and About dialog show the correct version
   2. The GitHub Actions CI workflow runs ruff lint, ruff format check, mypy, and pytest (Python 3.11 and 3.12 on windows-latest) on every push to main and all steps pass; `pip audit` runs and surfaces no unpatched high-severity CVEs
   3. On the `v1.0.0` tag, CI additionally builds the Windows executable, runs a smoke test (launch with `--version`, verify output and clean exit), computes a SHA-256 checksum, and attaches both the artifact and checksum to the GitHub Release
-  4. The repository root contains: `SPECIFICATION.md`, `README.md` (bilingual headers, disclaimer, install instructions), `LICENSE` (MIT), `CHANGELOG.md` (v1.0.0 entry in Keep-a-Changelog format), `CONTRIBUTING.md` (external contributions not accepted), `RENAMING.md` (full rename checklist), `.gitignore`, `.gitattributes`, and `pyproject.toml` with pinned dependencies and tool configuration
+  4. The repository root contains: `SPECIFICATION.md`, `README.md` (bilingual headers, install instructions), `LICENSE` (MIT), `CHANGELOG.md` (v1.0.0 entry in Keep-a-Changelog format), `CONTRIBUTING.md` (external contributions not accepted), `RENAMING.md` (full rename checklist), `.gitignore`, `.gitattributes`, and `pyproject.toml` with pinned dependencies and tool configuration
 
-**Plans**: TBD
+**Plans**: 5 plans
+
+**Wave 1** *(parallel — no dependencies between 04-01 and 04-02)*
+
+- [ ] 04-01-PLAN.md — Version bump to 1.0.0, --version CLI arg, UMinho removal from source, test_no_uminho_strings.py regression guard, pyproject.toml dev extras
+- [ ] 04-02-PLAN.md — Inter font asset (InterVariable.ttf), generate_icons.py script, PNG/ICO assets generated and committed
+
+**Wave 2** *(blocked on Wave 1 completion; 04-03 and 04-04 parallel)*
+
+- [ ] 04-03-PLAN.md — scripts/build.py: PyInstaller wrapper with version_info.py generation, one-folder build, ZIP creation, SHA-256 checksum
+- [ ] 04-04-PLAN.md — Repository documentation: SPECIFICATION.md, README.md (bilingual), CHANGELOG.md, CONTRIBUTING.md, RENAMING.md, .gitignore, .gitattributes
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 04-05-PLAN.md — GitHub Actions CI/CD: ci.yml (push-to-main quality gate) and release.yml (v1.0.0 tag build + smoke test + release publication)
 
 ## Progress
 
@@ -129,4 +143,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
 | 2. UI Scaffold + Wizard Steps | 6/6 | Complete    | 2026-05-23 |
 | 3. Integration, End-to-End Testing + Fixtures | 1/1 | Complete    | 2026-05-23 |
-| 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
+| 4. Build, CI, Packaging + Distribution Artifacts | 0/5 | Not started | - |
