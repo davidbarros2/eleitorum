@@ -33,7 +33,7 @@ Validated in Phase 1 (core-pipeline):
 - [x] Fail-fast, never-partial philosophy: no output file if any error occurs
 - [x] Error log file (`_ERRORS_`) created on failure with per-row details in PT-PT
 - [x] Transformation log file (`_LOG_`) created on success with per-change entries
-- [x] Test suite: unit tests for all transformation/validation rules (91.26% coverage); 18 integration tests; synthetic fixtures only
+- [x] Test suite: unit tests for all transformation/validation rules (90.39% coverage); PipelineWorker QThread integration tests; byte-exact elegíveis row assertions (0-based index, NFKD sort, no trailing semicolon); coverage gate ≥90% passing
 - [x] Performance: 150,000-row pipeline in 3.5s (budget 10s); headless core runs in background-thread-safe mode
 
 ### Active
@@ -116,15 +116,15 @@ Validated in Phase 1 (core-pipeline):
 
 ## Current State
 
-Phase 2 complete (2026-05-23). Full PySide6 desktop wizard implemented: 6 wizard steps, WizardController, MainWindow with menu bar and QSettings persistence, WelcomeDialog + AboutDialog, QThread worker with progress reporting, light/dark theming. `python -m eleitorum` launches a working wizard. 381 tests passing.
+Phase 3 complete (2026-05-23). Integration and end-to-end testing fixtures done: PipelineWorker QThread integration tests (happy path + rejection), byte-exact elegíveis row content assertions, TST-09 coverage gate satisfied at 90.39%. 383 tests passing, 1 skipped. All TST-01..TST-09 requirements verified.
 
-Phase 3 (integration-e2e-testing-fixtures) is next: wire pipeline to UI in integration tests, byte-exact output assertions, synthetic fixture generators for all 15 fixture types, pytest-qt smoke tests per step.
+Phase 4 (build, CI, packaging + distribution artifacts) is next.
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
 
-Last updated: 2026-05-23
+Last updated: 2026-05-23 after Phase 3 completion
 
 **After each phase transition** (via `/gsd-transition`):
 1. Requirements invalidated? → Move to Out of Scope with reason
