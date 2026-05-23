@@ -537,12 +537,10 @@ All claims in this research were verified against the live codebase or pyproject
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Does TST-09's ≥90% threshold apply per-module or in aggregate?**
-   - What we know: `pyproject.toml` has `fail_under = 90` on the aggregate; overall is 90.39%; `readers.py` (78%) and `detection.py` (88%) are individually below 90%.
-   - What's unclear: the spec says "transformation and validation logic" — which might mean only `transform.py` + `validate.py` (both above 90%), or might mean all core modules.
-   - Recommendation: the D-03 strategy already handles this: measure first. The aggregate gate passes. Mark TST-09 as done. If the user wants per-module 90% enforced, it can be added to `pyproject.toml` as a separate concern in Phase 4 (CI).
+   RESOLVED: Aggregate gate only. `pyproject.toml` has `fail_under = 90` on the aggregate; overall is 90.39% — the gate passes. `readers.py` (78%) and `detection.py` (88%) are individually below 90% but their uncovered lines are error-path branches (PermissionError, FileNotFoundError, XLRDError) that are not the "transformation and validation logic" TST-09 targets. Per-module enforcement is not required by any current gate; if wanted, it belongs in Phase 4 CI configuration, not Phase 3. TST-09 is satisfied as-is.
 
 ---
 
