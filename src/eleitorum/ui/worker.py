@@ -15,6 +15,7 @@ Requirements: WIZ-11 (background thread, cancel available), PERF-02
 
 from __future__ import annotations
 
+import pathlib
 import threading
 
 from PySide6.QtCore import QThread, Signal
@@ -67,7 +68,7 @@ class PipelineWorker(QThread):
 
     def __init__(
         self,
-        source: PipelineSource | str,
+        source: PipelineSource | pathlib.Path | str,
         output_type: str,
         output_path: object,
         parent: object = None,
