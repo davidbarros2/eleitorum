@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Wave 0 scaffold: pyproject.toml, src/eleitorum package skeleton, test infrastructure, 15 synthetic fixture generators
+- [x] 01-01-PLAN.md — Wave 0 scaffold: pyproject.toml, src/eleitorum package skeleton, test infrastructure, 15 synthetic fixture generators
 - [ ] 01-02-PLAN.md — Wave 1: errors.py (PT-PT exception hierarchy) + readers.py (XLSX/XLS/ODS/CSV/TSV per-format readers with openpyxl streaming)
 - [ ] 01-03-PLAN.md — Wave 1: detection.py (encoding + header + columns with D-01 hybrid fallback) + transform.py (all 15 TRF rules including batch case normalization)
 
@@ -98,7 +98,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Core Pipeline | 0/5 | Planned | - |
+| 1. Core Pipeline | 1/5 | In Progress|  |
 | 2. UI Scaffold + Wizard Steps | 0/TBD | Not started | - |
 | 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
