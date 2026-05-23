@@ -77,7 +77,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 4** *(blocked on 02-02, 02-03)*
 
-- [ ] 02-04-PLAN.md — Upper wizard steps: StepType (output type, WIZ-01), StepUpload (file load, WIZ-02), StepSheet (sheet picker, WIZ-03), StepColumns (column mapping, WIZ-04). Creates `src/eleitorum/ui/steps/__init__.py` package marker.
+- [x] 02-04-PLAN.md — Upper wizard steps: StepType (output type, WIZ-01), StepUpload (file load, WIZ-02), StepSheet (sheet picker, WIZ-03), StepColumns (column mapping, WIZ-04). Creates `src/eleitorum/ui/steps/__init__.py` package marker.
 
 **Wave 5** *(blocked on 02-01, 02-02, 02-04)*
 
@@ -123,6 +123,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
-| 2. UI Scaffold + Wizard Steps | 3/6 | In Progress|  |
+| 2. UI Scaffold + Wizard Steps | 4/6 | In Progress|  |
 | 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
