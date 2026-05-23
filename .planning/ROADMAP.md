@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Given any of the documented real-data quirks (mojibake, parenthetical annotations, trailing commas, Excel float mecanograficos, mixed prefix casing, leading zeros, U+FFFD characters), the transformation layer corrects them and records every change in the `_LOG_` file with the correct PT-PT tag and timestamp
   3. Given an input with any validation violation (invalid prefix, non-positive number, duplicate mecanografico, F/D/B cross-prefix collision, empty name after transformation), processing halts immediately, no output file is written, and an `_ERRORS_` file is created listing each offending row in PT-PT with row number, column name, value, and actionable message
   4. Given a 150,000-row XLSX file, the pipeline completes in under 10 seconds on a typical office laptop, reading in `read_only=True, data_only=True` mode throughout
-  5. `pytest --cov` reports ≥90% line coverage over the core pipeline modules (reader, detector, normalizer, validator, output, log_builder, pipeline); no Qt import is present in any of these modules**Plans**: 5 plans
+  5. `pytest --cov` reports ≥90% line coverage over the core pipeline modules (reader, detector, normalizer, validator, output, log_builder, pipeline); no Qt import is present in any of these modules**Plans**: 5 plans
 
 **Wave 1**
 
@@ -60,8 +60,32 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. All user-facing strings are in idiomatic PT-PT with no English text visible in the shipped UI; every interactive element is reachable by keyboard in visual tab order with visible focus indicators in both themes
   5. Window size, position, last directory, and theme are all restored correctly on relaunch; the About dialog displays the correct app name, version, UMinho disclaimer in PT-PT, license note, and repository link
 
-**Plans**: TBD
+**Plans**: 6 plans (sequential — each wave blocks on the previous due to subpackage `__init__.py` ownership)
 **UI hint**: yes
+
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Wave 0 scaffold: pyproject.toml updates (PySide6 6.11.1, pytest-qt 4.5.0, qt_api=pyside6), PipelineWorker QThread + PipelineCancelledError, tests/unit/ui/ test infrastructure (__init__.py, conftest.py)
+
+**Wave 2** *(blocked on 02-01)*
+
+- [ ] 02-02-PLAN.md — Foundation modules: SessionModel @dataclass (Qt-free), strings.py (PT-PT constants), theme.py (LIGHT_QSS + DARK_QSS + apply_theme + detect_system_theme), icon.svg (BRAND-02), Inter font directory with OFL.txt
+
+**Wave 3** *(blocked on 02-02)*
+
+- [ ] 02-03-PLAN.md — Reusable widgets: NavBar (Anterior/Próximo/Cancelar footer), OptionCard (selectable card with QSS dynamic property), DropZone (drag-and-drop QFrame using core.readers.SUPPORTED_EXTENSIONS)
+
+**Wave 4** *(blocked on 02-02, 02-03)*
+
+- [ ] 02-04-PLAN.md — Upper wizard steps: StepType (output type, WIZ-01), StepUpload (file load, WIZ-02), StepSheet (sheet picker, WIZ-03), StepColumns (column mapping, WIZ-04). Creates `src/eleitorum/ui/steps/__init__.py` package marker.
+
+**Wave 5** *(blocked on 02-01, 02-02, 02-04)*
+
+- [ ] 02-05-PLAN.md — Lower wizard steps: StepProcessing (progress + D-01 cancel, WIZ-11), StepPreview (preview table + Ver detalhes, WIZ-05), StepDone (dual-state success/error, WIZ-07/08)
+
+**Wave 6** *(blocked on all of 02-01..02-05)*
+
+- [ ] 02-06-PLAN.md — Integration: app.py (Fusion + Inter + theme), WizardController (navigation + two-call dry-run/write architecture + multi-sheet path), MainWindow (menu bar + QSettings + first-run), WelcomeDialog + AboutDialog, __main__.py entry point, plus full manual checkpoint walk-through
 
 ### Phase 3: Integration, End-to-End Testing + Fixtures
 
@@ -99,6 +123,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
-| 2. UI Scaffold + Wizard Steps | 0/TBD | Not started | - |
+| 2. UI Scaffold + Wizard Steps | 0/6 | Not started | - |
 | 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
