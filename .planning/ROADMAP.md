@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Core Pipeline** - All Qt-free processing: file readers, encoding detection, header/column detection, transformation rules, validation, output writer, log builder, custom exceptions, and PT-PT error messages — with ≥90% unit-test coverage before Phase 2 starts (completed 2026-05-23)
 - [ ] **Phase 2: UI Scaffold + Wizard Steps** - QApplication setup, QStackedWidget + SessionModel + NavBar, QThread worker, all six wizard steps, theme system (light + dark), menu bar, About dialog, first-run welcome screen, window chrome, and QSettings persistence
-- [ ] **Phase 3: Integration, End-to-End Testing + Fixtures** - Wire pipeline to UI, integration tests for both output types, synthetic fixture generators for all 15 fixture types, pytest-qt smoke tests per wizard step, and byte-exact output assertions
+- [x] **Phase 3: Integration, End-to-End Testing + Fixtures** - Wire pipeline to UI, integration tests for both output types, synthetic fixture generators for all 15 fixture types, pytest-qt smoke tests per wizard step, and byte-exact output assertions (completed 2026-05-23)
 - [ ] **Phase 4: Build, CI, Packaging + Distribution Artifacts** - PyInstaller spec and build script, icon generation, font and plugin bundling, Windows PE metadata, GitHub Actions CI/CD, SHA-256 checksum, CHANGELOG v1.0.0, and all repository documentation files
 
 ## Phase Details
@@ -103,7 +103,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — Close the three Phase 3 gaps: D-01 worker integration tests (tests/integration/test_worker_integration.py), D-02 elegíveis byte-exact assertions (test_happy_path_elegiveis_csv expansion), D-03 TST-09 aggregate coverage gate verification (03-COVERAGE.md)
+- [x] 03-01-PLAN.md — Close the three Phase 3 gaps: D-01 worker integration tests (tests/integration/test_worker_integration.py), D-02 elegíveis byte-exact assertions (test_happy_path_elegiveis_csv expansion), D-03 TST-09 aggregate coverage gate verification (03-COVERAGE.md)
 
 ### Phase 4: Build, CI, Packaging + Distribution Artifacts
 
@@ -128,5 +128,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
 | 2. UI Scaffold + Wizard Steps | 6/6 | Complete    | 2026-05-23 |
-| 3. Integration, End-to-End Testing + Fixtures | 0/1 | Planned     | - |
+| 3. Integration, End-to-End Testing + Fixtures | 1/1 | Complete   | 2026-05-23 |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
