@@ -251,11 +251,11 @@ def make_mojibake_csv(path: pathlib.Path) -> pathlib.Path:
     """
     header_utf8 = "nº mec.;nome\r\n"
     rows_utf8 = [
-        f"f6688;{name}\r\n"
-        for name in [
-            "João Silva Teste",
-            "Maria Costa Exemplo",
-            "Ana Pereira Sintetica",
+        f"{mec};{name}\r\n"
+        for mec, name in [
+            ("f6688", "João Silva Teste"),
+            ("f1234", "Maria Costa Exemplo"),
+            ("f9001", "Ana Pereira Sintetica"),
         ]
     ]
     content_utf8 = header_utf8 + "".join(rows_utf8)
