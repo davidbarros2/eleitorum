@@ -91,7 +91,12 @@ class TestStepUpload:
     def test_step_upload_unsupported_extension_shows_inline_error(
         self, qtbot, tmp_path
     ) -> None:
-        """Unsupported extension shows inline error, session.source_path stays None."""
+        """Unsupported extension shows inline error, session.source_path stays None.
+
+        Note: isHidden() is used instead of isVisible() because Qt's isVisible()
+        depends on the full parent widget chain being shown; isHidden() reflects the
+        explicit visibility flag set via setVisible() regardless of parent state.
+        """
         png_path = tmp_path / "teste.png"
         png_path.write_bytes(b"fake image data")
         session = SessionModel()
@@ -100,7 +105,8 @@ class TestStepUpload:
 
         step._on_file_received(str(png_path))
 
-        assert step._error_label.isVisible() is True
+        # Error label must NOT be hidden (i.e., it was explicitly made visible)
+        assert step._error_label.isHidden() is False
         assert ".png" in step._error_label.text()
         assert session.source_path is None
 
@@ -132,10 +138,10 @@ class TestStepUpload:
         step = StepUpload(session=session)
         qtbot.addWidget(step)
 
-        # First: bad file → error shown
+        # First: bad file → error shown (not hidden)
         step._on_file_received(str(png_path))
-        assert step._error_label.isVisible() is True
+        assert step._error_label.isHidden() is False
 
         # Then: valid file → error hidden
         step._on_file_received(str(xlsx_path))
-        assert step._error_label.isVisible() is False
+        assert step._error_label.isHidden() is True
