@@ -237,7 +237,7 @@ def _execute_pipeline(
                 ext = src.path.suffix.lower()
                 if ext in {".csv", ".tsv"}:
                     delimiter = (
-                        src.csv_delimiter if src.csv_delimiter else ("\t" if ext == ".tsv" else ",")
+                        src.csv_delimiter if src.csv_delimiter else ("\t" if ext == ".tsv" else ";")
                     )
                     read_result = readers.read_csv_like(
                         src.path, delimiter=delimiter, encoding=encoding_used
