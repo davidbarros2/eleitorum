@@ -1,22 +1,16 @@
 ---
 phase: 01-core-pipeline
-verified: 2026-05-23T12:00:00Z
-status: gaps_found
-score: 9/10 must-haves verified
+verified: 2026-05-23T13:00:00Z
+status: passed
+score: 10/10 must-haves verified
 overrides_applied: 0
-re_verification: null
-gaps:
-  - truth: "mypy src/eleitorum exits 0 against the scaffold"
-    status: failed
-    reason: "detection.py passes path=None to EncodingDetectionError.__init__ at lines 155 and 171, but errors.py defines the argument as path: pathlib.Path (required, non-optional). mypy reports 2 arg-type errors and exits 1."
-    artifacts:
-      - path: "src/eleitorum/core/detection.py"
-        issue: "Lines 155 and 171 call EncodingDetectionError(path=None) — passes None where pathlib.Path is required"
-      - path: "src/eleitorum/core/errors.py"
-        issue: "EncodingDetectionError.__init__ signature is def __init__(self, path: pathlib.Path) — does not accept None"
-    missing:
-      - "Change EncodingDetectionError.__init__ signature in errors.py to accept Optional[pathlib.Path]: def __init__(self, path: pathlib.Path | None = None) — this matches plan 03's original design intent per the interfaces block note: 'Cleanest: EncodingDetectionError accepts an optional path'"
-      - "OR change both call sites in detection.py lines 155 and 171 to pass a real pathlib.Path instead of None"
+re_verification:
+  previous_status: gaps_found
+  previous_score: 9/10
+  gaps_closed:
+    - "mypy src/eleitorum exits 0 — EncodingDetectionError.__init__ now accepts path: pathlib.Path | None = None"
+  gaps_remaining: []
+  regressions: []
 deferred: null
 human_verification: null
 ---
@@ -25,8 +19,8 @@ human_verification: null
 
 **Phase Goal:** Build the complete headless core pipeline — all file reading, encoding detection, data transformation, validation, CSV output, and logging — tested to >=90% coverage with a full integration test suite.
 **Verified:** 2026-05-23
-**Status:** GAPS_FOUND (1 blocker)
-**Re-verification:** No — initial verification
+**Status:** PASSED
+**Re-verification:** Yes — after gap closure (mypy type error fixed)
 
 ---
 
@@ -38,7 +32,7 @@ human_verification: null
 |---|-------|--------|----------|
 | 1 | pytest discovers the entire tests/ tree without import errors | VERIFIED | 237 passed, 1 skipped (documented test_read_xls_legacy). All 8 test files importable. |
 | 2 | ruff check . and ruff format --check . both exit 0 | VERIFIED | Both commands exit 0 against the full codebase |
-| 3 | mypy src/eleitorum exits 0 | FAILED | 2 type errors in detection.py: `Argument "path" to "EncodingDetectionError" has incompatible type "None"; expected "Path"` at lines 155 and 171 |
+| 3 | mypy src/eleitorum exits 0 | VERIFIED | `Success: no issues found in 13 source files` — errors.py line 128 now `path: pathlib.Path | None = None`; both call sites in detection.py (lines 155, 171) pass `path=None` legally |
 | 4 | python -c 'import eleitorum' succeeds from the repository root | VERIFIED | `0.1.0 EleitorUM` — version and APP_NAME correct |
 | 5 | tests/fixtures/generators.py exports all 15 fixture functions | VERIFIED | All 15 functions present and produce non-empty synthetic files; mojibake bytes confirmed (0xc3 present) |
 | 6 | pyproject.toml pins every dependency at exact versions | VERIFIED | openpyxl==3.1.5, xlrd==2.0.2, odfpy==1.4.1, pandas==3.0.2, charset-normalizer==3.4.7; dev: pytest==9.0.3, pytest-cov==7.1.0, mypy==1.19.1, ruff==0.15.8 |
@@ -47,7 +41,18 @@ human_verification: null
 | 9 | pytest --cov=src/eleitorum/core --cov-fail-under=90 exits 0 | VERIFIED | 91.26% total coverage; all 7 core modules pass 85% individual gate |
 | 10 | PERF-01: 150,000-row XLSX completes under 10 seconds | VERIFIED | Elapsed 6.27s (budget 10s, 1.6x headroom) |
 
-**Score:** 9/10 truths verified
+**Score:** 10/10 truths verified
+
+---
+
+### Gap Closure Evidence
+
+**Gap closed:** `mypy src/eleitorum exits 0`
+
+- `src/eleitorum/core/errors.py` line 128: signature is now `def __init__(self, path: pathlib.Path | None = None)` — accepts `None` as designed
+- `src/eleitorum/core/detection.py` lines 155 and 171: `raise EncodingDetectionError(path=None)` — now type-correct
+- `python -m mypy src/eleitorum` output: `Success: no issues found in 13 source files`
+- `python -m pytest tests/` output: `237 passed, 1 skipped in 7.00s` — no regressions
 
 ---
 
@@ -60,13 +65,13 @@ human_verification: null
 | `src/eleitorum/config.py` | APP_NAME = "EleitorUM" | VERIFIED | Correct per BRAND-01 contract |
 | `src/eleitorum/version.py` | __version__ = "0.1.0" | VERIFIED | Single source of truth |
 | `src/eleitorum/core/__init__.py` | Core sub-package marker | VERIFIED | Exists with docstring |
-| `src/eleitorum/core/errors.py` | 8 error classes + FailureRow + format_error_message | VERIFIED | All exports present and importable; 100% coverage |
+| `src/eleitorum/core/errors.py` | 8 error classes + FailureRow + format_error_message | VERIFIED | All exports present and importable; 100% coverage; EncodingDetectionError.path now Optional |
 | `src/eleitorum/core/readers.py` | 6 per-format readers + metadata | VERIFIED | SUPPORTED_EXTENSIONS, ReadResult, SheetInfo, read_input, list_sheets all present; read_only=True appears 4 times |
-| `src/eleitorum/core/detection.py` | Encoding + header + column detection | VERIFIED (runtime) | Exports present; 88% coverage; runtime behavior correct. NOTE: mypy type error at lines 155+171 (path=None passed to non-optional arg) |
+| `src/eleitorum/core/detection.py` | Encoding + header + column detection | VERIFIED | Exports present; 88% coverage; runtime behavior correct; mypy clean |
 | `src/eleitorum/core/transform.py` | All 15 TRF rules | VERIFIED | All exports present; 100% coverage; VALID_PREFIXES/FDB_SHARED correct |
 | `src/eleitorum/core/validate.py` | Aggregated VAL checks + path guards | VERIFIED | UniquenessTracker, ValidationOutcome, validate_rows, validate_output_path present; 94% coverage |
 | `src/eleitorum/core/output.py` | Byte-exact CSV writer | VERIFIED | USE_BOM=True, CADERNO_HEADER/ELEGIVEIS_HEADER correct; write_caderno produces correct BOM+CRLF+no-quote output; 96% coverage |
-| `src/eleitorum/core/logging.py` | Log builder with 9 PT-PT tags | VERIFIED | TAGS frozenset correct (9 tags); format_log_line matches spec format_log_line("INICIO","msg",ts)=="[...] INICIO  msg"; 100% coverage |
+| `src/eleitorum/core/logging.py` | Log builder with 9 PT-PT tags | VERIFIED | TAGS frozenset correct (9 tags); format_log_line matches spec; 100% coverage |
 | `src/eleitorum/core/pipeline.py` | Qt-free orchestrator | VERIFIED | run_pipeline, PipelineSource, PipelineResult all exported; 511 lines; no Qt imports |
 | `tests/fixtures/generators.py` | All 15 fixture functions | VERIFIED | All 15 present with correct signatures; SYNTHETIC_NAMES and SYNTHETIC_PREFIXES defined at module level |
 | `tests/conftest.py` | Shared fixtures + huge_caderno_xlsx_path | VERIFIED | SYNTHETIC_NAMES (10 entries), SYNTHETIC_PREFIXES per D-08, huge_caderno_xlsx_path session-scoped |
@@ -124,7 +129,7 @@ human_verification: null
 | D-07 aggregation: 3 failures collected, no short-circuit | validate_rows(3-failure input) | len(failures)==3 confirmed | PASS |
 | Coverage gate: 90% minimum | pytest --cov-fail-under=90 | 91.26% total — gate green | PASS |
 | PERF-01: 150k rows under 10s | test_performance.py | 6.27s elapsed | PASS |
-| mypy src/eleitorum | mypy src/eleitorum | 2 errors in detection.py (path=None type mismatch) | FAIL |
+| mypy src/eleitorum | mypy src/eleitorum | Success: no issues found in 13 source files | PASS |
 
 ---
 
@@ -162,28 +167,25 @@ Evidence:
 
 ### Anti-Patterns Found
 
-| File | Line | Pattern | Severity | Impact |
-|------|------|---------|----------|--------|
-| `src/eleitorum/core/detection.py` | 155, 171 | `EncodingDetectionError(path=None)` — None passed to non-optional Path argument | WARNING | mypy exits 1; runtime produces ugly "ficheiro 'None'" in error message when encoding detection fails on empty bytes or undecodable content |
+No anti-patterns found. No TBD, FIXME, XXX debt markers in any core module file. No TODO/HACK/PLACEHOLDER markers. No `pandas.to_csv` or `chardet` usage. The previously flagged `EncodingDetectionError(path=None)` call sites are now type-correct.
 
-No TBD, FIXME, XXX debt markers in any core module file. No TODO/HACK/PLACEHOLDER markers. No `pandas.to_csv` or `chardet` usage.
+---
+
+### Human Verification Required
+
+None. All must-haves are programmatically verifiable and have been verified.
 
 ---
 
 ### Gaps Summary
 
-**1 gap blocking complete status:**
+No gaps. Phase goal fully achieved.
 
-The SUMMARY documentation claims "mypy: Success: no issues found in X source files" across multiple plans, but the actual codebase currently fails `mypy src/eleitorum` with 2 errors in `src/eleitorum/core/detection.py`.
-
-Root cause: Plan 03 ran in a parallel worktree and created its own version of `errors.py` with `EncodingDetectionError(path: pathlib.Path | None = None)` (accepting None). Plan 02's version (which won after merge) used the stricter signature `EncodingDetectionError(path: pathlib.Path)`. After merge, detection.py retained the `path=None` call sites from Plan 03's assumption, but errors.py reflects Plan 02's stricter signature. The two call sites at lines 155 and 171 of detection.py pass `None` where `pathlib.Path` is now required.
-
-The fix is a one-line change to errors.py: `def __init__(self, path: pathlib.Path | None = None)`. This was the original design intent per the Plan 03 interfaces block note: "Cleanest: EncodingDetectionError accepts an optional path."
-
-All other phase objectives are fully met:
-- 237 passing tests (218 unit + 1 skipped + 18 integration + 1 performance)
+All phase objectives met:
+- 237 passing tests (238 total, 1 documented skip for XLS legacy write path)
 - 91.26% test coverage (hard gate 90% met)
-- PERF-01 150k rows in 6.27s (budget 10s)
+- PERF-01: 150k rows in 6.27s (budget 10s, 1.6x headroom)
+- mypy exits 0: no issues found in 13 source files
 - Zero Qt imports in core/
 - Zero forbidden patterns (pandas.to_csv, chardet)
 - Byte-exact output verified by spot-checks
@@ -192,5 +194,5 @@ All other phase objectives are fully met:
 
 ---
 
-_Verified: 2026-05-23_
+_Verified: 2026-05-23 (re-verification after gap closure)_
 _Verifier: Claude (gsd-verifier)_
