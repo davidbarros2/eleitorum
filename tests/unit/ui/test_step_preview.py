@@ -59,6 +59,7 @@ class TestStepPreview:
 
         widget = StepPreview(session)
         qtbot.addWidget(widget)
+        widget.show()  # required so isVisible() returns correct state for children
         return widget
 
     def test_step_preview_constructs(self, step) -> None:
@@ -155,14 +156,16 @@ class TestStepPreview:
         assert step._ver_detalhes_btn.isVisible(), "Ver detalhes button should be visible"
         assert not step._log_view.isVisible(), "_log_view should start hidden"
 
+        from PySide6.QtCore import Qt as _Qt
+
         # Click to show
-        qtbot.mouseClick(step._ver_detalhes_btn, qtbot.Qt.LeftButton)
+        qtbot.mouseClick(step._ver_detalhes_btn, _Qt.MouseButton.LeftButton)
         QApplication.processEvents()
         assert step._log_view.isVisible(), "_log_view should be visible after click"
         assert step._ver_detalhes_btn.text() == BTN_VER_DETALHES_FECHAR
 
         # Click again to hide
-        qtbot.mouseClick(step._ver_detalhes_btn, qtbot.Qt.LeftButton)
+        qtbot.mouseClick(step._ver_detalhes_btn, _Qt.MouseButton.LeftButton)
         QApplication.processEvents()
         assert not step._log_view.isVisible(), "_log_view should be hidden after second click"
         assert step._ver_detalhes_btn.text() == BTN_VER_DETALHES_ABRIR

@@ -77,6 +77,10 @@ class PipelineResult:
     detection: dict[str, Any]
     failures: list[FailureRow]  # populated on failure
     log_entries: list[str]  # the log lines built during the run
+    # Populated during dry-run (output_path=None) only — first 50 output rows as
+    # string-converted cell values, used by StepPreview table. Empty on write-phase
+    # runs. Additive field with default [] — Phase 1 tests are NOT affected.
+    preview_rows: list[list[str]] = dataclasses.field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -404,6 +408,28 @@ def _execute_pipeline(
     # Step 21: dry-run guard
     # ------------------------------------------------------------------
     if output_path is None:
+        # Build preview_rows snapshot — first 50 output rows as string lists.
+        # This is a deep copy of string-converted cell values; no live references
+        # into pipeline internal state. Only populated on dry-run (output_path=None)
+        # so that StepPreview can render a table without needing a written CSV.
+        _preview: list[list[str]] = []
+        if output_type == "caderno":
+            for _row_idx, prefix, number, name in transformed[:50]:
+                if chosen_case == "lower":
+                    _mec_str = f"{prefix.lower()}{number}"
+                else:
+                    _mec_str = f"{prefix.upper()}{number}"
+                _preview.append([_mec_str, name, ""])  # category always empty
+        else:
+            # elegiveis: index + designation (index assigned during output phase;
+            # for preview use 0-based position as placeholder string)
+            _sorted_names = sorted(
+                [name for (_row_idx, _prefix, _number, name) in transformed],
+                key=lambda s: s.casefold(),
+            )
+            for _i, _name in enumerate(_sorted_names[:50]):
+                _preview.append([str(_i), _name])
+
         return PipelineResult(
             success=True,
             output_path=None,
@@ -420,6 +446,7 @@ def _execute_pipeline(
             },
             failures=[],
             log_entries=builder.entries,
+            preview_rows=_preview,
         )
 
     # ------------------------------------------------------------------
