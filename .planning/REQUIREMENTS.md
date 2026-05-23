@@ -214,30 +214,153 @@ None. This product ships once as v1.0.0 and is then archived. There is no v2 (se
 
 ## Traceability
 
-*Updated during roadmap creation — populated by the roadmapper agent.*
+*Updated 2026-05-23 — roadmap created, all requirements mapped.*
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INP-01 through INP-13 | TBD | Pending |
-| DET-01 through DET-07 | TBD | Pending |
-| TRF-01 through TRF-15 | TBD | Pending |
-| VAL-01 through VAL-09 | TBD | Pending |
-| OUT-01 through OUT-12 | TBD | Pending |
-| LOG-01 through LOG-07 | TBD | Pending |
-| WIZ-01 through WIZ-11 | TBD | Pending |
-| APP-01 through APP-20 | TBD | Pending |
-| BRAND-01 through BRAND-04 | TBD | Pending |
-| REPO-01 through REPO-09 | TBD | Pending |
-| BLD-01 through BLD-05 | TBD | Pending |
-| CI-01 through CI-05 | TBD | Pending |
-| TST-01 through TST-10 | TBD | Pending |
-| PERF-01 through PERF-03 | TBD | Pending |
+| INP-01 | Phase 1 | Pending |
+| INP-02 | Phase 1 | Pending |
+| INP-03 | Phase 1 | Pending |
+| INP-04 | Phase 1 | Pending |
+| INP-05 | Phase 1 | Pending |
+| INP-06 | Phase 1 | Pending |
+| INP-07 | Phase 1 | Pending |
+| INP-08 | Phase 1 | Pending |
+| INP-09 | Phase 1 | Pending |
+| INP-10 | Phase 1 | Pending |
+| INP-11 | Phase 1 | Pending |
+| INP-12 | Phase 1 | Pending |
+| INP-13 | Phase 1 | Pending |
+| DET-01 | Phase 1 | Pending |
+| DET-02 | Phase 1 | Pending |
+| DET-03 | Phase 1 | Pending |
+| DET-04 | Phase 1 | Pending |
+| DET-05 | Phase 1 | Pending |
+| DET-06 | Phase 1 | Pending |
+| DET-07 | Phase 1 | Pending |
+| TRF-01 | Phase 1 | Pending |
+| TRF-02 | Phase 1 | Pending |
+| TRF-03 | Phase 1 | Pending |
+| TRF-04 | Phase 1 | Pending |
+| TRF-05 | Phase 1 | Pending |
+| TRF-06 | Phase 1 | Pending |
+| TRF-07 | Phase 1 | Pending |
+| TRF-08 | Phase 1 | Pending |
+| TRF-09 | Phase 1 | Pending |
+| TRF-10 | Phase 1 | Pending |
+| TRF-11 | Phase 1 | Pending |
+| TRF-12 | Phase 1 | Pending |
+| TRF-13 | Phase 1 | Pending |
+| TRF-14 | Phase 1 | Pending |
+| TRF-15 | Phase 1 | Pending |
+| VAL-01 | Phase 1 | Pending |
+| VAL-02 | Phase 1 | Pending |
+| VAL-03 | Phase 1 | Pending |
+| VAL-04 | Phase 1 | Pending |
+| VAL-05 | Phase 1 | Pending |
+| VAL-06 | Phase 1 | Pending |
+| VAL-07 | Phase 1 | Pending |
+| VAL-08 | Phase 1 | Pending |
+| VAL-09 | Phase 1 | Pending |
+| OUT-01 | Phase 1 | Pending |
+| OUT-02 | Phase 1 | Pending |
+| OUT-03 | Phase 1 | Pending |
+| OUT-04 | Phase 1 | Pending |
+| OUT-05 | Phase 1 | Pending |
+| OUT-06 | Phase 1 | Pending |
+| OUT-07 | Phase 1 | Pending |
+| OUT-08 | Phase 1 | Pending |
+| OUT-09 | Phase 1 | Pending |
+| OUT-10 | Phase 1 | Pending |
+| OUT-11 | Phase 1 | Pending |
+| OUT-12 | Phase 1 | Pending |
+| LOG-01 | Phase 1 | Pending |
+| LOG-02 | Phase 1 | Pending |
+| LOG-03 | Phase 1 | Pending |
+| LOG-04 | Phase 1 | Pending |
+| LOG-05 | Phase 1 | Pending |
+| LOG-06 | Phase 1 | Pending |
+| LOG-07 | Phase 1 | Pending |
+| PERF-01 | Phase 1 | Pending |
+| PERF-03 | Phase 1 | Pending |
+| WIZ-01 | Phase 2 | Pending |
+| WIZ-02 | Phase 2 | Pending |
+| WIZ-03 | Phase 2 | Pending |
+| WIZ-04 | Phase 2 | Pending |
+| WIZ-05 | Phase 2 | Pending |
+| WIZ-06 | Phase 2 | Pending |
+| WIZ-07 | Phase 2 | Pending |
+| WIZ-08 | Phase 2 | Pending |
+| WIZ-09 | Phase 2 | Pending |
+| WIZ-10 | Phase 2 | Pending |
+| WIZ-11 | Phase 2 | Pending |
+| APP-01 | Phase 2 | Pending |
+| APP-02 | Phase 2 | Pending |
+| APP-03 | Phase 2 | Pending |
+| APP-04 | Phase 2 | Pending |
+| APP-05 | Phase 2 | Pending |
+| APP-06 | Phase 2 | Pending |
+| APP-07 | Phase 2 | Pending |
+| APP-08 | Phase 2 | Pending |
+| APP-09 | Phase 2 | Pending |
+| APP-10 | Phase 2 | Pending |
+| APP-11 | Phase 2 | Pending |
+| APP-12 | Phase 2 | Pending |
+| APP-13 | Phase 2 | Pending |
+| APP-14 | Phase 2 | Pending |
+| APP-15 | Phase 2 | Pending |
+| APP-16 | Phase 2 | Pending |
+| APP-17 | Phase 2 | Pending |
+| APP-18 | Phase 2 | Pending |
+| APP-19 | Phase 2 | Pending |
+| APP-20 | Phase 2 | Pending |
+| BRAND-01 | Phase 2 | Pending |
+| BRAND-02 | Phase 2 | Pending |
+| TST-10 | Phase 2 | Pending |
+| PERF-02 | Phase 2 | Pending |
+| TST-01 | Phase 3 | Pending |
+| TST-02 | Phase 3 | Pending |
+| TST-03 | Phase 3 | Pending |
+| TST-04 | Phase 3 | Pending |
+| TST-05 | Phase 3 | Pending |
+| TST-06 | Phase 3 | Pending |
+| TST-07 | Phase 3 | Pending |
+| TST-08 | Phase 3 | Pending |
+| TST-09 | Phase 3 | Pending |
+| BRAND-03 | Phase 4 | Pending |
+| BRAND-04 | Phase 4 | Pending |
+| REPO-01 | Phase 4 | Pending |
+| REPO-02 | Phase 4 | Pending |
+| REPO-03 | Phase 4 | Pending |
+| REPO-04 | Phase 4 | Pending |
+| REPO-05 | Phase 4 | Pending |
+| REPO-06 | Phase 4 | Pending |
+| REPO-07 | Phase 4 | Pending |
+| REPO-08 | Phase 4 | Pending |
+| REPO-09 | Phase 4 | Pending |
+| BLD-01 | Phase 4 | Pending |
+| BLD-02 | Phase 4 | Pending |
+| BLD-03 | Phase 4 | Pending |
+| BLD-04 | Phase 4 | Pending |
+| BLD-05 | Phase 4 | Pending |
+| CI-01 | Phase 4 | Pending |
+| CI-02 | Phase 4 | Pending |
+| CI-03 | Phase 4 | Pending |
+| CI-04 | Phase 4 | Pending |
+| CI-05 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 88 total
-- Mapped to phases: 0 (roadmap not yet created)
-- Unmapped: 88 ⚠️ (will be resolved by roadmapper)
+- v1 requirements: 130 total (actual count; REQUIREMENTS.md previously stated 88 — corrected after roadmap audit)
+- Mapped to phases: 130/130
+- Unmapped: 0
+
+| Phase | Requirements | Count |
+|-------|-------------|-------|
+| Phase 1 — Core Pipeline | INP-01–13, DET-01–07, TRF-01–15, VAL-01–09, OUT-01–12, LOG-01–07, PERF-01, PERF-03 | 65 |
+| Phase 2 — UI Scaffold + Wizard Steps | WIZ-01–11, APP-01–20, BRAND-01–02, TST-10, PERF-02 | 35 |
+| Phase 3 — Integration, End-to-End Testing + Fixtures | TST-01–09 | 9 |
+| Phase 4 — Build, CI, Packaging + Distribution Artifacts | BRAND-03–04, REPO-01–09, BLD-01–05, CI-01–05 | 21 |
 
 ---
 *Requirements defined: 2026-05-23*
-*Last updated: 2026-05-23 after initial definition*
+*Last updated: 2026-05-23 — traceability populated after roadmap creation*
