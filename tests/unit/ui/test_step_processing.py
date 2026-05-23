@@ -134,7 +134,9 @@ class TestStepProcessing:
                 pass
 
         fake_worker = FakeWorker()
-        qtbot.addWidget(fake_worker)
+        # Note: FakeWorker is a QThread (not QWidget), so we don't call qtbot.addWidget()
+        # but we still need to ensure it is cleaned up
+        fake_worker.setParent(step)  # parent to step widget for cleanup
 
         step.start_processing(fake_worker)
 
@@ -161,7 +163,7 @@ class TestStepProcessing:
                 pass
 
         fake_worker = FakeWorker()
-        qtbot.addWidget(fake_worker)
+        fake_worker.setParent(step)
 
         step.start_processing(fake_worker)
 
@@ -173,7 +175,7 @@ class TestStepProcessing:
 
         # Reset and test failure routing
         fake_worker2 = FakeWorker()
-        qtbot.addWidget(fake_worker2)
+        fake_worker2.setParent(step)
         step.start_processing(fake_worker2)
 
         failure_result = types.SimpleNamespace(success=False)
