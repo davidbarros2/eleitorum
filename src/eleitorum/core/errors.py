@@ -125,12 +125,13 @@ class EncodingDetectionError(EleitorumError):
     Eleitorum.md Section 4.2: re-save as UTF-8.
     """
 
-    def __init__(self, path: pathlib.Path) -> None:
+    def __init__(self, path: pathlib.Path | None = None) -> None:
+        path_display = str(path) if path is not None else "(ficheiro desconhecido)"
         message_pt = (
-            f"Não foi possível identificar a codificação do ficheiro '{path}'. "
+            f"Não foi possível identificar a codificação do ficheiro '{path_display}'. "
             "Tente abri-lo e guardá-lo novamente em UTF-8."
         )
-        super().__init__(message_pt, path=str(path))
+        super().__init__(message_pt, path=path_display)
 
 
 class MecanograficoError(EleitorumError):
