@@ -138,8 +138,11 @@ def read_xlsx(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
         raise FileAccessError(path=path, mode="read") from err
 
     try:
-        chosen_sheet: str = sheet_name or wb.sheetnames[0]
-        ws = wb[chosen_sheet]
+        try:
+            chosen_sheet: str = sheet_name or wb.sheetnames[0]
+            ws = wb[chosen_sheet]
+        except (KeyError, IndexError) as err:
+            raise FileAccessError(path=path, mode="read") from err
         raw: list[tuple[Any, ...]] = list(ws.iter_rows(values_only=True))
     finally:
         wb.close()
@@ -171,12 +174,15 @@ def read_xls(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
         raise FileAccessError(path=path, mode="read") from err
 
     try:
-        if sheet_name is not None:
-            sheet = wb_xls.sheet_by_name(sheet_name)
-            chosen_sheet: str = sheet_name
-        else:
-            sheet = wb_xls.sheet_by_index(0)
-            chosen_sheet = wb_xls.sheet_names()[0]
+        try:
+            if sheet_name is not None:
+                sheet = wb_xls.sheet_by_name(sheet_name)
+                chosen_sheet: str = sheet_name
+            else:
+                sheet = wb_xls.sheet_by_index(0)
+                chosen_sheet = wb_xls.sheet_names()[0]
+        except (xlrd.biffh.XLRDError, IndexError) as err:
+            raise FileAccessError(path=path, mode="read") from err
         raw: list[tuple[Any, ...]] = [tuple(cell.value for cell in row) for row in sheet.get_rows()]
     finally:
         wb_xls.release_resources()
