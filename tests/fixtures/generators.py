@@ -161,13 +161,13 @@ def make_multi_sheet_xlsx(path: pathlib.Path) -> pathlib.Path:
     # Sheet 1: Docentes — 10 data rows
     ws_docentes = wb.create_sheet("Docentes")
     ws_docentes.append(["Nº Mec.", "Nome"])
-    for i, (mec, name) in enumerate(_CADERNO_ROWS[:10]):
+    for mec, name in _CADERNO_ROWS[:10]:
         ws_docentes.append([mec, name])
 
     # Sheet 2: PTAG — 5 data rows
     ws_ptag = wb.create_sheet("PTAG")
     ws_ptag.append(["Nº Mec.", "Nome"])
-    for i, (mec, name) in enumerate(_CADERNO_ROWS[10:15]):
+    for mec, name in _CADERNO_ROWS[10:15]:
         ws_ptag.append([mec, name])
 
     # Sheet 3: Alunos — header only, no data rows (exercises INP-11)
@@ -296,7 +296,7 @@ def make_whitespace_chaos_xlsx(path: pathlib.Path) -> pathlib.Path:
         "Ana  Pereira Sintetica  ",
     ]
     mecs = ["f6688", "f1234", "f9001"]
-    for mec, name in zip(mecs, chaos_names):
+    for mec, name in zip(mecs, chaos_names, strict=False):
         ws.append([mec, name])
 
     wb.save(path)
@@ -461,11 +461,11 @@ def make_mixed_case_prefixes(path: pathlib.Path) -> pathlib.Path:
     """
     rows: list[list[str]] = [
         ["nº mec.", "nome"],
-        ["f6688", "João Silva Teste"],       # lowercase
-        ["F1234", "Maria Costa Exemplo"],    # uppercase
+        ["f6688", "João Silva Teste"],  # lowercase
+        ["F1234", "Maria Costa Exemplo"],  # uppercase
         ["f9001", "Ana Pereira Sintetica"],  # lowercase
         ["F2002", "Carlos Oliveira Teste"],  # uppercase
-        ["f7003", "Rui Ferreira Exemplo"],   # lowercase
+        ["f7003", "Rui Ferreira Exemplo"],  # lowercase
     ]
     _write_csv(path, rows)
     return path
