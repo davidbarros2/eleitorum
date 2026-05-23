@@ -81,8 +81,7 @@ class UnsupportedFormatError(EleitorumError):
     def __init__(self, extension: str) -> None:
         accepted = ", ".join(_ACCEPTED_EXTS_TEXT)
         message_pt = (
-            f"O tipo de ficheiro '{extension}' não é suportado. "
-            f"Formatos aceites: {accepted}."
+            f"O tipo de ficheiro '{extension}' não é suportado. Formatos aceites: {accepted}."
         )
         super().__init__(message_pt, extension=extension)
 

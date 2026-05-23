@@ -48,9 +48,7 @@ _PAREN_PAT: re.Pattern[str] = re.compile(r"\s*\([^)]*\)\s*")  # TRF-08
 #   ‌ — ZERO-WIDTH NON-JOINER
 #   ‍ — ZERO-WIDTH JOINER
 #   ﻿ — ZERO-WIDTH NO-BREAK SPACE (BOM when appearing mid-string)
-_WHITESPACE_PAT: re.Pattern[str] = re.compile(
-    r"[\s​‌‍﻿]+"
-)  # includes NBSP, ZWSP, ZWJ, ZWNJ, BOM
+_WHITESPACE_PAT: re.Pattern[str] = re.compile(r"[\s​‌‍﻿]+")  # includes NBSP, ZWSP, ZWJ, ZWNJ, BOM
 
 
 # ---------------------------------------------------------------------------
@@ -111,8 +109,7 @@ def transform_mecanografico(raw: Any, row_index: int) -> tuple[str, int, list[Ch
         raise MecanograficoError(
             row_index,
             str(raw),
-            f"número sem prefixo — o número mecanográfico deve incluir o prefixo "
-            f"(ex.: F{raw})",
+            f"número sem prefixo — o número mecanográfico deve incluir o prefixo (ex.: F{raw})",
         )
 
     # Pure float: if it is a whole number (e.g., 14891.0), it still has no prefix
@@ -350,9 +347,7 @@ def transform_name(raw: Any, row_index: int) -> tuple[str, list[ChangeRecord]]:
                 rule_tag="AVISO",
                 before=s,
                 after=s3,
-                reason_pt=(
-                    f"Removido(s) {removed} carácter(es) de substituição (U+FFFD) do nome"
-                ),
+                reason_pt=(f"Removido(s) {removed} carácter(es) de substituição (U+FFFD) do nome"),
             )
         )
         s = s3
@@ -370,8 +365,7 @@ def transform_name(raw: Any, row_index: int) -> tuple[str, list[ChangeRecord]]:
                 before=s,
                 after=s4,
                 reason_pt=(
-                    f"Anotação(ões) entre parênteses removida(s): "
-                    f"{', '.join(parens_found)}"
+                    f"Anotação(ões) entre parênteses removida(s): {', '.join(parens_found)}"
                 ),
             )
         )

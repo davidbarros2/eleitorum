@@ -22,7 +22,6 @@ from eleitorum.core.detection import (
 from eleitorum.core.errors import EncodingDetectionError
 from tests.fixtures.generators import make_headerless_xlsx, make_titled_xlsx
 
-
 # ---------------------------------------------------------------------------
 # normalize_col_name
 # ---------------------------------------------------------------------------
@@ -122,8 +121,7 @@ def test_detect_encoding_cp1252() -> None:
     # charset-normalizer may select any compatible Western European encoding
     acceptable = {"cp1252", "windows1252", "cp1250", "iso88591", "latin1", "utf8"}
     assert enc in acceptable, (
-        f"Unexpected encoding {result.encoding!r} for CP1252 data. "
-        f"Acceptable: {acceptable}"
+        f"Unexpected encoding {result.encoding!r} for CP1252 data. Acceptable: {acceptable}"
     )
     # Most importantly: the returned encoding must actually decode the bytes
     data.decode(result.encoding)
@@ -164,6 +162,40 @@ def test_detect_encoding_logs_choice() -> None:
     assert hasattr(result, "confidence")
     assert hasattr(result, "via_bom")
     assert hasattr(result, "raw_chaos")
+
+
+def test_detect_encoding_returns_result_for_latin_bytes() -> None:
+    """detect_encoding handles bytes valid in Latin encodings (exercises low-chaos path)."""
+    # These bytes are not valid UTF-8 but valid in iso-8859-1 / cp1252
+    data = b"\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9" * 10
+    result = detect_encoding(data)
+    assert isinstance(result, EncodingDetectionResult)
+    # Any encoding returned must be able to decode the bytes
+    data.decode(result.encoding)
+    assert result.confidence > 0.0
+
+
+def test_detect_columns_format_fallback_with_empty_data_column() -> None:
+    """Format fallback skips columns where all data values are None/empty."""
+    header = ("EmptyCol", "Nome")
+    # Column 0 has all None values, column 1 (name) has text
+    data: list[tuple] = [
+        (None, "Person A"),
+        (None, "Person B"),
+        (None, "Person C"),
+    ]
+    result = detect_columns(header, data, output_type="caderno")
+    # No format fallback match because column 0 has no sample values
+    assert result.mec_col_index is None or result.detection_method == "manual"
+
+
+def test_detect_columns_ambiguous_name_candidates() -> None:
+    """DET-06: multiple name synonym matches yield ambiguous_name_candidates."""
+    header = ("nome", "nome completo", "Custom")
+    data: list[tuple] = [("João Silva", "João Silva Teste", "x")]
+    result = detect_columns(header, data, output_type="caderno")
+    assert len(result.ambiguous_name_candidates) >= 2
+    assert result.name_col_index is None
 
 
 # ---------------------------------------------------------------------------

@@ -11,12 +11,11 @@ All functions are pure (no I/O side-effects). The module has zero Qt dependencie
 from __future__ import annotations
 
 import dataclasses
-import pathlib
 import re
 import unicodedata
 from typing import Any, Literal
 
-from charset_normalizer import from_bytes  # type: ignore[import-untyped]
+from charset_normalizer import from_bytes
 
 from eleitorum.core.errors import EncodingDetectionError
 
@@ -306,13 +305,13 @@ def detect_columns(
 
     if len(mec_candidates) == 1:
         mec_col_index = mec_candidates[0]
-        mec_col_label = str(header_row[mec_col_index]) if header_row[mec_col_index] is not None else None
+        raw_mec = header_row[mec_col_index]
+        mec_col_label = str(raw_mec) if raw_mec is not None else None
         detection_method = "synonym"
     elif len(mec_candidates) > 1:
         # Ambiguous — report all candidates
         ambiguous_mec_candidates = [
-            (i, str(header_row[i]) if header_row[i] is not None else "")
-            for i in mec_candidates
+            (i, str(header_row[i]) if header_row[i] is not None else "") for i in mec_candidates
         ]
         mec_col_index = None
     elif output_type == "caderno":
@@ -357,8 +356,7 @@ def detect_columns(
             detection_method = "synonym"
     elif len(name_candidates) > 1:
         ambiguous_name_candidates = [
-            (i, str(header_row[i]) if header_row[i] is not None else "")
-            for i in name_candidates
+            (i, str(header_row[i]) if header_row[i] is not None else "") for i in name_candidates
         ]
 
     return ColumnMapping(
