@@ -79,6 +79,26 @@ def test_happy_path_elegiveis_csv(tmp_path: pathlib.Path) -> None:
     first_data = lines[1]
     assert first_data.startswith("0;"), f"first data row should start with '0;': {first_data}"
 
+    # D-02 byte-exact data-row assertions (TRF-13, TRF-14, OUT-09)
+    data_lines = lines[1:]  # skip header
+
+    # (a) 0-based integer index: first data row has index 0 (TRF-14)
+    assert int(data_lines[0].split(";")[0]) == 0, (
+        f"first index must be 0; got: {data_lines[0]}"
+    )
+
+    # (b) alphabetical NFKD order: designations sorted before index assignment (TRF-13)
+    names = [line.split(";")[1] for line in data_lines]
+    assert names == sorted(names, key=lambda s: s.casefold()), (
+        f"elegíveis must be in alphabetical order; got first 5: {names[:5]}"
+    )
+
+    # (c) no trailing semicolon: elegíveis rows are "{int};{designation}" only (OUT-09)
+    for line in data_lines:
+        assert not line.endswith(";"), (
+            f"elegíveis row must not end with semicolon: {line}"
+        )
+
 
 # ---------------------------------------------------------------------------
 # User Journey 3: Multi-sheet XLSX — processes selected sheet
