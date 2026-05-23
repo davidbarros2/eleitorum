@@ -379,8 +379,9 @@ def test_unicode_replacement_removed_logged(tmp_path: pathlib.Path) -> None:
 
     # Output must not contain the replacement character
     raw = out.read_bytes()
-    assert "fffd".encode("ascii") not in raw.lower(), (
-        "replacement character bytes should not appear in output"
+    # CORRECT: U+FFFD in UTF-8 is 3 bytes EF BF BD
+    assert b"\xef\xbf\xbd" not in raw, (
+        "replacement character (U+FFFD) bytes should not appear in UTF-8 output"
     )
     output_text = out.read_text(encoding="utf-8-sig")
     assert "�" not in output_text, "U+FFFD should have been removed from names"
