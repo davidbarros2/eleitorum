@@ -14,13 +14,21 @@ import pathlib
 
 import pytest
 
+from eleitorum.ui.session import SessionModel
+
 
 @pytest.fixture
-def session_fresh() -> None:
-    """Placeholder fixture returning None.
+def session_fresh() -> SessionModel:
+    """Return a fresh SessionModel with all fields defaulting to None.
 
-    The real SessionModel fixture will be added in plan 02-02 once
-    ``src/eleitorum/ui/session.py`` exists. Tests in this plan that need
-    a source path construct it directly via ``tmp_path``.
+    Updated in plan 02-02 from the placeholder None stub.
     """
-    return None
+    return SessionModel()
+
+
+@pytest.fixture
+def session_with_file(tmp_path: pathlib.Path) -> SessionModel:
+    """Return a SessionModel with source_path set to a synthetic XLSX path."""
+    s = SessionModel()
+    s.source_path = tmp_path / "sintetico_teste.xlsx"
+    return s
