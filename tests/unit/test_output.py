@@ -21,7 +21,6 @@ from eleitorum.core.output import (
     write_elegiveis,
 )
 
-
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -153,7 +152,7 @@ def test_elegiveis_row_format_index_zero_based(tmp_path: pathlib.Path) -> None:
     p = tmp_path / "out.csv"
     write_elegiveis(p, ["Zélia", "Ana"])
     text = p.read_bytes().decode("utf-8-sig")
-    lines = [l for l in text.split("\r\n") if l]
+    lines = [line for line in text.split("\r\n") if line]
     # Ana comes first alphabetically
     assert lines[1] == "0;Ana"
     assert lines[2] == "1;Zélia"
@@ -164,7 +163,7 @@ def test_write_elegiveis_sorts_alphabetically_diacritic_stripped(tmp_path: pathl
     p = tmp_path / "out.csv"
     write_elegiveis(p, ["Zélia", "Ana", "Mário", "Élia"])
     text = p.read_bytes().decode("utf-8-sig")
-    lines = [l for l in text.split("\r\n") if l]
+    lines = [line for line in text.split("\r\n") if line]
     # Skip header
     data_lines = lines[1:]
     assert data_lines[0] == "0;Ana"
@@ -274,7 +273,8 @@ def test_write_caderno_permission_error_pt_pt(
 
 def test_build_output_filename_caderno_xlsx() -> None:
     """build_output_filename: lista_2026.xlsx + caderno → 'caderno_lista_2026.csv'."""
-    assert build_output_filename(pathlib.Path("lista_2026.xlsx"), "caderno") == "caderno_lista_2026.csv"
+    result = build_output_filename(pathlib.Path("lista_2026.xlsx"), "caderno")
+    assert result == "caderno_lista_2026.csv"
 
 
 def test_build_output_filename_elegiveis_xlsx() -> None:
@@ -301,7 +301,7 @@ def test_build_output_filename_no_extension() -> None:
 
 
 def test_build_output_filename_double_extension() -> None:
-    """build_output_filename: file.backup.xlsx → 'caderno_file.backup.csv' (only last ext stripped)."""
+    """build_output_filename: file.backup.xlsx — only last ext stripped."""
     result = build_output_filename(pathlib.Path("file.backup.xlsx"), "caderno")
     assert result == "caderno_file.backup.csv"
 

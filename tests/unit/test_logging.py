@@ -35,8 +35,9 @@ _FIXED_TS_STR = "2026-05-23 14:32:15"
 
 def test_log_all_nine_tags_defined() -> None:
     """LOG-03: TAGS must contain exactly the 9 PT-PT tags."""
-    assert TAGS == frozenset(
-        {"INICIO", "INPUT", "COLUNA", "CASO", "LIMPEZA", "AVISO", "ERRO", "SAIDA", "FIM"}
+    assert (
+        frozenset({"INICIO", "INPUT", "COLUNA", "CASO", "LIMPEZA", "AVISO", "ERRO", "SAIDA", "FIM"})
+        == TAGS
     )
 
 

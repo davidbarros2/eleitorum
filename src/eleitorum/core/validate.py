@@ -19,7 +19,6 @@ from typing import Literal
 from eleitorum.core.errors import FailureRow, OutputPathError
 from eleitorum.core.transform import FDB_SHARED
 
-
 # ---------------------------------------------------------------------------
 # UniquenessTracker
 # ---------------------------------------------------------------------------

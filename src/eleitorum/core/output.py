@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import csv
 import pathlib
-from typing import Literal
+from typing import IO, Any, Literal
 
 from eleitorum.core.errors import FileAccessError, OutputPathError
 from eleitorum.core.transform import sort_elegiveis
@@ -54,7 +54,7 @@ _LINETERMINATOR: str = "\r\n"
 # ---------------------------------------------------------------------------
 
 
-def _open_writer(path: pathlib.Path):  # type: ignore[return]
+def _open_writer(path: pathlib.Path) -> IO[str]:
     """Open a file for writing in byte-exact CSV mode.
 
     Args:
@@ -67,7 +67,7 @@ def _open_writer(path: pathlib.Path):  # type: ignore[return]
         FileAccessError(mode='write'): On PermissionError or any other OSError.
     """
     try:
-        return open(  # noqa: SIM115
+        return open(  # noqa: WPS515
             path,
             mode="w",
             encoding=_OUTPUT_ENCODING,
@@ -101,7 +101,7 @@ def _apply_output_guards(
             raise OutputPathError(path=path, reason="already_exists")
 
 
-def _make_writer(f) -> csv.writer:  # type: ignore[type-arg]
+def _make_writer(f: IO[str]) -> Any:
     """Build a csv.writer with the byte-exact settings."""
     return csv.writer(
         f,

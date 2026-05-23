@@ -24,10 +24,10 @@ from __future__ import annotations
 import dataclasses
 import datetime
 import pathlib
+from collections.abc import Callable
 from dataclasses import field
-from typing import Callable, Literal, TypeAlias
+from typing import Literal, TypeAlias
 
-from eleitorum.core.errors import FailureRow
 from eleitorum.core.transform import ChangeRecord
 
 # ---------------------------------------------------------------------------
@@ -74,8 +74,7 @@ def format_log_line(tag: LogTag, message: str, ts: datetime.datetime) -> str:
         AssertionError: If tag is not in TAGS.
     """
     assert tag in TAGS, (
-        f"Etiqueta de log desconhecida: {tag!r}. "
-        f"Etiquetas válidas: {', '.join(sorted(TAGS))}"
+        f"Etiqueta de log desconhecida: {tag!r}. Etiquetas válidas: {', '.join(sorted(TAGS))}"
     )
     return f"[{ts.strftime(_TIMESTAMP_FORMAT)}] {tag:<7} {message}"
 
@@ -133,7 +132,7 @@ class LogBuilder:
             ts:        Explicit timestamp; defaults to ``self.clock()``.
         """
         message = f"Linha {row_index}: {change.reason_pt}"
-        self.add(change.rule_tag, message, ts)  # type: ignore[arg-type]
+        self.add(change.rule_tag, message, ts)
 
 
 # ---------------------------------------------------------------------------
