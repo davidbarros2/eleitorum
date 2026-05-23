@@ -65,7 +65,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 1**
 
-- [ ] 02-01-PLAN.md — Wave 0 scaffold: pyproject.toml updates (PySide6 6.11.1, pytest-qt 4.5.0, qt_api=pyside6), PipelineWorker QThread + PipelineCancelledError, tests/unit/ui/ test infrastructure (__init__.py, conftest.py)
+- [x] 02-01-PLAN.md — Wave 0 scaffold: pyproject.toml updates (PySide6 6.11.1, pytest-qt 4.5.0, qt_api=pyside6), PipelineWorker QThread + PipelineCancelledError, tests/unit/ui/ test infrastructure (__init__.py, conftest.py)
 
 **Wave 2** *(blocked on 02-01)*
 
@@ -123,6 +123,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
-| 2. UI Scaffold + Wizard Steps | 0/6 | Not started | - |
+| 2. UI Scaffold + Wizard Steps | 1/6 | In Progress|  |
 | 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
