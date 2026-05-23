@@ -285,7 +285,7 @@ def test_leading_zeros_stripped_logged(tmp_path: pathlib.Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_excel_float_numbers_converted_logged(tmp_path: pathlib.Path) -> None:
+def test_excel_float_numbers_rejected_as_invalid_mec(tmp_path: pathlib.Path) -> None:
     """TRF-02: Excel numeric float mec values (e.g. 14891.0) cause validation failure.
 
     Float cells without a prefix are invalid mec values (no prefix like F).
