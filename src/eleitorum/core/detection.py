@@ -170,6 +170,19 @@ def detect_encoding(raw_bytes: bytes) -> EncodingDetectionResult:
     if not raw_bytes:
         raise EncodingDetectionError(path=None)
 
+    # Manual BOM check BEFORE calling charset-normalizer.
+    # charset-normalizer can fail to detect bom=True on files containing
+    # U+FFFD (b'\xef\xbf\xbd') because the 0xEF byte sequence is ambiguous
+    # between a UTF-8 BOM (0xEF 0xBB 0xBF) and Asian encodings (e.g., cp949).
+    # The manual check is authoritative per spec: BOM trusted unconditionally.
+    if raw_bytes[:3] == b"\xef\xbb\xbf":
+        return EncodingDetectionResult(
+            encoding="utf-8-sig",
+            confidence=1.0,
+            via_bom=True,
+            raw_chaos=None,
+        )
+
     results = from_bytes(raw_bytes)
     if not results:
         return _fallback_chain(raw_bytes)
@@ -178,7 +191,7 @@ def detect_encoding(raw_bytes: bytes) -> EncodingDetectionResult:
     if best is None:
         return _fallback_chain(raw_bytes)
 
-    # BOM detected — trust unconditionally
+    # BOM detected by charset-normalizer — trust unconditionally
     if best.bom:
         return EncodingDetectionResult(
             encoding=_canonical_bom_encoding(best.encoding),
