@@ -11,84 +11,84 @@ Everything below ships as v1.0.0. There is no v2; there are no deferrals.
 
 ### Input Handling (INP)
 
-- [ ] **INP-01**: User can load a `.xlsx` or `.xlsm` file (openpyxl engine)
-- [ ] **INP-02**: User can load a legacy `.xls` file (xlrd engine, read-only)
-- [ ] **INP-03**: User can load an `.ods` file (odfpy engine)
-- [ ] **INP-04**: User can load a `.csv` file with automatic encoding detection
-- [ ] **INP-05**: User can load a `.tsv` file with automatic encoding detection
-- [ ] **INP-06**: Unsupported file extensions produce a clear error message listing accepted formats; no further processing occurs
-- [ ] **INP-07**: Encoding is detected by reading the first ~64 KB; BOM is trusted unconditionally; confidence threshold ≥ 0.85 (charset-normalizer); fallback chain: UTF-8 with BOM → UTF-8 → Windows-1252 → ISO-8859-1
-- [ ] **INP-08**: If encoding cannot be determined, the user sees an actionable PT-PT message (no jargon); no output is produced
-- [ ] **INP-09**: Detected encoding is logged in the transformation log
-- [ ] **INP-10**: For Excel files with more than one sheet, user is shown all sheet names with row counts and selects one to process
-- [ ] **INP-11**: Empty or header-only sheets in the sheet picker are listed but visually muted with a "folha vazia" indicator
-- [ ] **INP-12**: Trailing empty rows (all relevant columns empty) are skipped silently; count is logged
-- [ ] **INP-13**: Files already open in another application (PermissionError on read) produce a clear PT-PT error message; no output is produced
+- [x] **INP-01**: User can load a `.xlsx` or `.xlsm` file (openpyxl engine)
+- [x] **INP-02**: User can load a legacy `.xls` file (xlrd engine, read-only)
+- [x] **INP-03**: User can load an `.ods` file (odfpy engine)
+- [x] **INP-04**: User can load a `.csv` file with automatic encoding detection
+- [x] **INP-05**: User can load a `.tsv` file with automatic encoding detection
+- [x] **INP-06**: Unsupported file extensions produce a clear error message listing accepted formats; no further processing occurs
+- [x] **INP-07**: Encoding is detected by reading the first ~64 KB; BOM is trusted unconditionally; confidence threshold ≥ 0.85 (charset-normalizer); fallback chain: UTF-8 with BOM → UTF-8 → Windows-1252 → ISO-8859-1
+- [x] **INP-08**: If encoding cannot be determined, the user sees an actionable PT-PT message (no jargon); no output is produced
+- [x] **INP-09**: Detected encoding is logged in the transformation log
+- [x] **INP-10**: For Excel files with more than one sheet, user is shown all sheet names with row counts and selects one to process
+- [x] **INP-11**: Empty or header-only sheets in the sheet picker are listed but visually muted with a "folha vazia" indicator
+- [x] **INP-12**: Trailing empty rows (all relevant columns empty) are skipped silently; count is logged
+- [x] **INP-13**: Files already open in another application (PermissionError on read) produce a clear PT-PT error message; no output is produced
 
 ### Detection (DET)
 
-- [ ] **DET-01**: Header row is detected automatically by scoring the first 10 rows; row with highest header-likeness score wins
-- [ ] **DET-02**: If no plausible header row is found, the column-mapping dialog opens in manual mode with a friendly PT-PT message
-- [ ] **DET-03**: Mecanográfico column is detected by matching against the defined synonym list (tolerant: trimmed, lowercased, accent-stripped)
-- [ ] **DET-04**: Name/designation column is detected by matching against the defined synonym list
-- [ ] **DET-05**: Column mapping result is always shown to the user (pre-populated on auto-detection success, empty dropdowns on failure); user can override any mapping
-- [ ] **DET-06**: If auto-detection is ambiguous (multiple plausible matches), both candidates are surfaced and user selects
-- [ ] **DET-07**: For elegíveis output, only the name/designation mapping is shown; mecanográfico mapping is hidden
+- [x] **DET-01**: Header row is detected automatically by scoring the first 10 rows; row with highest header-likeness score wins
+- [x] **DET-02**: If no plausible header row is found, the column-mapping dialog opens in manual mode with a friendly PT-PT message
+- [x] **DET-03**: Mecanográfico column is detected by matching against the defined synonym list (tolerant: trimmed, lowercased, accent-stripped)
+- [x] **DET-04**: Name/designation column is detected by matching against the defined synonym list
+- [x] **DET-05**: Column mapping result is always shown to the user (pre-populated on auto-detection success, empty dropdowns on failure); user can override any mapping
+- [x] **DET-06**: If auto-detection is ambiguous (multiple plausible matches), both candidates are surfaced and user selects
+- [x] **DET-07**: For elegíveis output, only the name/designation mapping is shown; mecanográfico mapping is hidden
 
 ### Transformation (TRF)
 
-- [ ] **TRF-01**: Mecanográfico values are trimmed of all leading/trailing whitespace; internal whitespace is removed; changes are logged
-- [ ] **TRF-02**: Excel numeric cells in the mecanográfico column are converted from float to integer string (e.g., `14891.0` → `14891`); conversion is logged
-- [ ] **TRF-03**: Leading zeros in the numeric portion of a mecanográfico are stripped (e.g., `F0500` → `F500`); stripping is logged
-- [ ] **TRF-04**: Mecanográfico prefix case is normalized across the entire output using majority-wins rule (lowercase on tie); chosen case and vote counts are logged
-- [ ] **TRF-05**: Name values are trimmed of all leading/trailing whitespace (including ASCII space, tab, no-break space U+00A0, zero-width space U+200B, and any Unicode whitespace)
-- [ ] **TRF-06**: Internal whitespace sequences in names are collapsed to a single ASCII space; changes are logged
-- [ ] **TRF-07**: Commas found in name values are removed; removal is logged with the original value
-- [ ] **TRF-08**: Parenthetical content in names (e.g., `(Coordenador)`) is removed including the parentheses; removal is logged showing what was removed; whitespace normalization is re-applied after removal
-- [ ] **TRF-09**: Mojibake (deterministic UTF-8-read-as-Latin-1 corruption) is auto-corrected when the re-encode result is unambiguous; correction is logged showing before and after
-- [ ] **TRF-10**: If mojibake correction is ambiguous (result does not decode cleanly), no correction is applied; the suspicious string is logged as a warning for human review
-- [ ] **TRF-11**: Unicode replacement characters (`U+FFFD`) and non-deterministically corrupted characters are removed individually from names; the rest of the name is preserved; removal is logged
-- [ ] **TRF-12**: Name capitalization is preserved as-is; the program does not alter name casing
-- [ ] **TRF-13**: For elegíveis output, rows are sorted alphabetically ascending by designation before index assignment
-- [ ] **TRF-14**: For elegíveis output, index (0-based integer, 0 = first alphabetically) is assigned after sorting and generated by the program; input does not provide it
-- [ ] **TRF-15**: For caderno output, row order is preserved from the input; no sorting is applied
+- [x] **TRF-01**: Mecanográfico values are trimmed of all leading/trailing whitespace; internal whitespace is removed; changes are logged
+- [x] **TRF-02**: Excel numeric cells in the mecanográfico column are converted from float to integer string (e.g., `14891.0` → `14891`); conversion is logged
+- [x] **TRF-03**: Leading zeros in the numeric portion of a mecanográfico are stripped (e.g., `F0500` → `F500`); stripping is logged
+- [x] **TRF-04**: Mecanográfico prefix case is normalized across the entire output using majority-wins rule (lowercase on tie); chosen case and vote counts are logged
+- [x] **TRF-05**: Name values are trimmed of all leading/trailing whitespace (including ASCII space, tab, no-break space U+00A0, zero-width space U+200B, and any Unicode whitespace)
+- [x] **TRF-06**: Internal whitespace sequences in names are collapsed to a single ASCII space; changes are logged
+- [x] **TRF-07**: Commas found in name values are removed; removal is logged with the original value
+- [x] **TRF-08**: Parenthetical content in names (e.g., `(Coordenador)`) is removed including the parentheses; removal is logged showing what was removed; whitespace normalization is re-applied after removal
+- [x] **TRF-09**: Mojibake (deterministic UTF-8-read-as-Latin-1 corruption) is auto-corrected when the re-encode result is unambiguous; correction is logged showing before and after
+- [x] **TRF-10**: If mojibake correction is ambiguous (result does not decode cleanly), no correction is applied; the suspicious string is logged as a warning for human review
+- [x] **TRF-11**: Unicode replacement characters (`U+FFFD`) and non-deterministically corrupted characters are removed individually from names; the rest of the name is preserved; removal is logged
+- [x] **TRF-12**: Name capitalization is preserved as-is; the program does not alter name casing
+- [x] **TRF-13**: For elegíveis output, rows are sorted alphabetically ascending by designation before index assignment
+- [x] **TRF-14**: For elegíveis output, index (0-based integer, 0 = first alphabetically) is assigned after sorting and generated by the program; input does not provide it
+- [x] **TRF-15**: For caderno output, row order is preserved from the input; no sorting is applied
 
 ### Validation (VAL)
 
-- [ ] **VAL-01**: Mecanográfico prefix must be one of: `A`, `PG`, `ID`, `F`, `D`, `B`, `Q`, `EX` (case-insensitive on input); any other prefix stops processing with a list of offending rows
-- [ ] **VAL-02**: Mecanográfico number portion must be a positive integer (≥ 1); `F0`, `D00`, or a prefix with empty number stops processing with offending rows listed
-- [ ] **VAL-03**: No duplicate mecanográficos within the same prefix; duplicates stop processing with offending rows listed (showing mecanográfico value and name for each)
-- [ ] **VAL-04**: Prefixes F, D, and B share a numeric namespace; `F500` and `D500` in the same file is a collision; stops processing with offending rows listed
-- [ ] **VAL-05**: Prefixes A, PG, ID, Q, and EX each have independent namespaces; `A500` and `PG500` in the same file is valid
-- [ ] **VAL-06**: Empty name (or name that becomes empty after transformation) stops processing with offending row listed
-- [ ] **VAL-07**: For caderno output, a row with a mecanográfico but no name (or vice versa) stops processing with offending row listed
-- [ ] **VAL-08**: The chosen output file path must not equal the input file path; if it does, the wizard refuses and prompts for a different location
-- [ ] **VAL-09**: If the output file is already open in another application (PermissionError on write), a clear PT-PT message is shown: user is instructed to close the file and try again
+- [x] **VAL-01**: Mecanográfico prefix must be one of: `A`, `PG`, `ID`, `F`, `D`, `B`, `Q`, `EX` (case-insensitive on input); any other prefix stops processing with a list of offending rows
+- [x] **VAL-02**: Mecanográfico number portion must be a positive integer (≥ 1); `F0`, `D00`, or a prefix with empty number stops processing with offending rows listed
+- [x] **VAL-03**: No duplicate mecanográficos within the same prefix; duplicates stop processing with offending rows listed (showing mecanográfico value and name for each)
+- [x] **VAL-04**: Prefixes F, D, and B share a numeric namespace; `F500` and `D500` in the same file is a collision; stops processing with offending rows listed
+- [x] **VAL-05**: Prefixes A, PG, ID, Q, and EX each have independent namespaces; `A500` and `PG500` in the same file is valid
+- [x] **VAL-06**: Empty name (or name that becomes empty after transformation) stops processing with offending row listed
+- [x] **VAL-07**: For caderno output, a row with a mecanográfico but no name (or vice versa) stops processing with offending row listed
+- [x] **VAL-08**: The chosen output file path must not equal the input file path; if it does, the wizard refuses and prompts for a different location
+- [x] **VAL-09**: If the output file is already open in another application (PermissionError on write), a clear PT-PT message is shown: user is instructed to close the file and try again
 
 ### Output (OUT)
 
-- [ ] **OUT-01**: Output encoding is UTF-8 with BOM (`\xEF\xBB\xBF` as the first 3 bytes)
-- [ ] **OUT-02**: Field separator is `;` (semicolon)
-- [ ] **OUT-03**: Line endings are `\r\n` (CRLF); no platform-dependent translation
-- [ ] **OUT-04**: Fields are written without surrounding quotes; no quoting of any kind
-- [ ] **OUT-05**: File ends with `\r\n` after the last data row
-- [ ] **OUT-06**: Caderno output header is exactly: `personnel_number;name;category`
-- [ ] **OUT-07**: Caderno output rows follow the format `{mec};{nome};` — third field (category) is always empty; row always ends with a semicolon before CRLF
-- [ ] **OUT-08**: Elegíveis output header is exactly: `personnel_number;designation`
-- [ ] **OUT-09**: Elegíveis output rows follow the format `{index};{designation}` where index is 0-based integer
-- [ ] **OUT-10**: Output is never written if any validation error occurred; no partial output file is ever created
-- [ ] **OUT-11**: Output file is never written to the same path as the input file
-- [ ] **OUT-12**: If the destination file already exists, user is prompted for confirmation or a counter suffix is auto-appended; no silent overwrite
+- [x] **OUT-01**: Output encoding is UTF-8 with BOM (`\xEF\xBB\xBF` as the first 3 bytes)
+- [x] **OUT-02**: Field separator is `;` (semicolon)
+- [x] **OUT-03**: Line endings are `\r\n` (CRLF); no platform-dependent translation
+- [x] **OUT-04**: Fields are written without surrounding quotes; no quoting of any kind
+- [x] **OUT-05**: File ends with `\r\n` after the last data row
+- [x] **OUT-06**: Caderno output header is exactly: `personnel_number;name;category`
+- [x] **OUT-07**: Caderno output rows follow the format `{mec};{nome};` — third field (category) is always empty; row always ends with a semicolon before CRLF
+- [x] **OUT-08**: Elegíveis output header is exactly: `personnel_number;designation`
+- [x] **OUT-09**: Elegíveis output rows follow the format `{index};{designation}` where index is 0-based integer
+- [x] **OUT-10**: Output is never written if any validation error occurred; no partial output file is ever created
+- [x] **OUT-11**: Output file is never written to the same path as the input file
+- [x] **OUT-12**: If the destination file already exists, user is prompted for confirmation or a counter suffix is auto-appended; no silent overwrite
 
 ### Logging (LOG)
 
-- [ ] **LOG-01**: A transformation log file is produced on every successful run, saved next to the output CSV with name pattern `{output_name}_LOG_{timestamp}.txt`
-- [ ] **LOG-02**: Log file encoding is UTF-8 with BOM; format is plain text, one event per line; each line starts with `[YYYY-MM-DD HH:MM:SS]` timestamp and a tag
-- [ ] **LOG-03**: Log tags used: `INICIO`, `INPUT`, `COLUNA`, `CASO`, `LIMPEZA`, `AVISO`, `ERRO`, `SAIDA`, `FIM`
-- [ ] **LOG-04**: Log records: output type chosen, input file path, detected encoding (with confidence), sheet selected (Excel only), header row detected, columns detected, case normalization decision (with vote counts), every per-row transformation applied, count of skipped empty rows, output file path, total row count, total transformation count, completion status
-- [ ] **LOG-05**: An error log file is produced on every failed run, saved at the output destination (or default location) with name pattern `{output_name}_ERRORS_{timestamp}.txt`
-- [ ] **LOG-06**: Error log format mirrors transformation log but uses `ERRO` tag for each problem; includes row number, column name (as seen in source), value, and the PT-PT message
-- [ ] **LOG-07**: Log files contain no personal data beyond what the user's input already contains; they are written only to the output location the user chose
+- [x] **LOG-01**: A transformation log file is produced on every successful run, saved next to the output CSV with name pattern `{output_name}_LOG_{timestamp}.txt`
+- [x] **LOG-02**: Log file encoding is UTF-8 with BOM; format is plain text, one event per line; each line starts with `[YYYY-MM-DD HH:MM:SS]` timestamp and a tag
+- [x] **LOG-03**: Log tags used: `INICIO`, `INPUT`, `COLUNA`, `CASO`, `LIMPEZA`, `AVISO`, `ERRO`, `SAIDA`, `FIM`
+- [x] **LOG-04**: Log records: output type chosen, input file path, detected encoding (with confidence), sheet selected (Excel only), header row detected, columns detected, case normalization decision (with vote counts), every per-row transformation applied, count of skipped empty rows, output file path, total row count, total transformation count, completion status
+- [x] **LOG-05**: An error log file is produced on every failed run, saved at the output destination (or default location) with name pattern `{output_name}_ERRORS_{timestamp}.txt`
+- [x] **LOG-06**: Error log format mirrors transformation log but uses `ERRO` tag for each problem; includes row number, column name (as seen in source), value, and the PT-PT message
+- [x] **LOG-07**: Log files contain no personal data beyond what the user's input already contains; they are written only to the output location the user chose
 
 ### Wizard UI — Steps (WIZ)
 
@@ -177,9 +177,9 @@ Everything below ships as v1.0.0. There is no v2; there are no deferrals.
 
 ### Performance (PERF)
 
-- [ ] **PERF-01**: Processing 150,000 rows from XLSX to validated CSV output completes in under 10 seconds on a typical office laptop
+- [x] **PERF-01**: Processing 150,000 rows from XLSX to validated CSV output completes in under 10 seconds on a typical office laptop
 - [ ] **PERF-02**: The UI thread remains responsive during processing (background thread); the window can be moved during a long run
-- [ ] **PERF-03**: openpyxl reads XLSX files in `read_only=True, data_only=True` mode to avoid loading the entire workbook into memory
+- [x] **PERF-03**: openpyxl reads XLSX files in `read_only=True, data_only=True` mode to avoid loading the entire workbook into memory
 
 ---
 
@@ -218,71 +218,71 @@ None. This product ships once as v1.0.0 and is then archived. There is no v2 (se
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INP-01 | Phase 1 | Pending |
-| INP-02 | Phase 1 | Pending |
-| INP-03 | Phase 1 | Pending |
-| INP-04 | Phase 1 | Pending |
-| INP-05 | Phase 1 | Pending |
-| INP-06 | Phase 1 | Pending |
-| INP-07 | Phase 1 | Pending |
-| INP-08 | Phase 1 | Pending |
-| INP-09 | Phase 1 | Pending |
-| INP-10 | Phase 1 | Pending |
-| INP-11 | Phase 1 | Pending |
-| INP-12 | Phase 1 | Pending |
-| INP-13 | Phase 1 | Pending |
-| DET-01 | Phase 1 | Pending |
-| DET-02 | Phase 1 | Pending |
-| DET-03 | Phase 1 | Pending |
-| DET-04 | Phase 1 | Pending |
-| DET-05 | Phase 1 | Pending |
-| DET-06 | Phase 1 | Pending |
-| DET-07 | Phase 1 | Pending |
-| TRF-01 | Phase 1 | Pending |
-| TRF-02 | Phase 1 | Pending |
-| TRF-03 | Phase 1 | Pending |
-| TRF-04 | Phase 1 | Pending |
-| TRF-05 | Phase 1 | Pending |
-| TRF-06 | Phase 1 | Pending |
-| TRF-07 | Phase 1 | Pending |
-| TRF-08 | Phase 1 | Pending |
-| TRF-09 | Phase 1 | Pending |
-| TRF-10 | Phase 1 | Pending |
-| TRF-11 | Phase 1 | Pending |
-| TRF-12 | Phase 1 | Pending |
-| TRF-13 | Phase 1 | Pending |
-| TRF-14 | Phase 1 | Pending |
-| TRF-15 | Phase 1 | Pending |
-| VAL-01 | Phase 1 | Pending |
-| VAL-02 | Phase 1 | Pending |
-| VAL-03 | Phase 1 | Pending |
-| VAL-04 | Phase 1 | Pending |
-| VAL-05 | Phase 1 | Pending |
-| VAL-06 | Phase 1 | Pending |
-| VAL-07 | Phase 1 | Pending |
-| VAL-08 | Phase 1 | Pending |
-| VAL-09 | Phase 1 | Pending |
-| OUT-01 | Phase 1 | Pending |
-| OUT-02 | Phase 1 | Pending |
-| OUT-03 | Phase 1 | Pending |
-| OUT-04 | Phase 1 | Pending |
-| OUT-05 | Phase 1 | Pending |
-| OUT-06 | Phase 1 | Pending |
-| OUT-07 | Phase 1 | Pending |
-| OUT-08 | Phase 1 | Pending |
-| OUT-09 | Phase 1 | Pending |
-| OUT-10 | Phase 1 | Pending |
-| OUT-11 | Phase 1 | Pending |
-| OUT-12 | Phase 1 | Pending |
-| LOG-01 | Phase 1 | Pending |
-| LOG-02 | Phase 1 | Pending |
-| LOG-03 | Phase 1 | Pending |
-| LOG-04 | Phase 1 | Pending |
-| LOG-05 | Phase 1 | Pending |
-| LOG-06 | Phase 1 | Pending |
-| LOG-07 | Phase 1 | Pending |
-| PERF-01 | Phase 1 | Pending |
-| PERF-03 | Phase 1 | Pending |
+| INP-01 | Phase 1 | Complete |
+| INP-02 | Phase 1 | Complete |
+| INP-03 | Phase 1 | Complete |
+| INP-04 | Phase 1 | Complete |
+| INP-05 | Phase 1 | Complete |
+| INP-06 | Phase 1 | Complete |
+| INP-07 | Phase 1 | Complete |
+| INP-08 | Phase 1 | Complete |
+| INP-09 | Phase 1 | Complete |
+| INP-10 | Phase 1 | Complete |
+| INP-11 | Phase 1 | Complete |
+| INP-12 | Phase 1 | Complete |
+| INP-13 | Phase 1 | Complete |
+| DET-01 | Phase 1 | Complete |
+| DET-02 | Phase 1 | Complete |
+| DET-03 | Phase 1 | Complete |
+| DET-04 | Phase 1 | Complete |
+| DET-05 | Phase 1 | Complete |
+| DET-06 | Phase 1 | Complete |
+| DET-07 | Phase 1 | Complete |
+| TRF-01 | Phase 1 | Complete |
+| TRF-02 | Phase 1 | Complete |
+| TRF-03 | Phase 1 | Complete |
+| TRF-04 | Phase 1 | Complete |
+| TRF-05 | Phase 1 | Complete |
+| TRF-06 | Phase 1 | Complete |
+| TRF-07 | Phase 1 | Complete |
+| TRF-08 | Phase 1 | Complete |
+| TRF-09 | Phase 1 | Complete |
+| TRF-10 | Phase 1 | Complete |
+| TRF-11 | Phase 1 | Complete |
+| TRF-12 | Phase 1 | Complete |
+| TRF-13 | Phase 1 | Complete |
+| TRF-14 | Phase 1 | Complete |
+| TRF-15 | Phase 1 | Complete |
+| VAL-01 | Phase 1 | Complete |
+| VAL-02 | Phase 1 | Complete |
+| VAL-03 | Phase 1 | Complete |
+| VAL-04 | Phase 1 | Complete |
+| VAL-05 | Phase 1 | Complete |
+| VAL-06 | Phase 1 | Complete |
+| VAL-07 | Phase 1 | Complete |
+| VAL-08 | Phase 1 | Complete |
+| VAL-09 | Phase 1 | Complete |
+| OUT-01 | Phase 1 | Complete |
+| OUT-02 | Phase 1 | Complete |
+| OUT-03 | Phase 1 | Complete |
+| OUT-04 | Phase 1 | Complete |
+| OUT-05 | Phase 1 | Complete |
+| OUT-06 | Phase 1 | Complete |
+| OUT-07 | Phase 1 | Complete |
+| OUT-08 | Phase 1 | Complete |
+| OUT-09 | Phase 1 | Complete |
+| OUT-10 | Phase 1 | Complete |
+| OUT-11 | Phase 1 | Complete |
+| OUT-12 | Phase 1 | Complete |
+| LOG-01 | Phase 1 | Complete |
+| LOG-02 | Phase 1 | Complete |
+| LOG-03 | Phase 1 | Complete |
+| LOG-04 | Phase 1 | Complete |
+| LOG-05 | Phase 1 | Complete |
+| LOG-06 | Phase 1 | Complete |
+| LOG-07 | Phase 1 | Complete |
+| PERF-01 | Phase 1 | Complete |
+| PERF-03 | Phase 1 | Complete |
 | WIZ-01 | Phase 2 | Pending |
 | WIZ-02 | Phase 2 | Pending |
 | WIZ-03 | Phase 2 | Pending |
@@ -350,6 +350,7 @@ None. This product ships once as v1.0.0 and is then archived. There is no v2 (se
 | CI-05 | Phase 4 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 130 total (actual count; REQUIREMENTS.md previously stated 88 — corrected after roadmap audit)
 - Mapped to phases: 130/130
 - Unmapped: 0
