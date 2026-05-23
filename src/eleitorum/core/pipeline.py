@@ -223,8 +223,8 @@ def _execute_pipeline(
             enc = detection.detect_encoding(read_result.raw_bytes_sample)
             builder.add(
                 "INPUT",
-                f"Codificacao detetada: {enc.encoding} "
-                f"(confianca {enc.confidence:.2f}, BOM={enc.via_bom})",
+                f"Codificação detetada: {enc.encoding} "
+                f"(confiança {enc.confidence:.2f}, BOM={enc.via_bom})",
             )
             encoding_used = enc.encoding
 
