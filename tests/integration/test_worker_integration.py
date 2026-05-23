@@ -17,12 +17,13 @@ from __future__ import annotations
 import pathlib
 
 import pytest
+from pytestqt.qtbot import QtBot
 
 from eleitorum.ui.worker import PipelineWorker
 from tests.fixtures import generators
 
 
-def test_worker_happy_path_caderno(qtbot: pytest.FixtureRequest, tmp_path: pathlib.Path) -> None:
+def test_worker_happy_path_caderno(qtbot: QtBot, tmp_path: pathlib.Path) -> None:
     """PipelineWorker with a real caderno file emits finished(result) with success=True.
 
     Requirements: D-01 (happy-path integration test), TST-05 (pipeline + worker integration).
@@ -50,7 +51,7 @@ def test_worker_happy_path_caderno(qtbot: pytest.FixtureRequest, tmp_path: pathl
 
 
 def test_worker_duplicate_mec_emits_finished_failure(
-    qtbot: pytest.FixtureRequest, tmp_path: pathlib.Path
+    qtbot: QtBot, tmp_path: pathlib.Path
 ) -> None:
     """Duplicate mec → pipeline validation failure → finished(result) with success=False.
 
