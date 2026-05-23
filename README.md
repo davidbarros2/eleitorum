@@ -1,17 +1,15 @@
 # EleitorUM
 
-> Utilitário Windows para normalizar listas eleitorais e de elegíveis da Universidade do Minho.
+> Utilitário Windows para normalizar cadernos eleitorais e listas de elegíveis.
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-green)](LICENSE)
 [![Plataforma: Windows](https://img.shields.io/badge/plataforma-Windows%2010%2F11-0078D4?logo=windows)](https://www.microsoft.com/windows)
 [![Estado: Em Desenvolvimento](https://img.shields.io/badge/estado-em%20desenvolvimento-orange)]()
 
-O **EleitorUM** automatiza a preparação de ficheiros eleitorais — uma tarefa hoje feita manualmente no Excel e no Notepad. Aceita qualquer ficheiro Excel ou texto (XLSX, XLS, ODS, CSV, TSV), valida e normaliza os dados segundo regras precisas, e produz um CSV byte-exact aceite pela plataforma eleitoral da UMinho, acompanhado de um log detalhado de todas as alterações.
+O **EleitorUM** automatiza a preparação de cadernos eleitorais e listas de elegíveis — uma tarefa hoje feita manualmente no Excel e no Notepad. Aceita qualquer ficheiro Excel ou texto (XLSX, XLS, ODS, CSV, TSV), valida e normaliza os dados segundo regras precisas, e produz um CSV byte-exact acompanhado de um log detalhado de todas as alterações.
 
 **Valor central:** um ficheiro de entrada arbitrário entra, o ficheiro correcto sai — sem correcções manuais.
-
-> **Aviso:** Esta ferramenta é independente e não tem qualquer afiliação oficial com a Universidade do Minho.
 
 ---
 
@@ -139,7 +137,3 @@ tests/
 ## Licença
 
 Distribuído sob a licença [MIT](LICENSE).
-
----
-
-*Desenvolvido para uso interno. Não é um produto oficial da Universidade do Minho.*
