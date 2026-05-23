@@ -7,6 +7,7 @@ real personal data. No real personal data may appear in any test file.
 
 import pathlib
 
+import openpyxl  # type: ignore[import-untyped]
 import pytest
 
 # ---------------------------------------------------------------------------
@@ -51,3 +52,29 @@ def tmp_xlsx_path(tmp_path: pathlib.Path) -> pathlib.Path:
 def synthetic_names() -> tuple[str, ...]:
     """Return the tuple of synthetic PT names for use in tests."""
     return SYNTHETIC_NAMES
+
+
+# ---------------------------------------------------------------------------
+# Performance fixtures
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session")
+def huge_caderno_xlsx_path(tmp_path_factory: pytest.TempPathFactory) -> pathlib.Path:
+    """Build a 150,000-row synthetic XLSX once per test session (PERF-01).
+
+    Session-scoped so the expensive file creation happens at most once per
+    test run, regardless of how many performance tests reference this fixture.
+
+    The generated file uses 'f{i}' mec numbers and 'Sintetico Teste {i}' names
+    to satisfy the privacy invariant (all names unmistakably synthetic).
+    """
+    path = tmp_path_factory.mktemp("perf") / "huge_caderno.xlsx"
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append(["No Mec.", "Nome"])
+    for i in range(1, 150_001):
+        ws.append([f"f{i}", f"Sintetico Teste {i}"])
+    wb.save(path)
+    wb.close()
+    return path
