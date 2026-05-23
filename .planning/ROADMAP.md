@@ -99,7 +99,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. `tests/fixtures/generators.py` exports a fixture function for every fixture type listed in spec Section 14.3; all fixture data is fully synthetic with no real personal data; the fixture functions are importable and callable without a running QApplication
   4. Every wizard step has at least one pytest-qt smoke test confirming it initializes without error given a pre-populated SessionModel; tests run cleanly with `qt_api = pyside6` configured in `pyproject.toml`
 
-**Plans**: TBD
+**Plans**: 1 plan
+
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Close the three Phase 3 gaps: D-01 worker integration tests (tests/integration/test_worker_integration.py), D-02 elegíveis byte-exact assertions (test_happy_path_elegiveis_csv expansion), D-03 TST-09 aggregate coverage gate verification (03-COVERAGE.md)
 
 ### Phase 4: Build, CI, Packaging + Distribution Artifacts
 
@@ -124,5 +128,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
 | 2. UI Scaffold + Wizard Steps | 6/6 | Complete    | 2026-05-23 |
-| 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
+| 3. Integration, End-to-End Testing + Fixtures | 0/1 | Planned     | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
