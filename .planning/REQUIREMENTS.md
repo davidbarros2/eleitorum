@@ -164,15 +164,15 @@ Everything below ships as v1.0.0. There is no v2; there are no deferrals.
 
 ### Testing (TST)
 
-- [ ] **TST-01**: Unit tests cover all transformation rules (whitespace, comma removal, parenthesis removal, mojibake correction, leading-zero strip, float-to-int, case normalization) with positive and negative cases
-- [ ] **TST-02**: Unit tests cover all validation rules (prefix check, number check, uniqueness, cross-prefix collision, empty name) with passing and failing inputs
-- [ ] **TST-03**: Unit tests cover encoding detection with fixtures in UTF-8 (BOM and no-BOM), Windows-1252, ISO-8859-1
-- [ ] **TST-04**: CSV output byte-exact test: write known input, read raw bytes, compare to expected bytes including BOM, CRLF, and trailing semicolon in caderno rows
-- [ ] **TST-05**: Integration tests cover full pipeline (synthetic input file → pipeline code paths → assert exact output bytes) for both output types
-- [ ] **TST-06**: Integration tests cover edge cases: multi-sheet XLSX, headerless CSV, mojibake Latin-1 file, whitespace-chaos names, commas in names, parenthetical annotations, cross-prefix collision (must fail), duplicates within prefix (must fail), leading zeros, Excel float mecanográficos, mixed prefix casing, `U+FFFD` replacement character in name
-- [ ] **TST-07**: One integration test per user journey from spec Section 10 (happy path CSV, multi-sheet Excel, mojibake file, duplicate rejection, manual column mapping)
-- [ ] **TST-08**: All test fixtures are synthetic; `tests/fixtures/generators.py` exports all fixture functions listed in spec Section 14.3; no real personal data enters the repository
-- [ ] **TST-09**: Transformation and validation logic achieves ≥ 90% line coverage
+- [x] **TST-01**: Unit tests cover all transformation rules (whitespace, comma removal, parenthesis removal, mojibake correction, leading-zero strip, float-to-int, case normalization) with positive and negative cases
+- [x] **TST-02**: Unit tests cover all validation rules (prefix check, number check, uniqueness, cross-prefix collision, empty name) with passing and failing inputs
+- [x] **TST-03**: Unit tests cover encoding detection with fixtures in UTF-8 (BOM and no-BOM), Windows-1252, ISO-8859-1
+- [x] **TST-04**: CSV output byte-exact test: write known input, read raw bytes, compare to expected bytes including BOM, CRLF, and trailing semicolon in caderno rows
+- [x] **TST-05**: Integration tests cover full pipeline (synthetic input file → pipeline code paths → assert exact output bytes) for both output types
+- [x] **TST-06**: Integration tests cover edge cases: multi-sheet XLSX, headerless CSV, mojibake Latin-1 file, whitespace-chaos names, commas in names, parenthetical annotations, cross-prefix collision (must fail), duplicates within prefix (must fail), leading zeros, Excel float mecanográficos, mixed prefix casing, `U+FFFD` replacement character in name
+- [x] **TST-07**: One integration test per user journey from spec Section 10 (happy path CSV, multi-sheet Excel, mojibake file, duplicate rejection, manual column mapping)
+- [x] **TST-08**: All test fixtures are synthetic; `tests/fixtures/generators.py` exports all fixture functions listed in spec Section 14.3; no real personal data enters the repository
+- [x] **TST-09**: Transformation and validation logic achieves ≥ 90% line coverage
 - [ ] **TST-10**: `pytest.ini` or `pyproject.toml` sets `qt_api = pyside6`
 
 ### Performance (PERF)
@@ -318,15 +318,15 @@ None. This product ships once as v1.0.0 and is then archived. There is no v2 (se
 | BRAND-02 | Phase 2 | Pending |
 | TST-10 | Phase 2 | Pending |
 | PERF-02 | Phase 2 | Pending |
-| TST-01 | Phase 3 | Pending |
-| TST-02 | Phase 3 | Pending |
-| TST-03 | Phase 3 | Pending |
-| TST-04 | Phase 3 | Pending |
-| TST-05 | Phase 3 | Pending |
-| TST-06 | Phase 3 | Pending |
-| TST-07 | Phase 3 | Pending |
-| TST-08 | Phase 3 | Pending |
-| TST-09 | Phase 3 | Pending |
+| TST-01 | Phase 3 | Complete |
+| TST-02 | Phase 3 | Complete |
+| TST-03 | Phase 3 | Complete |
+| TST-04 | Phase 3 | Complete |
+| TST-05 | Phase 3 | Complete |
+| TST-06 | Phase 3 | Complete |
+| TST-07 | Phase 3 | Complete |
+| TST-08 | Phase 3 | Complete |
+| TST-09 | Phase 3 | Complete |
 | BRAND-03 | Phase 4 | Pending |
 | BRAND-04 | Phase 4 | Pending |
 | REPO-01 | Phase 4 | Pending |
