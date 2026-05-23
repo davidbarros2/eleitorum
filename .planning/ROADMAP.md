@@ -13,7 +13,7 @@ EleitorUM is built in four sequential horizontal layers. Phase 1 constructs the 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Core Pipeline** - All Qt-free processing: file readers, encoding detection, header/column detection, transformation rules, validation, output writer, log builder, custom exceptions, and PT-PT error messages — with ≥90% unit-test coverage before Phase 2 starts
+- [x] **Phase 1: Core Pipeline** - All Qt-free processing: file readers, encoding detection, header/column detection, transformation rules, validation, output writer, log builder, custom exceptions, and PT-PT error messages — with ≥90% unit-test coverage before Phase 2 starts (completed 2026-05-23)
 - [ ] **Phase 2: UI Scaffold + Wizard Steps** - QApplication setup, QStackedWidget + SessionModel + NavBar, QThread worker, all six wizard steps, theme system (light + dark), menu bar, About dialog, first-run welcome screen, window chrome, and QSettings persistence
 - [ ] **Phase 3: Integration, End-to-End Testing + Fixtures** - Wire pipeline to UI, integration tests for both output types, synthetic fixture generators for all 15 fixture types, pytest-qt smoke tests per wizard step, and byte-exact output assertions
 - [ ] **Phase 4: Build, CI, Packaging + Distribution Artifacts** - PyInstaller spec and build script, icon generation, font and plugin bundling, Windows PE metadata, GitHub Actions CI/CD, SHA-256 checksum, CHANGELOG v1.0.0, and all repository documentation files
@@ -45,7 +45,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-05-PLAN.md — Wave 3: pipeline.py orchestrator + 5-user-journey integration tests + PERF-01 150k-row benchmark + ≥90% coverage gate
+- [x] 01-05-PLAN.md — Wave 3: pipeline.py orchestrator + 5-user-journey integration tests + PERF-01 150k-row benchmark + ≥90% coverage gate
 
 ### Phase 2: UI Scaffold + Wizard Steps
 
@@ -98,7 +98,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Core Pipeline | 4/5 | In Progress|  |
+| 1. Core Pipeline | 5/5 | Complete   | 2026-05-23 |
 | 2. UI Scaffold + Wizard Steps | 0/TBD | Not started | - |
 | 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
