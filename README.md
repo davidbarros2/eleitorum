@@ -49,8 +49,8 @@ O **EleitorUM** automatiza a preparação de cadernos eleitorais e listas de ele
 | Fase | Descrição | Estado |
 |------|-----------|--------|
 | 1 — Core Pipeline | Leitura, detecção, transformação, validação, output, logging — Qt-free | ✅ Concluída |
-| 2 — Interface Gráfica | Wizard PySide6, pré-visualização, temas claro/escuro | 🔄 Em desenvolvimento |
-| 3 — Testes de Integração | Cobertura ponta-a-ponta, fixtures sintéticos | ⏳ Pendente |
+| 2 — Interface Gráfica | Wizard PySide6, pré-visualização, temas claro/escuro | ✅ Concluída |
+| 3 — Testes de Integração | Cobertura ponta-a-ponta, fixtures sintéticos | 🔄 Em desenvolvimento |
 | 4 — Build e Distribuição | PyInstaller `.exe`, CI/CD, v1.0.0 | ⏳ Pendente |
 
 ---
@@ -68,6 +68,12 @@ O **EleitorUM** automatiza a preparação de cadernos eleitorais e listas de ele
 git clone https://github.com/davidbarros2/eleitorum.git
 cd eleitorum
 pip install -e ".[dev]"
+```
+
+### Lançar a aplicação
+
+```bash
+python -m eleitorum
 ```
 
 ### Executar os testes
@@ -98,21 +104,36 @@ mypy src/
 ```
 src/eleitorum/
 ├── core/
-│   ├── pipeline.py    # ponto de entrada público (sem Qt)
-│   ├── readers.py     # leitura XLSX/XLS/ODS/CSV/TSV
-│   ├── detection.py   # detecção de codificação, cabeçalho e colunas
-│   ├── transform.py   # normalização de mecanográfico e nome
-│   ├── validate.py    # validação de linhas e caminho de saída
-│   ├── output.py      # escrita CSV byte-exact
-│   ├── logging.py     # construção e escrita de logs
-│   └── errors.py      # hierarquia de excepções em PT-PT
-├── config.py          # constantes globais (APP_NAME, …)
-└── __main__.py
+│   ├── pipeline.py       # ponto de entrada público (sem Qt)
+│   ├── readers.py        # leitura XLSX/XLS/ODS/CSV/TSV
+│   ├── detection.py      # detecção de codificação, cabeçalho e colunas
+│   ├── transform.py      # normalização de mecanográfico e nome
+│   ├── validate.py       # validação de linhas e caminho de saída
+│   ├── output.py         # escrita CSV byte-exact
+│   ├── logging.py        # construção e escrita de logs
+│   └── errors.py         # hierarquia de excepções em PT-PT
+├── ui/
+│   ├── app.py            # QApplication factory (Fusion + tema + fonte)
+│   ├── main_window.py    # QMainWindow, menu bar, QSettings
+│   ├── wizard.py         # WizardController, navegação, dry-run/write
+│   ├── dialogs.py        # WelcomeDialog + AboutDialog
+│   ├── session.py        # SessionModel @dataclass (sem Qt)
+│   ├── worker.py         # PipelineWorker QThread
+│   ├── theme.py          # QSS claro/escuro, detecção do sistema
+│   ├── strings.py        # todas as strings PT-PT
+│   ├── widgets/          # NavBar, OptionCard, DropZone
+│   └── steps/            # StepType, StepUpload, StepSheet, StepColumns,
+│                         # StepProcessing, StepPreview, StepDone
+├── resources/
+│   ├── icon.svg
+│   └── fonts/Inter/      # Inter (download manual — ver README)
+├── config.py             # constantes globais (APP_NAME, …)
+└── __main__.py           # python -m eleitorum
 
 tests/
-├── unit/              # testes unitários por módulo
-├── integration/       # pipeline ponta-a-ponta + benchmark
-└── fixtures/          # geradores de dados sintéticos
+├── unit/                 # testes unitários por módulo (core + ui)
+├── integration/          # pipeline ponta-a-ponta + benchmark
+└── fixtures/             # geradores de dados sintéticos
 ```
 
 ---
@@ -130,7 +151,7 @@ tests/
 | Empacotamento | PyInstaller | 6.20.0 | GPL + bootloader exception |
 | Testes | pytest + pytest-qt | 9.0.3 / 4.5.0 | MIT |
 | Lint e formatação | ruff | 0.15.x | MIT |
-| Type checking | mypy | 1.x | MIT |
+| Type checking | mypy | 2.1.0 | MIT |
 
 ---
 

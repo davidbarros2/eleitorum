@@ -116,9 +116,9 @@ Validated in Phase 1 (core-pipeline):
 
 ## Current State
 
-Phase 1 complete (2026-05-23). Headless core pipeline fully implemented and verified: 8 core modules (`errors`, `readers`, `detection`, `transform`, `validate`, `output`, `logging`, `pipeline`), 237 tests passing, 91.26% coverage, 3.5s for 150k rows.
+Phase 2 complete (2026-05-23). Full PySide6 desktop wizard implemented: 6 wizard steps, WizardController, MainWindow with menu bar and QSettings persistence, WelcomeDialog + AboutDialog, QThread worker with progress reporting, light/dark theming. `python -m eleitorum` launches a working wizard. 381 tests passing.
 
-Phase 2 (ui-scaffold-+-wizard-steps) is next: PySide6 application skeleton, wizard framework, and file picker step.
+Phase 3 (integration-e2e-testing-fixtures) is next: wire pipeline to UI in integration tests, byte-exact output assertions, synthetic fixture generators for all 15 fixture types, pytest-qt smoke tests per step.
 
 ## Evolution
 
