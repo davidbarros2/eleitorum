@@ -7,6 +7,8 @@ All tests use synthetic data only (privacy invariant).
 No Qt imports are present in this file.
 """
 
+from __future__ import annotations
+
 import pathlib
 import unicodedata
 
