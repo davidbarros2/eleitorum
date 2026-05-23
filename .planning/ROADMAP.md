@@ -69,7 +69,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 2** *(blocked on 02-01)*
 
-- [ ] 02-02-PLAN.md — Foundation modules: SessionModel @dataclass (Qt-free), strings.py (PT-PT constants), theme.py (LIGHT_QSS + DARK_QSS + apply_theme + detect_system_theme), icon.svg (BRAND-02), Inter font directory with OFL.txt
+- [x] 02-02-PLAN.md — Foundation modules: SessionModel @dataclass (Qt-free), strings.py (PT-PT constants), theme.py (LIGHT_QSS + DARK_QSS + apply_theme + detect_system_theme), icon.svg (BRAND-02), Inter font directory with OFL.txt
 
 **Wave 3** *(blocked on 02-02)*
 
@@ -123,6 +123,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
-| 2. UI Scaffold + Wizard Steps | 1/6 | In Progress|  |
+| 2. UI Scaffold + Wizard Steps | 2/6 | In Progress|  |
 | 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
