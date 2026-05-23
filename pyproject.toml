@@ -13,16 +13,18 @@ dependencies = [
     "openpyxl==3.1.5",
     "xlrd==2.0.2",
     "odfpy==1.4.1",
-    "pandas==3.0.2",
+    "pandas==3.0.3",
     "charset-normalizer==3.4.7",
+    "PySide6==6.11.1",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest==9.0.3",
     "pytest-cov==7.1.0",
-    "mypy==1.19.1",
-    "ruff==0.15.8",
+    "mypy==2.1.0",
+    "ruff==0.15.14",
+    "pytest-qt==4.5.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -47,6 +49,7 @@ disallow_untyped_defs = true
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-x -q --strict-markers"
+qt_api = "pyside6"
 markers = [
     "integration: full pipeline tests (slower)",
     "performance: 150k-row benchmark tests",
