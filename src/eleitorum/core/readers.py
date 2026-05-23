@@ -14,8 +14,8 @@ a lazy iterator. Materializing into a list is intentional:
 
 Security notes:
 - T-1-02-02: every file-opening call is wrapped in try/except PermissionError
-  → re-raised as FileAccessError (INP-13).
-- T-1-02-03: openpyxl uses read_only=True, data_only=True — streaming mode,
+  -> re-raised as FileAccessError (INP-13).
+- T-1-02-03: openpyxl uses read_only=True, data_only=True -- streaming mode,
   no full workbook in-memory load (PERF-03).
 - T-1-02-05: extension whitelist check happens before any I/O; unknown
   extension raises UnsupportedFormatError without touching the file contents.
@@ -38,9 +38,7 @@ from eleitorum.core.errors import FileAccessError, UnsupportedFormatError
 # Module-level constants
 # ---------------------------------------------------------------------------
 
-SUPPORTED_EXTENSIONS: frozenset[str] = frozenset(
-    {".xlsx", ".xlsm", ".xls", ".ods", ".csv", ".tsv"}
-)
+SUPPORTED_EXTENSIONS: frozenset[str] = frozenset({".xlsx", ".xlsm", ".xls", ".ods", ".csv", ".tsv"})
 
 # First 64KB of a CSV/TSV file is sampled for encoding detection (INP-07).
 _ENCODING_SAMPLE_BYTES: int = 64 * 1024
@@ -58,7 +56,7 @@ class SheetInfo:
     ``approximate_row_count`` is derived from ``ws.max_row`` in openpyxl
     read-only mode; per RESEARCH.md Pitfall 2 this value can be stale (the
     XLSX may have been saved with cached dimensions). It is used only for
-    display in the Phase 2 sheet-picker dialog — never as a hard row count.
+    display in the Phase 2 sheet-picker dialog -- never as a hard row count.
 
     ``is_empty`` is True when the sheet has at most one non-empty row (i.e. a
     header with no data rows, or a completely blank sheet).
@@ -66,7 +64,7 @@ class SheetInfo:
 
     name: str
     approximate_row_count: int  # from ws.max_row; approximate only
-    is_empty: bool  # True if sheet has ≤ 1 non-empty row (header only or no data)
+    is_empty: bool  # True if sheet has <= 1 non-empty row (header only or no data)
 
 
 @dataclasses.dataclass
@@ -134,10 +132,10 @@ def read_xlsx(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
     """
     try:
         wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
-    except PermissionError:
-        raise FileAccessError(path=path, mode="read")
-    except FileNotFoundError:
-        raise FileAccessError(path=path, mode="read")
+    except PermissionError as err:
+        raise FileAccessError(path=path, mode="read") from err
+    except FileNotFoundError as err:
+        raise FileAccessError(path=path, mode="read") from err
 
     chosen_sheet: str = sheet_name or wb.sheetnames[0]
     ws = wb[chosen_sheet]
@@ -157,19 +155,19 @@ def read_xlsx(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
 def read_xls(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
     """Read a legacy XLS file using xlrd (XLS-only; xlrd 2.x does not read XLSX).
 
-    Uses ``on_demand=True`` for memory-friendliness — sheets are loaded only
+    Uses ``on_demand=True`` for memory-friendliness -- sheets are loaded only
     when accessed.
 
     Note: xlrd cells carry typed ``.value`` attributes. For numeric cells,
     ``cell.value`` returns a Python float; TRF-02 in transform.py handles the
-    ``14891.0 → "14891"`` conversion downstream.
+    ``14891.0 -> "14891"`` conversion downstream.
     """
     try:
         wb_xls = xlrd.open_workbook(str(path), on_demand=True)
-    except PermissionError:
-        raise FileAccessError(path=path, mode="read")
-    except FileNotFoundError:
-        raise FileAccessError(path=path, mode="read")
+    except PermissionError as err:
+        raise FileAccessError(path=path, mode="read") from err
+    except FileNotFoundError as err:
+        raise FileAccessError(path=path, mode="read") from err
 
     if sheet_name is not None:
         sheet = wb_xls.sheet_by_name(sheet_name)
@@ -178,9 +176,7 @@ def read_xls(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
         sheet = wb_xls.sheet_by_index(0)
         chosen_sheet = wb_xls.sheet_names()[0]
 
-    raw: list[tuple[Any, ...]] = [
-        tuple(cell.value for cell in row) for row in sheet.get_rows()
-    ]
+    raw: list[tuple[Any, ...]] = [tuple(cell.value for cell in row) for row in sheet.get_rows()]
     wb_xls.release_resources()
 
     stripped, skipped_count = _strip_trailing_empty(raw)
@@ -199,15 +195,15 @@ def read_ods(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
     detection.py scores each row to find the actual header position and
     expects the raw file layout including that header row.
 
-    Note: pandas 3.0 Copy-on-Write is now default — no explicit copy needed.
+    Note: pandas 3.0 Copy-on-Write is now default -- no explicit copy needed.
     """
     try:
         sheet_idx: str | int = sheet_name if sheet_name is not None else 0
         df = pd.read_excel(path, engine="odf", sheet_name=sheet_idx, header=0)
-    except PermissionError:
-        raise FileAccessError(path=path, mode="read")
-    except FileNotFoundError:
-        raise FileAccessError(path=path, mode="read")
+    except PermissionError as err:
+        raise FileAccessError(path=path, mode="read") from err
+    except FileNotFoundError as err:
+        raise FileAccessError(path=path, mode="read") from err
 
     # Determine the resolved sheet name
     if sheet_name is not None:
@@ -217,14 +213,12 @@ def read_ods(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
         try:
             with pd.ExcelFile(path, engine="odf") as xf:
                 chosen_sheet = xf.sheet_names[0] if xf.sheet_names else None
-        except Exception:
+        except Exception:  # noqa: BLE001
             chosen_sheet = None
 
     # Prepend header row then data rows
     header_tuple: tuple[Any, ...] = tuple(df.columns.tolist())
-    data_rows: list[tuple[Any, ...]] = [
-        tuple(row) for row in df.itertuples(index=False, name=None)
-    ]
+    data_rows: list[tuple[Any, ...]] = [tuple(row) for row in df.itertuples(index=False, name=None)]
     all_rows: list[tuple[Any, ...]] = [header_tuple] + data_rows
 
     stripped, skipped_count = _strip_trailing_empty(all_rows)
@@ -252,15 +246,15 @@ def read_csv_like(
     output into this parameter for actual runtime use.
     """
     try:
-        with open(path, mode="rb") as fb:
+        with open(path, "rb") as fb:
             sample = fb.read(_ENCODING_SAMPLE_BYTES)
-        with open(path, mode="r", encoding=encoding, newline="") as ft:
+        with open(path, encoding=encoding, newline="") as ft:
             reader = csv.reader(ft, delimiter=delimiter)
             rows: list[tuple[Any, ...]] = [tuple(row) for row in reader]
-    except PermissionError:
-        raise FileAccessError(path=path, mode="read")
-    except FileNotFoundError:
-        raise FileAccessError(path=path, mode="read")
+    except PermissionError as err:
+        raise FileAccessError(path=path, mode="read") from err
+    except FileNotFoundError as err:
+        raise FileAccessError(path=path, mode="read") from err
 
     stripped, skipped_count = _strip_trailing_empty(rows)
     return ReadResult(
@@ -295,7 +289,7 @@ def list_sheets(path: pathlib.Path) -> list[SheetInfo]:
     It is used only for display in the Phase 2 sheet-picker dialog.
 
     ``is_empty`` is determined by checking the first 5 rows (per RESEARCH.md
-    Pitfall 8 — Alunos-style header-only sheets): if fewer than 2 non-empty
+    Pitfall 8 -- Alunos-style header-only sheets): if fewer than 2 non-empty
     rows are found, the sheet is flagged as empty.
     """
     ext = path.suffix.lower()
@@ -306,10 +300,10 @@ def list_sheets(path: pathlib.Path) -> list[SheetInfo]:
     if ext in {".xlsx", ".xlsm"}:
         try:
             wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
-        except PermissionError:
-            raise FileAccessError(path=path, mode="read")
-        except FileNotFoundError:
-            raise FileAccessError(path=path, mode="read")
+        except PermissionError as err:
+            raise FileAccessError(path=path, mode="read") from err
+        except FileNotFoundError as err:
+            raise FileAccessError(path=path, mode="read") from err
 
         result: list[SheetInfo] = []
         for name in wb.sheetnames:
@@ -317,17 +311,19 @@ def list_sheets(path: pathlib.Path) -> list[SheetInfo]:
             approx_rows: int = ws.max_row or 0
             nonempty = _count_nonempty_rows_xlsx(ws, max_check=5)
             is_empty = nonempty < 2
-            result.append(SheetInfo(name=name, approximate_row_count=approx_rows, is_empty=is_empty))
+            result.append(
+                SheetInfo(name=name, approximate_row_count=approx_rows, is_empty=is_empty)
+            )
         wb.close()
         return result
 
     if ext == ".xls":
         try:
             wb_xls = xlrd.open_workbook(str(path), on_demand=True)
-        except PermissionError:
-            raise FileAccessError(path=path, mode="read")
-        except FileNotFoundError:
-            raise FileAccessError(path=path, mode="read")
+        except PermissionError as err:
+            raise FileAccessError(path=path, mode="read") from err
+        except FileNotFoundError as err:
+            raise FileAccessError(path=path, mode="read") from err
 
         result = []
         for name in wb_xls.sheet_names():
@@ -348,10 +344,10 @@ def list_sheets(path: pathlib.Path) -> list[SheetInfo]:
         try:
             with pd.ExcelFile(path, engine="odf") as xf:
                 sheet_names: list[str] = list(xf.sheet_names)
-        except PermissionError:
-            raise FileAccessError(path=path, mode="read")
-        except FileNotFoundError:
-            raise FileAccessError(path=path, mode="read")
+        except PermissionError as err:
+            raise FileAccessError(path=path, mode="read") from err
+        except FileNotFoundError as err:
+            raise FileAccessError(path=path, mode="read") from err
 
         result = []
         for name in sheet_names:
@@ -362,17 +358,18 @@ def list_sheets(path: pathlib.Path) -> list[SheetInfo]:
                 nonempty = int(
                     df_head.apply(
                         lambda row: any(
-                            v is not None and str(v).strip() != "" and str(v) != "nan"
-                            for v in row
+                            v is not None and str(v).strip() != "" and str(v) != "nan" for v in row
                         ),
                         axis=1,
                     ).sum()
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 nrows_approx = 0
                 nonempty = 0
             is_empty = nonempty < 2
-            result.append(SheetInfo(name=name, approximate_row_count=nrows_approx, is_empty=is_empty))
+            result.append(
+                SheetInfo(name=name, approximate_row_count=nrows_approx, is_empty=is_empty)
+            )
         return result
 
     # For any other supported extension not handled above, raise UnsupportedFormatError
@@ -388,7 +385,7 @@ def read_input(
     path: pathlib.Path,
     sheet_name: str | None = None,
 ) -> ReadResult:
-    """Dispatch entry point — picks the engine by file extension.
+    """Dispatch entry point -- picks the engine by file extension.
 
     Raises:
         UnsupportedFormatError: if the extension is not in SUPPORTED_EXTENSIONS.

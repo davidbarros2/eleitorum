@@ -41,9 +41,7 @@ class FailureRow:
 
     def __post_init__(self) -> None:
         if self.row_index < 1:
-            raise ValueError(
-                f"row_index deve ser >= 1 (1-based); recebido: {self.row_index}"
-            )
+            raise ValueError(f"row_index deve ser >= 1 (1-based); recebido: {self.row_index}")
 
 
 # ---------------------------------------------------------------------------

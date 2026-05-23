@@ -24,9 +24,9 @@ from eleitorum.core.errors import (
 )
 
 # English keywords that must never appear in PT-PT user-facing messages.
-_ENGLISH_KEYWORDS = ["error", "exception", "traceback", "file \""]
+_ENGLISH_KEYWORDS = ["error", "exception", "traceback", 'file "']
 # Python internals that must never appear in format_error_message output.
-_PYTHON_INTERNALS = ["Traceback", "File \"", '.py", line']
+_PYTHON_INTERNALS = ["Traceback", 'File "', '.py", line']
 
 
 class TestEleitorumErrorBase:
@@ -294,9 +294,7 @@ class TestFormatErrorMessage:
             FileAccessError(path=pathlib.Path("x.xlsx"), mode="write"),
             EncodingDetectionError(path=pathlib.Path("x.csv")),
             MecanograficoError(row_index=1, value="X", reason="prefixo inválido"),
-            ValidationError(
-                failures=[FailureRow(1, "col", "v", "msg")], summary_pt="1 erro."
-            ),
+            ValidationError(failures=[FailureRow(1, "col", "v", "msg")], summary_pt="1 erro."),
             OutputPathError(path=pathlib.Path("out.csv"), reason="same_as_input"),
             OutputPathError(path=pathlib.Path("out.csv"), reason="already_exists"),
             ColumnDetectionError(missing="mecanografico"),

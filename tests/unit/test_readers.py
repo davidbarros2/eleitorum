@@ -28,14 +28,13 @@ from eleitorum.core.readers import (
 )
 from tests.fixtures.generators import make_multi_sheet_xlsx, make_simple_caderno
 
-
 # ---------------------------------------------------------------------------
 # SUPPORTED_EXTENSIONS sanity check
 # ---------------------------------------------------------------------------
 
 
 def test_supported_extensions_contains_all_six() -> None:
-    assert SUPPORTED_EXTENSIONS == frozenset({".xlsx", ".xlsm", ".xls", ".ods", ".csv", ".tsv"})
+    assert frozenset({".xlsx", ".xlsm", ".xls", ".ods", ".csv", ".tsv"}) == SUPPORTED_EXTENSIONS
 
 
 # ---------------------------------------------------------------------------
@@ -74,7 +73,10 @@ def test_xlsx_uses_read_only_and_data_only(tmp_path: pathlib.Path) -> None:
         captured_kwargs.update(kwargs)
         return original_load(*args, **kwargs)
 
-    with patch("eleitorum.core.readers.openpyxl.load_workbook", side_effect=capturing_load_workbook):
+    with patch(
+        "eleitorum.core.readers.openpyxl.load_workbook",
+        side_effect=capturing_load_workbook,
+    ):
         read_xlsx(xlsx_path)
 
     assert captured_kwargs.get("read_only") is True, "openpyxl must use read_only=True (PERF-03)"
@@ -86,9 +88,14 @@ def test_permission_error_on_locked_file(tmp_path: pathlib.Path) -> None:
     xlsx_path = tmp_path / "locked.xlsx"
     xlsx_path.write_bytes(b"")  # file must exist for the path to be valid
 
-    with patch("eleitorum.core.readers.openpyxl.load_workbook", side_effect=PermissionError("locked")):
-        with pytest.raises(FileAccessError) as exc_info:
-            read_xlsx(xlsx_path)
+    with (
+        patch(
+            "eleitorum.core.readers.openpyxl.load_workbook",
+            side_effect=PermissionError("locked"),
+        ),
+        pytest.raises(FileAccessError) as exc_info,
+    ):
+        read_xlsx(xlsx_path)
 
     err = exc_info.value
     assert "aberto" in err.message_pt or "abrir" in err.message_pt
@@ -158,9 +165,11 @@ def test_read_ods_permission_error(tmp_path: pathlib.Path) -> None:
     ods_path = tmp_path / "locked.ods"
     ods_path.write_bytes(b"")
 
-    with patch("eleitorum.core.readers.pd.read_excel", side_effect=PermissionError("locked")):
-        with pytest.raises(FileAccessError):
-            read_ods(ods_path)
+    with (
+        patch("eleitorum.core.readers.pd.read_excel", side_effect=PermissionError("locked")),
+        pytest.raises(FileAccessError),
+    ):
+        read_ods(ods_path)
 
 
 # ---------------------------------------------------------------------------
@@ -187,9 +196,7 @@ def test_read_csv_utf8_no_bom(tmp_path: pathlib.Path) -> None:
     csv_path = tmp_path / "no_bom.csv"
     # Use write_bytes to avoid platform-specific newline translation
     csv_path.write_bytes(
-        "nº mec.;nome\r\nf6688;João Silva Teste\r\nf1234;Maria Costa Exemplo\r\n".encode(
-            "utf-8"
-        )
+        "nº mec.;nome\r\nf6688;João Silva Teste\r\nf1234;Maria Costa Exemplo\r\n".encode()
     )
     result = read_csv_like(csv_path, delimiter=";", encoding="utf-8")
     assert len(result.rows) == 3  # 1 header + 2 data rows
@@ -211,9 +218,7 @@ def test_read_tsv(tmp_path: pathlib.Path) -> None:
     tsv_path = tmp_path / "data.tsv"
     # Use write_bytes to avoid platform-specific newline translation
     tsv_path.write_bytes(
-        "nº mec.\tnome\r\nf6688\tJoão Silva Teste\r\nf1234\tMaria Costa Exemplo\r\n".encode(
-            "utf-8"
-        )
+        "nº mec.\tnome\r\nf6688\tJoão Silva Teste\r\nf1234\tMaria Costa Exemplo\r\n".encode()
     )
     result = read_csv_like(tsv_path, delimiter="\t", encoding="utf-8")
     assert len(result.rows) == 3  # 1 header + 2 data rows
@@ -235,9 +240,11 @@ def test_csv_permission_error_raises_file_access_error(tmp_path: pathlib.Path) -
     csv_path = tmp_path / "locked.csv"
     csv_path.write_text("a;b\r\n", encoding="utf-8")
 
-    with patch("builtins.open", side_effect=PermissionError("locked")):
-        with pytest.raises(FileAccessError) as exc_info:
-            read_csv_like(csv_path, delimiter=";")
+    with (
+        patch("builtins.open", side_effect=PermissionError("locked")),
+        pytest.raises(FileAccessError) as exc_info,
+    ):
+        read_csv_like(csv_path, delimiter=";")
 
     assert "aberto" in exc_info.value.message_pt or "abrir" in exc_info.value.message_pt
 
@@ -265,11 +272,8 @@ def test_unsupported_extension_no_builtin_exception(tmp_path: pathlib.Path) -> N
 
 
 def test_read_input_dispatches_by_extension(tmp_path: pathlib.Path) -> None:
-    """Dispatch table: .xlsx → read_xlsx, .csv → read_csv_like, .docx → UnsupportedFormatError."""
+    """Dispatch table: .xlsx -> read_xlsx, .csv -> read_csv_like, .docx -> error."""
     xlsx_path = make_multi_sheet_xlsx(tmp_path / "test.xlsx")
-
-    xlsx_calls: list[tuple[Any, ...]] = []
-    original_read_xlsx = read_xlsx.__wrapped__ if hasattr(read_xlsx, "__wrapped__") else None
 
     with patch("eleitorum.core.readers.read_xlsx", wraps=read_xlsx) as mock_xlsx:
         read_input(xlsx_path)
@@ -309,7 +313,7 @@ def test_read_input_xlsm_dispatches_to_xlsx(tmp_path: pathlib.Path) -> None:
 def test_read_input_tsv_dispatches_with_tab_delimiter(tmp_path: pathlib.Path) -> None:
     """read_input with .tsv calls read_csv_like with tab delimiter."""
     tsv_path = tmp_path / "data.tsv"
-    tsv_path.write_bytes("a\tb\r\n1\t2\r\n".encode("utf-8"))
+    tsv_path.write_bytes(b"a\tb\r\n1\t2\r\n")
 
     with patch("eleitorum.core.readers.read_csv_like", wraps=read_csv_like) as mock_csv:
         read_input(tsv_path)
@@ -364,7 +368,7 @@ def test_list_sheets_csv_returns_empty(tmp_path: pathlib.Path) -> None:
 def test_list_sheets_tsv_returns_empty(tmp_path: pathlib.Path) -> None:
     """list_sheets returns [] for TSV files."""
     tsv_path = tmp_path / "data.tsv"
-    tsv_path.write_bytes("a\tb\r\n".encode("utf-8"))
+    tsv_path.write_bytes(b"a\tb\r\n")
     result = list_sheets(tsv_path)
     assert result == []
 
@@ -439,3 +443,109 @@ def test_strip_trailing_empty_no_trailing() -> None:
     stripped, count = _strip_trailing_empty(rows)
     assert stripped == rows
     assert count == 0
+
+
+# ---------------------------------------------------------------------------
+# Additional coverage tests (INP-02 mock, ODS sheet_name, list_sheets ODS)
+# ---------------------------------------------------------------------------
+
+
+def test_read_xls_permission_error(tmp_path: pathlib.Path) -> None:
+    """INP-13: PermissionError from xlrd is wrapped as FileAccessError."""
+    xls_path = tmp_path / "locked.xls"
+    xls_path.write_bytes(b"")  # file exists but xlrd cannot open it
+
+    import xlrd as xlrd_module
+
+    with (
+        patch.object(xlrd_module, "open_workbook", side_effect=PermissionError("locked")),
+        pytest.raises(FileAccessError) as exc_info,
+    ):
+        from eleitorum.core.readers import read_xls
+
+        read_xls(xls_path)
+
+    assert "aberto" in exc_info.value.message_pt or "abrir" in exc_info.value.message_pt
+
+
+def test_read_xls_file_not_found(tmp_path: pathlib.Path) -> None:
+    """INP-13: FileNotFoundError from xlrd is wrapped as FileAccessError."""
+    missing_path = tmp_path / "missing.xls"
+
+    import xlrd as xlrd_module
+
+    with (
+        patch.object(xlrd_module, "open_workbook", side_effect=FileNotFoundError("not found")),
+        pytest.raises(FileAccessError),
+    ):
+        from eleitorum.core.readers import read_xls
+
+        read_xls(missing_path)
+
+
+def test_read_ods_with_sheet_name(tmp_path: pathlib.Path) -> None:
+    """INP-03: read_ods with explicit sheet_name sets chosen_sheet correctly."""
+    ods_path = tmp_path / "named.ods"
+    df = pd.DataFrame({"col_a": [1, 2], "col_b": ["x", "y"]})
+    df.to_excel(ods_path, engine="odf", index=False)
+
+    result = read_ods(ods_path, sheet_name="Sheet1")
+    assert result.sheet_name == "Sheet1"
+    assert len(result.rows) >= 1
+
+
+def test_read_ods_file_not_found(tmp_path: pathlib.Path) -> None:
+    """INP-13: FileNotFoundError from ODS read is wrapped as FileAccessError."""
+    missing_path = tmp_path / "missing.ods"
+    with pytest.raises(FileAccessError):
+        read_ods(missing_path)
+
+
+def test_list_sheets_ods(tmp_path: pathlib.Path) -> None:
+    """INP-10: list_sheets works for ODS files."""
+    ods_path = tmp_path / "data.ods"
+    df = pd.DataFrame({"nº mec.": ["f6688", "f1234"], "nome": ["Alice Teste", "Bob Exemplo"]})
+    df.to_excel(ods_path, engine="odf", index=False)
+
+    infos = list_sheets(ods_path)
+    assert isinstance(infos, list)
+    assert len(infos) >= 1
+    assert all(isinstance(i, SheetInfo) for i in infos)
+
+
+def test_csv_file_not_found_raises_file_access_error(tmp_path: pathlib.Path) -> None:
+    """INP-13: FileNotFoundError for CSV is wrapped as FileAccessError."""
+    missing_path = tmp_path / "missing.csv"
+    with pytest.raises(FileAccessError):
+        read_csv_like(missing_path, delimiter=";")
+
+
+def test_read_input_ods_dispatches(tmp_path: pathlib.Path) -> None:
+    """read_input with .ods calls read_ods."""
+    ods_path = tmp_path / "data.ods"
+    df = pd.DataFrame({"col_a": [1, 2], "col_b": ["x", "y"]})
+    df.to_excel(ods_path, engine="odf", index=False)
+
+    with patch("eleitorum.core.readers.read_ods", wraps=read_ods) as mock_ods:
+        read_input(ods_path)
+        assert mock_ods.call_count == 1
+
+
+def test_read_input_xls_dispatches(tmp_path: pathlib.Path) -> None:
+    """read_input with .xls calls read_xls."""
+    xls_path = tmp_path / "data.xls"
+    xls_path.write_bytes(b"")  # file exists; we mock xlrd
+
+    import xlrd as xlrd_module
+
+    mock_sheet = MagicMock()
+    mock_sheet.get_rows.return_value = iter([])
+    mock_sheet.name = "Sheet1"
+    mock_wb = MagicMock()
+    mock_wb.sheet_names.return_value = ["Sheet1"]
+    mock_wb.sheet_by_index.return_value = mock_sheet
+    mock_wb.release_resources.return_value = None
+
+    with patch.object(xlrd_module, "open_workbook", return_value=mock_wb):
+        result = read_input(xls_path)
+        assert isinstance(result, ReadResult)
