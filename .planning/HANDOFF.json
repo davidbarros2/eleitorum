@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-23T19:40:07Z",
+  "phase": "04",
+  "phase_name": "Build, CI, Packaging + Distribution Artifacts",
+  "phase_dir": ".planning/phases/04-build-ci-packaging-distribution",
+  "plan": 0,
+  "task": 0,
+  "total_tasks": 0,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Phase 01 — Core Pipeline", "status": "done", "commit": "see git log"},
+    {"id": 2, "name": "Phase 02 — UI Scaffold + Wizard Steps", "status": "done", "commit": "see git log"},
+    {"id": 3, "name": "Phase 03 — Integration, End-to-End Testing + Fixtures", "status": "done", "commit": "cf3acbc"}
+  ],
+  "remaining_tasks": [
+    {"id": 4, "name": "Phase 04 — Build, CI, Packaging + Distribution Artifacts", "status": "not_started"}
+  ],
+  "blockers": [
+    {
+      "description": "BOM in output requires product owner validation against live electoral platform before v1.0.0 tag",
+      "type": "human_action",
+      "workaround": "defer until Phase 4 pre-release checklist"
+    },
+    {
+      "description": "F/D/B cross-prefix uniqueness rule must be confirmed against UMinho HR documentation",
+      "type": "human_action",
+      "workaround": "defer until Phase 4 pre-release checklist"
+    },
+    {
+      "description": "Eligiveis sort key (full designation string vs. surname-first) must be confirmed with product owner",
+      "type": "human_action",
+      "workaround": "defer until Phase 4 pre-release checklist"
+    },
+    {
+      "description": "Valid mecanografico prefixes list exhaustiveness must be confirmed before v1.0.0",
+      "type": "human_action",
+      "workaround": "defer until Phase 4 pre-release checklist"
+    }
+  ],
+  "human_actions_pending": [
+    {
+      "action": "Run manual UI checks A–G (see deferred_manual_checks.md in memory)",
+      "context": "These were deferred from Phase 02 checkpoint per David's preference to batch at end of all phases. Phase 4 is the last phase before v1.0.0.",
+      "blocking": false
+    },
+    {
+      "action": "Validate BOM output format against live UMinho electoral platform",
+      "context": "The output writer uses UTF-8 BOM — needs confirmation the platform accepts it",
+      "blocking": true
+    }
+  ],
+  "decisions": [
+    {"decision": "Horizontal layers architecture — core pipeline reaches ≥90% coverage before any UI", "rationale": "Hard gate between Phase 1 and Phase 2", "phase": "01"},
+    {"decision": "QStackedWidget over QWizard", "rationale": "Locked in at Phase 2 start", "phase": "02"},
+    {"decision": "stdlib csv for all output, never pandas.to_csv", "rationale": "Byte-exact control over BOM, CRLF, quoting", "phase": "01"},
+    {"decision": "One-folder (--onedir) ZIP as primary build artifact", "rationale": "Benchmark cold-start before considering --onefile", "phase": "04"},
+    {"decision": "charset-normalizer over chardet", "rationale": "MIT license, 10-100x faster, avoids chardet v7 licensing issue", "phase": "01"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Run /gsd-discuss-phase for Phase 4: Build, CI, Packaging + Distribution Artifacts. Read .planning/ROADMAP.md Phase 4 section for success criteria and requirements before starting.",
+  "context_notes": "Phases 1, 2, and 3 are fully complete and verified. 383 tests pass, coverage at 90.39%. The application runs end-to-end. Phase 4 is the final phase before v1.0.0 release: PyInstaller build, GitHub Actions CI, SHA-256 checksum, CHANGELOG, and all repo documentation artifacts."
+}

@@ -50,7 +50,7 @@ O **EleitorUM** automatiza a preparação de cadernos eleitorais e listas de ele
 |------|-----------|--------|
 | 1 — Core Pipeline | Leitura, detecção, transformação, validação, output, logging — Qt-free | ✅ Concluída |
 | 2 — Interface Gráfica | Wizard PySide6, pré-visualização, temas claro/escuro | ✅ Concluída |
-| 3 — Testes de Integração | Cobertura ponta-a-ponta, fixtures sintéticos | 🔄 Em desenvolvimento |
+| 3 — Testes de Integração | Cobertura ponta-a-ponta, fixtures sintéticos | ✅ Concluída |
 | 4 — Build e Distribuição | PyInstaller `.exe`, CI/CD, v1.0.0 | ⏳ Pendente |
 
 ---
