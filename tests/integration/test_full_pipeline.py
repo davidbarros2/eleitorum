@@ -8,6 +8,7 @@ No Qt imports are present in this file.
 """
 
 import pathlib
+import unicodedata
 
 import openpyxl
 import pytest
@@ -89,8 +90,11 @@ def test_happy_path_elegiveis_csv(tmp_path: pathlib.Path) -> None:
 
     # (b) alphabetical NFKD order: designations sorted before index assignment (TRF-13)
     names = [line.split(";")[1] for line in data_lines]
-    assert names == sorted(names, key=lambda s: s.casefold()), (
-        f"elegíveis must be in alphabetical order; got first 5: {names[:5]}"
+    def _nfkd_key(s: str) -> str:
+        return unicodedata.normalize("NFKD", s.casefold()).encode("ascii", "ignore").decode("ascii")
+
+    assert names == sorted(names, key=_nfkd_key), (
+        f"elegíveis must be in NFKD alphabetical order; got first 5: {names[:5]}"
     )
 
     # (c) no trailing semicolon: elegíveis rows are "{int};{designation}" only (OUT-09)
