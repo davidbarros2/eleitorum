@@ -104,15 +104,14 @@ def _strip_trailing_empty(
 ) -> tuple[list[tuple[Any, ...]], int]:
     """Strip all-empty rows from the tail of ``rows``.
 
-    Returns the surviving rows list and the count of dropped rows.
+    Returns a new list (slice) and the count of dropped rows. Does NOT mutate
+    the input list.
     """
-    if not rows:
-        return [], 0
-    count = 0
-    while rows and _is_empty_row(rows[-1]):
-        rows.pop()
-        count += 1
-    return rows, count
+    end = len(rows)
+    while end > 0 and _is_empty_row(rows[end - 1]):
+        end -= 1
+    count = len(rows) - end
+    return rows[:end], count
 
 
 # ---------------------------------------------------------------------------
