@@ -811,17 +811,19 @@ def populate_preview_table(table: QTableWidget, rows: list[tuple]) -> None:
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Dry-run vs single-run pipeline execution for preview**
    - What we know: D-07 says "Próximo on step 3 triggers processing"; step 4 shows transformed output
    - What's unclear: Is step 4 populated from a dry-run result, or does the actual write happen when "Escolher destino e gravar" is clicked and the user is navigated directly to step 6?
    - Recommendation: Dry-run approach (two worker calls) gives the user a chance to review before committing to disk. The `output_path=None` dry-run path in pipeline.py supports this explicitly. The planner should confirm this interpretation from CONTEXT.md D-07 and WIZ-06.
+   - **RESOLVED:** Dry-run approach adopted. Plan 02-05 Task 2 locks `PipelineResult.preview_rows: list[list[str]]` as an additive field (default `[]`) populated during the dry-run phase (`output_path=None`). Wizard.py (plan 02-06) issues two PipelineWorker calls: (a) dry-run on STEP_COLUMNS → STEP_PREVIEW; (b) real write on STEP_PREVIEW save dialog → STEP_DONE. Existing Phase 1 tests are not broken because the field defaults to `[]` when not populated and `run_pipeline()` signature is unchanged.
 
 2. **pyproject.toml version bumps alongside Phase 2 additions**
    - What we know: CLAUDE.md recommends pandas 3.0.3, mypy 2.1.0, ruff 0.15.14; pyproject.toml has older versions
    - What's unclear: Should Phase 2 Wave 0 bump these or leave them for Phase 4?
    - Recommendation: Bump in Wave 0 since they are dev tooling; no functional risk for Phase 2 work.
+   - **RESOLVED:** Bumps performed in Wave 0 (plan 02-01 Task 1): pandas 3.0.2 → 3.0.3, mypy 1.19.1 → 2.1.0, ruff 0.15.8 → 0.15.14. Verified in plan 02-01 acceptance criteria.
 
 ---
 
