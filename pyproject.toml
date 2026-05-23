@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "eleitorum"
+version = "0.1.0"
+description = "Windows desktop utility to normalize electoral roll and eligibility list files for Universidade do Minho"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { text = "MIT" }
+dependencies = [
+    "openpyxl==3.1.5",
+    "xlrd==2.0.2",
+    "odfpy==1.4.1",
+    "pandas==3.0.2",
+    "charset-normalizer==3.4.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.3",
+    "pytest-cov==7.1.0",
+    "mypy==1.19.1",
+    "ruff==0.15.8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = "eleitorum.core.*"
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-x -q --strict-markers"
+markers = [
+    "integration: full pipeline tests (slower)",
+    "performance: 150k-row benchmark tests",
+]
+
+[tool.coverage.run]
+source = ["src/eleitorum/core"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
