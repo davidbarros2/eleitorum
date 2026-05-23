@@ -137,11 +137,12 @@ def read_xlsx(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
     except FileNotFoundError as err:
         raise FileAccessError(path=path, mode="read") from err
 
-    chosen_sheet: str = sheet_name or wb.sheetnames[0]
-    ws = wb[chosen_sheet]
-
-    raw: list[tuple[Any, ...]] = list(ws.iter_rows(values_only=True))
-    wb.close()
+    try:
+        chosen_sheet: str = sheet_name or wb.sheetnames[0]
+        ws = wb[chosen_sheet]
+        raw: list[tuple[Any, ...]] = list(ws.iter_rows(values_only=True))
+    finally:
+        wb.close()
 
     stripped, skipped_count = _strip_trailing_empty(raw)
     return ReadResult(
@@ -169,15 +170,16 @@ def read_xls(path: pathlib.Path, sheet_name: str | None = None) -> ReadResult:
     except FileNotFoundError as err:
         raise FileAccessError(path=path, mode="read") from err
 
-    if sheet_name is not None:
-        sheet = wb_xls.sheet_by_name(sheet_name)
-        chosen_sheet: str = sheet_name
-    else:
-        sheet = wb_xls.sheet_by_index(0)
-        chosen_sheet = wb_xls.sheet_names()[0]
-
-    raw: list[tuple[Any, ...]] = [tuple(cell.value for cell in row) for row in sheet.get_rows()]
-    wb_xls.release_resources()
+    try:
+        if sheet_name is not None:
+            sheet = wb_xls.sheet_by_name(sheet_name)
+            chosen_sheet: str = sheet_name
+        else:
+            sheet = wb_xls.sheet_by_index(0)
+            chosen_sheet = wb_xls.sheet_names()[0]
+        raw: list[tuple[Any, ...]] = [tuple(cell.value for cell in row) for row in sheet.get_rows()]
+    finally:
+        wb_xls.release_resources()
 
     stripped, skipped_count = _strip_trailing_empty(raw)
     return ReadResult(
@@ -306,15 +308,17 @@ def list_sheets(path: pathlib.Path) -> list[SheetInfo]:
             raise FileAccessError(path=path, mode="read") from err
 
         result: list[SheetInfo] = []
-        for name in wb.sheetnames:
-            ws = wb[name]
-            approx_rows: int = ws.max_row or 0
-            nonempty = _count_nonempty_rows_xlsx(ws, max_check=5)
-            is_empty = nonempty < 2
-            result.append(
-                SheetInfo(name=name, approximate_row_count=approx_rows, is_empty=is_empty)
-            )
-        wb.close()
+        try:
+            for name in wb.sheetnames:
+                ws = wb[name]
+                approx_rows: int = ws.max_row or 0
+                nonempty = _count_nonempty_rows_xlsx(ws, max_check=5)
+                is_empty = nonempty < 2
+                result.append(
+                    SheetInfo(name=name, approximate_row_count=approx_rows, is_empty=is_empty)
+                )
+        finally:
+            wb.close()
         return result
 
     if ext == ".xls":
@@ -326,18 +330,20 @@ def list_sheets(path: pathlib.Path) -> list[SheetInfo]:
             raise FileAccessError(path=path, mode="read") from err
 
         result = []
-        for name in wb_xls.sheet_names():
-            sheet = wb_xls.sheet_by_name(name)
-            nrows = sheet.nrows
-            # Count non-empty rows in first 5 rows
-            nonempty = 0
-            for row_idx in range(min(5, nrows)):
-                row_cells = [sheet.cell(row_idx, c).value for c in range(sheet.ncols)]
-                if any(c is not None and str(c).strip() != "" for c in row_cells):
-                    nonempty += 1
-            is_empty = nonempty < 2
-            result.append(SheetInfo(name=name, approximate_row_count=nrows, is_empty=is_empty))
-        wb_xls.release_resources()
+        try:
+            for name in wb_xls.sheet_names():
+                sheet = wb_xls.sheet_by_name(name)
+                nrows = sheet.nrows
+                # Count non-empty rows in first 5 rows
+                nonempty = 0
+                for row_idx in range(min(5, nrows)):
+                    row_cells = [sheet.cell(row_idx, c).value for c in range(sheet.ncols)]
+                    if any(c is not None and str(c).strip() != "" for c in row_cells):
+                        nonempty += 1
+                is_empty = nonempty < 2
+                result.append(SheetInfo(name=name, approximate_row_count=nrows, is_empty=is_empty))
+        finally:
+            wb_xls.release_resources()
         return result
 
     if ext == ".ods":
