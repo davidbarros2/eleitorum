@@ -248,7 +248,7 @@ def read_csv_like(
     try:
         with open(path, "rb") as fb:
             sample = fb.read(_ENCODING_SAMPLE_BYTES)
-        with open(path, encoding=encoding, newline="") as ft:
+        with open(path, encoding=encoding, newline="", errors="replace") as ft:
             reader = csv.reader(ft, delimiter=delimiter)
             rows: list[tuple[Any, ...]] = [tuple(row) for row in reader]
     except PermissionError as err:
