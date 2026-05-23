@@ -455,7 +455,7 @@ def _execute_pipeline(
     validate.validate_output_path(src.path, output_path, overwrite_allowed=overwrite_allowed)
 
     # ------------------------------------------------------------------
-    # Step 23: build output rows
+    # Steps 23-24: build output rows and write
     # ------------------------------------------------------------------
     if output_type == "caderno":
         output_rows: list[tuple[str, str]] = []
@@ -465,13 +465,6 @@ def _execute_pipeline(
             else:
                 mec_str = f"{prefix.upper()}{number}"
             output_rows.append((mec_str, name))
-    else:
-        designations = [name for (_row_idx, _prefix, _number, name) in transformed]
-
-    # ------------------------------------------------------------------
-    # Step 24: write output
-    # ------------------------------------------------------------------
-    if output_type == "caderno":
         output.write_caderno(
             output_path,
             output_rows,
@@ -479,6 +472,7 @@ def _execute_pipeline(
             overwrite_allowed=overwrite_allowed,
         )
     else:
+        designations = [name for (_row_idx, _prefix, _number, name) in transformed]
         output.write_elegiveis(
             output_path,
             designations,
