@@ -146,6 +146,9 @@ class MecanograficoError(EleitorumError):
             f"{reason}. Corrija o ficheiro de origem e tente novamente."
         )
         super().__init__(message_pt, row_index=row_index, value=value, reason=reason)
+        self.row_index: int = row_index
+        self.value: str = value
+        self.reason: str = reason
 
 
 class ValidationError(EleitorumError):
