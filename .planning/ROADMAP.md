@@ -29,7 +29,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Given an input with any validation violation (invalid prefix, non-positive number, duplicate mecanografico, F/D/B cross-prefix collision, empty name after transformation), processing halts immediately, no output file is written, and an `_ERRORS_` file is created listing each offending row in PT-PT with row number, column name, value, and actionable message
   4. Given a 150,000-row XLSX file, the pipeline completes in under 10 seconds on a typical office laptop, reading in `read_only=True, data_only=True` mode throughout
   5. `pytest --cov` reports ≥90% line coverage over the core pipeline modules (reader, detector, normalizer, validator, output, log_builder, pipeline); no Qt import is present in any of these modules
-**Plans**: TBD
+**Plans**: 5 plans
+- [ ] 01-01-PLAN.md — Wave 0 scaffold: pyproject.toml, src/eleitorum package skeleton, test infrastructure, 15 synthetic fixture generators
+- [ ] 01-02-PLAN.md — Wave 1: errors.py (PT-PT exception hierarchy) + readers.py (XLSX/XLS/ODS/CSV/TSV per-format readers with openpyxl streaming)
+- [ ] 01-03-PLAN.md — Wave 1: detection.py (encoding + header + columns with D-01 hybrid fallback) + transform.py (all 15 TRF rules including batch case normalization)
+- [ ] 01-04-PLAN.md — Wave 2: validate.py (aggregated VAL-01..09) + output.py (byte-exact CSV writer) + logging.py (PT-PT log builder)
+- [ ] 01-05-PLAN.md — Wave 3: pipeline.py orchestrator + 5-user-journey integration tests + PERF-01 150k-row benchmark + ≥90% coverage gate
 
 ### Phase 2: UI Scaffold + Wizard Steps
 **Goal**: The full PySide6 application runs end-to-end — QStackedWidget wizard with all six steps, light/dark theming, QThread worker with progress reporting, and all window chrome — built on top of the Phase 1 pipeline without modifying it
@@ -73,7 +78,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Core Pipeline | 0/TBD | Not started | - |
+| 1. Core Pipeline | 0/5 | Planned | - |
 | 2. UI Scaffold + Wizard Steps | 0/TBD | Not started | - |
 | 3. Integration, End-to-End Testing + Fixtures | 0/TBD | Not started | - |
 | 4. Build, CI, Packaging + Distribution Artifacts | 0/TBD | Not started | - |
