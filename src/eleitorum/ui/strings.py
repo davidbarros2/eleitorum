@@ -5,10 +5,9 @@ here. Format strings use .format(key=value) syntax for parameterization.
 
 Mirrors Phase 1's errors.py pattern: centralized, typed, PT-PT only.
 All copy sourced from 02-UI-SPEC.md Copywriting Contract, Error States, and
-Empty States sections. The UMINHO_DISCLAIMER is verbatim from Eleitorum.md §3.5.
+Empty States sections.
 """
 from __future__ import annotations
-
 
 # ---------------------------------------------------------------------------
 # Window / app title
@@ -164,18 +163,10 @@ MENU_SOBRE: str = "Sobre…"
 # ---------------------------------------------------------------------------
 
 ABOUT_DESCRIPTION: str = (
-    "Utilitário para normalização de ficheiros eleitorais da Universidade do Minho."
+    "Utilitário para normalização de ficheiros eleitorais."
 )
 ABOUT_LICENSE: str = "Distribuído sob a licença MIT."
 ABOUT_REPO_LINK_LABEL: str = "Repositório no GitHub"
-
-# Verbatim from Eleitorum.md §3.5 — do not paraphrase.
-UMINHO_DISCLAIMER: str = (
-    "O EleitorUM é uma ferramenta independente de código aberto. Não é oficialmente "
-    "afiliada nem endossada pela Universidade do Minho. As cores e referências "
-    "gráficas inspiram-se nas normas da UMinho mas o projeto não tem qualquer "
-    "ligação institucional com a universidade."
-)
 
 
 # ---------------------------------------------------------------------------
@@ -185,7 +176,7 @@ UMINHO_DISCLAIMER: str = (
 WELCOME_HEADING: str = "Bem-vindo ao EleitorUM"
 WELCOME_BODY: str = (
     "O EleitorUM guia-o passo a passo na transformação dos seus ficheiros "
-    "eleitorais para o formato exigido pela plataforma da Universidade do Minho.\n\n"
+    "eleitorais para o formato exigido pela plataforma eleitoral.\n\n"
     "1. Selecione o tipo de ficheiro de saída\n"
     "2. Carregue o ficheiro de entrada\n"
     "3. Mapeie as colunas\n"

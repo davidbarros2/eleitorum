@@ -4,21 +4,16 @@ Tests verify:
 - WelcomeDialog is modal
 - WelcomeDialog has a "Começar" QPushButton that calls dialog.accept()
 - AboutDialog shows APP_NAME and __version__ in a QLabel
-- AboutDialog shows UMINHO_DISCLAIMER verbatim
 - AboutDialog has a QLabel with openExternalLinks() == True (repo link)
 - AboutDialog shows MIT license text
 """
 
 from __future__ import annotations
 
-import pytest
 from PySide6.QtWidgets import QLabel, QPushButton
 
 from eleitorum.config import APP_NAME
-from eleitorum.ui.strings import (
-    BTN_COMECAR,
-    UMINHO_DISCLAIMER,
-)
+from eleitorum.ui.strings import BTN_COMECAR
 from eleitorum.version import __version__
 
 
@@ -82,23 +77,6 @@ class TestAboutDialog:
         )
         assert heading_match, (
             f"No QLabel found containing both '{APP_NAME}' and '{__version__}'. "
-            f"Labels found: {texts}"
-        )
-
-    def test_about_dialog_shows_uminho_disclaimer(self, qtbot) -> None:  # noqa: ANN001
-        """AboutDialog must contain a QLabel whose text equals UMINHO_DISCLAIMER verbatim."""
-        from eleitorum.ui.dialogs import AboutDialog  # noqa: PLC0415
-
-        dialog = AboutDialog(None)
-        qtbot.addWidget(dialog)
-        dialog.show()
-        qtbot.waitExposed(dialog)
-
-        labels = dialog.findChildren(QLabel)
-        texts = [lbl.text() for lbl in labels]
-
-        assert UMINHO_DISCLAIMER in texts, (
-            "No QLabel found with the verbatim UMINHO_DISCLAIMER text. "
             f"Labels found: {texts}"
         )
 

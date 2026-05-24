@@ -1,4 +1,4 @@
-"""EleitorUM — electoral roll and eligibility list normalizer for Universidade do Minho."""
+"""EleitorUM — electoral roll and eligibility list normalizer."""
 
 from eleitorum.config import APP_NAME
 from eleitorum.version import __version__
