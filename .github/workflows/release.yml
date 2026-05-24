@@ -31,9 +31,10 @@ jobs:
 
       - name: Smoke test — --version
         run: |
-          & dist\EleitorUM\EleitorUM.exe --version 2>&1
-          if ($LASTEXITCODE -ne 0) {
-            Write-Error "EleitorUM.exe --version exited $LASTEXITCODE"
+          & dist\EleitorUM\EleitorUM.exe --version
+          $code = $LASTEXITCODE
+          if ($code -ne 0) {
+            Write-Error "EleitorUM.exe --version exited $code"
             exit 1
           }
           Write-Host "Smoke test passed (exit code 0)"
