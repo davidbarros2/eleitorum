@@ -121,8 +121,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 1** *(parallel — no dependencies between 04-01 and 04-02)*
 
-- [ ] 04-01-PLAN.md — Version bump to 1.0.0, --version CLI arg, UMinho removal from source, test_no_uminho_strings.py regression guard, pyproject.toml dev extras
-- [ ] 04-02-PLAN.md — Inter font asset (InterVariable.ttf), generate_icons.py script, PNG/ICO assets generated and committed
+- [x] 04-01-PLAN.md — Version bump to 1.0.0, --version CLI arg, UMinho removal from source, test_no_uminho_strings.py regression guard, pyproject.toml dev extras
+- [x] 04-02-PLAN.md — Inter font asset (InterVariable.ttf), generate_icons.py script, PNG/ICO assets generated and committed
 
 **Wave 2** *(blocked on Wave 1 completion; 04-03 and 04-04 parallel)*
 
@@ -143,4 +143,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
 | 2. UI Scaffold + Wizard Steps | 6/6 | Complete    | 2026-05-23 |
 | 3. Integration, End-to-End Testing + Fixtures | 1/1 | Complete    | 2026-05-23 |
-| 4. Build, CI, Packaging + Distribution Artifacts | 0/5 | Planned    | - |
+| 4. Build, CI, Packaging + Distribution Artifacts | 2/5 | In Progress|  |
