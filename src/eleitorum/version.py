@@ -5,4 +5,4 @@ and any version-stamped artifacts. Per Eleitorum.md Section 15.5, the developmen
 series starts at 0.1.0 and bumps to 1.0.0 only at the final release commit.
 """
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
