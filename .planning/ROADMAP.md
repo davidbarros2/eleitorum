@@ -126,8 +126,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 2** *(blocked on Wave 1 completion; 04-03 and 04-04 parallel)*
 
-- [ ] 04-03-PLAN.md — scripts/build.py: PyInstaller wrapper with version_info.py generation, one-folder build, ZIP creation, SHA-256 checksum
-- [ ] 04-04-PLAN.md — Repository documentation: SPECIFICATION.md, README.md (bilingual), CHANGELOG.md, CONTRIBUTING.md, RENAMING.md, .gitignore, .gitattributes
+- [x] 04-03-PLAN.md — scripts/build.py: PyInstaller wrapper with version_info.py generation, one-folder build, ZIP creation, SHA-256 checksum
+- [x] 04-04-PLAN.md — Repository documentation: SPECIFICATION.md, README.md (bilingual), CHANGELOG.md, CONTRIBUTING.md, RENAMING.md, .gitignore, .gitattributes
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -143,4 +143,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
 | 2. UI Scaffold + Wizard Steps | 6/6 | Complete    | 2026-05-23 |
 | 3. Integration, End-to-End Testing + Fixtures | 1/1 | Complete    | 2026-05-23 |
-| 4. Build, CI, Packaging + Distribution Artifacts | 2/5 | In Progress|  |
+| 4. Build, CI, Packaging + Distribution Artifacts | 4/5 | In Progress|  |
