@@ -1,15 +1,34 @@
-# Default: normalize line endings to LF in the repository
-* text=auto eol=lf
+# Default: normalise line endings in text files on checkout
+* text=auto
 
-# Python source: always LF
+# Python source: always LF in working tree
 *.py text eol=lf
+
+# YAML and TOML: always LF
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
 
 # CSV outputs MUST keep CRLF on checkout (electoral platform requires CRLF)
 *.csv text eol=crlf
 
-# Binary formats: no line-ending translation
-*.png binary
+# Binary files: no line ending conversion
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.svg binary
 *.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+*.pdf binary
+*.exe binary
+*.dll binary
 *.ods binary
 *.xls binary
 *.xlsx binary
