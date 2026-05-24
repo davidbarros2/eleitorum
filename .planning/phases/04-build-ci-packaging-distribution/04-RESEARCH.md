@@ -761,7 +761,7 @@ if __name__ == "__main__":
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Smoke test robustness on clean Windows VM**
    - What we know: The `--version` smoke test runs the EXE and checks exit code + output. This is valid for catching Qt plugin failures, font loading errors, and import errors.
