@@ -15,6 +15,7 @@ when the app is run as a module or via the console script entry point.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import sys
 
 
@@ -31,10 +32,8 @@ def _check_version_flag() -> None:
     if args.version:
         from eleitorum.version import __version__
 
-        try:
+        with contextlib.suppress(AttributeError, OSError):
             sys.stdout.write(f"EleitorUM {__version__}\n")
-        except (AttributeError, OSError):
-            pass  # stdout is None in --windowed PyInstaller builds
         sys.exit(0)
 
 
