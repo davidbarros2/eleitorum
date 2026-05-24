@@ -2,16 +2,16 @@
 
 All test data is synthetic per Eleitorum.md §14.1 (no real personal data).
 """
+
 from __future__ import annotations
 
 import pathlib
 
 import openpyxl
-import pytest
 
 from eleitorum.ui.session import SessionModel
-from eleitorum.ui.strings import BTN_ESCOLHER_FICHEIRO, ERR_UNSUPPORTED_EXT
 from eleitorum.ui.steps.step_upload import StepUpload
+from eleitorum.ui.strings import BTN_ESCOLHER_FICHEIRO
 
 
 def _make_synthetic_xlsx(path: pathlib.Path) -> pathlib.Path:
@@ -30,6 +30,7 @@ class TestStepUpload:
     def test_step_upload_constructs(self, qtbot) -> None:
         """StepUpload constructs with DropZone, button, file label, error label."""
         from PySide6.QtWidgets import QLabel, QPushButton
+
         from eleitorum.ui.widgets.drop_zone import DropZone
 
         session = SessionModel()
@@ -88,9 +89,7 @@ class TestStepUpload:
         assert session.sheets is not None
         assert isinstance(session.sheets, list)
 
-    def test_step_upload_unsupported_extension_shows_inline_error(
-        self, qtbot, tmp_path
-    ) -> None:
+    def test_step_upload_unsupported_extension_shows_inline_error(self, qtbot, tmp_path) -> None:
         """Unsupported extension shows inline error, session.source_path stays None.
 
         Note: isHidden() is used instead of isVisible() because Qt's isVisible()
@@ -127,9 +126,7 @@ class TestStepUpload:
 
         assert session.source_path == xlsx_path
 
-    def test_step_upload_inline_error_clears_on_next_attempt(
-        self, qtbot, tmp_path
-    ) -> None:
+    def test_step_upload_inline_error_clears_on_next_attempt(self, qtbot, tmp_path) -> None:
         """After an error, a subsequent valid file clears the error label."""
         png_path = tmp_path / "teste_erro.png"
         png_path.write_bytes(b"fake image data")

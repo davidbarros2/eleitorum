@@ -7,6 +7,7 @@ Session contract: writes session.output_type on card selection.
 Restores visual state from session.output_type on construction (back-navigation
 and Reiniciar flows — WIZ-10).
 """
+
 from __future__ import annotations
 
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget

@@ -5,6 +5,7 @@ Tests:
   2. `python -m eleitorum --version` runs without importing PySide6 (headless safe)
   3. importing `eleitorum.version` yields __version__ == "1.0.0"
 """
+
 from __future__ import annotations
 
 import os

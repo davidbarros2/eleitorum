@@ -86,12 +86,11 @@ def test_happy_path_elegiveis_csv(tmp_path: pathlib.Path) -> None:
     data_lines = lines[1:]  # skip header
 
     # (a) 0-based integer index: first data row has index 0 (TRF-14)
-    assert int(data_lines[0].split(";")[0]) == 0, (
-        f"first index must be 0; got: {data_lines[0]}"
-    )
+    assert int(data_lines[0].split(";")[0]) == 0, f"first index must be 0; got: {data_lines[0]}"
 
     # (b) alphabetical NFKD order: designations sorted before index assignment (TRF-13)
     names = [line.split(";")[1] for line in data_lines]
+
     def _nfkd_key(s: str) -> str:
         return unicodedata.normalize("NFKD", s.casefold()).encode("ascii", "ignore").decode("ascii")
 
@@ -101,9 +100,7 @@ def test_happy_path_elegiveis_csv(tmp_path: pathlib.Path) -> None:
 
     # (c) no trailing semicolon: elegíveis rows are "{int};{designation}" only (OUT-09)
     for line in data_lines:
-        assert not line.endswith(";"), (
-            f"elegíveis row must not end with semicolon: {line}"
-        )
+        assert not line.endswith(";"), f"elegíveis row must not end with semicolon: {line}"
 
 
 # ---------------------------------------------------------------------------

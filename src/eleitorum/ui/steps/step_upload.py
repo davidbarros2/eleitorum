@@ -9,6 +9,7 @@ Security notes:
 - T-02-04-01: SUPPORTED_EXTENSIONS whitelist applied before any file I/O.
 - T-02-04-02: inline error text uses err.message_pt only — never a traceback.
 """
+
 from __future__ import annotations
 
 import pathlib

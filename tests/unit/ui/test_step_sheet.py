@@ -2,14 +2,13 @@
 
 All test data is synthetic per Eleitorum.md §14.1 (no real personal data).
 """
-from __future__ import annotations
 
-import pytest
+from __future__ import annotations
 
 from eleitorum.core.readers import SheetInfo
 from eleitorum.ui.session import SessionModel
-from eleitorum.ui.strings import SHEET_PICKER_EMPTY_SUFFIX, SHEET_PICKER_ROWS_TEMPLATE
 from eleitorum.ui.steps.step_sheet import StepSheet
+from eleitorum.ui.strings import SHEET_PICKER_EMPTY_SUFFIX, SHEET_PICKER_ROWS_TEMPLATE
 
 
 class TestStepSheet:
@@ -74,10 +73,7 @@ class TestStepSheet:
         step = StepSheet(session=session)
         qtbot.addWidget(step)
 
-        assert (
-            step._list.selectionMode()
-            == QAbstractItemView.SelectionMode.SingleSelection
-        )
+        assert step._list.selectionMode() == QAbstractItemView.SelectionMode.SingleSelection
 
     def test_step_sheet_is_complete_false_when_no_selection(self, qtbot) -> None:
         """With sheets populated but nothing selected, is_complete() is False."""
@@ -89,9 +85,7 @@ class TestStepSheet:
 
         assert step.is_complete() is False
 
-    def test_step_sheet_is_complete_true_after_selection_and_writes_session(
-        self, qtbot
-    ) -> None:
+    def test_step_sheet_is_complete_true_after_selection_and_writes_session(self, qtbot) -> None:
         """Selecting first item: is_complete() True and session.sheet_name == 'Docentes'."""
         session = SessionModel()
         session.sheets = [

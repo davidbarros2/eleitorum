@@ -12,6 +12,7 @@ Security note (T-02-02-02): apply_theme() ignores all values except 'dark' —
 any other string falls back to LIGHT_QSS. The theme string is NEVER
 concatenated into the QSS itself; callers cannot inject arbitrary QSS.
 """
+
 from __future__ import annotations
 
 from PySide6.QtCore import Qt

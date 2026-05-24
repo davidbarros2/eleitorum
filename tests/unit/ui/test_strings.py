@@ -4,6 +4,7 @@ Tests use AST inspection to enumerate all module-level uppercase assignments
 and verify: every required constant is present, every value is a non-empty
 PT-PT string (no English keywords), and format placeholders match spec.
 """
+
 from __future__ import annotations
 
 import ast

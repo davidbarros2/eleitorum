@@ -121,13 +121,9 @@ class AboutDialog(QDialog):
         layout.addWidget(license_lbl)
 
         # Repository link — opens in default browser via Qt
-        repo_link = QLabel(
-            f'<a href="{_REPO_URL}">{ABOUT_REPO_LINK_LABEL}</a>'
-        )
+        repo_link = QLabel(f'<a href="{_REPO_URL}">{ABOUT_REPO_LINK_LABEL}</a>')
         repo_link.setOpenExternalLinks(True)
-        repo_link.setTextInteractionFlags(
-            Qt.TextInteractionFlag.TextBrowserInteraction
-        )
+        repo_link.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
         layout.addWidget(repo_link)
 
         layout.addStretch()

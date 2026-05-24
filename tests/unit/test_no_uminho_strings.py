@@ -4,6 +4,7 @@ Requirement: D-01 — BRAND-04. Scans src/, README.md, and pyproject.toml for an
 occurrence of institution names ('Universidade' or 'UMinho').
 Fails if any match is found, listing every offending file, line number, and content.
 """
+
 from __future__ import annotations
 
 import pathlib
@@ -35,6 +36,6 @@ class TestNoUminhoStrings:
                 for lineno, line in enumerate(text.splitlines(), start=1):
                     if _PATTERN.search(line):
                         violations.append(f"{path}:{lineno}: {line.strip()}")
-        assert not violations, (
-            "Institution references found — remove per D-01:\n" + "\n".join(violations)
+        assert not violations, "Institution references found — remove per D-01:\n" + "\n".join(
+            violations
         )

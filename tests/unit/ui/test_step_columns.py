@@ -5,15 +5,14 @@ All test data is synthetic per Eleitorum.md §14.1 (no real personal data).
 Note: session.pipeline_result is seeded with types.SimpleNamespace for
 unit tests; the real PipelineResult from pipeline.py is only used at runtime.
 """
+
 from __future__ import annotations
 
 import types
 
-import pytest
-
 from eleitorum.ui.session import SessionModel
-from eleitorum.ui.strings import BTN_ALTERAR, STEP_3_TITLE
 from eleitorum.ui.steps.step_columns import StepColumns
+from eleitorum.ui.strings import BTN_ALTERAR, STEP_3_TITLE
 
 
 def _make_detected_session(
@@ -52,6 +51,7 @@ class TestStepColumns:
 
         # Check stepTitle
         from PySide6.QtWidgets import QLabel
+
         labels = step.findChildren(QLabel)
         title_labels = [l for l in labels if l.objectName() == "stepTitle"]
         assert len(title_labels) == 1
@@ -89,10 +89,8 @@ class TestStepColumns:
 
         # Alterar buttons must exist
         from PySide6.QtWidgets import QPushButton
-        alterar_buttons = [
-            w for w in step.findChildren(QPushButton)
-            if w.text() == BTN_ALTERAR
-        ]
+
+        alterar_buttons = [w for w in step.findChildren(QPushButton) if w.text() == BTN_ALTERAR]
         assert len(alterar_buttons) >= 1
 
         # Value label for mec column should reference the detected column name
@@ -100,7 +98,6 @@ class TestStepColumns:
 
     def test_step_columns_manual_mode_when_no_detection(self, qtbot) -> None:
         """No detection: no-detection message shown; QComboBoxes active."""
-        from PySide6.QtWidgets import QComboBox
 
         session = SessionModel(output_type="caderno")
         session.column_headers = ["No Mec. Teste", "Nome Completo Teste"]
@@ -117,7 +114,6 @@ class TestStepColumns:
 
     def test_step_columns_alterar_opens_combobox(self, qtbot) -> None:
         """Clicking Alterar reveals the QComboBox for that row."""
-        from PySide6.QtWidgets import QComboBox
 
         session = _make_detected_session()
         step = StepColumns(session=session)

@@ -11,6 +11,7 @@ worker already strips tracebacks at emission time (T-02-01-02).
 Requirements: WIZ-11 (background thread, cancel available), PERF-02 (UI thread
 stays responsive — only progress bar + label updates happen on the main thread).
 """
+
 from __future__ import annotations
 
 import types
@@ -28,8 +29,6 @@ from PySide6.QtWidgets import (
 
 from eleitorum.ui.session import SessionModel
 from eleitorum.ui.strings import (
-    BTN_CONFIRM_CANCEL,
-    BTN_CONTINUE,
     CONFIRM_CANCEL,
     PROCESSING_LOADING,
     PROCESSING_PROGRESS,
@@ -52,9 +51,9 @@ class StepProcessing(QWidget):
             wizard.py connects this to navigate back to STEP_COLUMNS.
     """
 
-    route_to_preview = Signal(object)   # carries PipelineResult on success
-    route_to_error = Signal(object)     # carries PipelineResult or error namespace
-    cancelled_by_user = Signal()        # D-01: user confirmed cancel → back to step 3
+    route_to_preview = Signal(object)  # carries PipelineResult on success
+    route_to_error = Signal(object)  # carries PipelineResult or error namespace
+    cancelled_by_user = Signal()  # D-01: user confirmed cancel → back to step 3
 
     def __init__(self, session: SessionModel, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -106,12 +105,12 @@ class StepProcessing(QWidget):
                     signals and start()/cancel() methods).
         """
         self._worker = worker
-        worker.progress.connect(self.on_progress)       # type: ignore[union-attr]
-        worker.finished.connect(self._on_finished)      # type: ignore[union-attr]
-        worker.error.connect(self._on_error)            # type: ignore[union-attr]
-        worker.cancelled.connect(self._on_cancelled)    # type: ignore[union-attr]
+        worker.progress.connect(self.on_progress)  # type: ignore[union-attr]
+        worker.finished.connect(self._on_finished)  # type: ignore[union-attr]
+        worker.error.connect(self._on_error)  # type: ignore[union-attr]
+        worker.cancelled.connect(self._on_cancelled)  # type: ignore[union-attr]
         self.on_processing_started()
-        worker.start()                                  # type: ignore[union-attr]
+        worker.start()  # type: ignore[union-attr]
 
     def on_processing_started(self) -> None:
         """Reset to indeterminate state (called before worker.start())."""
@@ -144,7 +143,7 @@ class StepProcessing(QWidget):
             QMessageBox.StandardButton.No,
         )
         if reply == QMessageBox.StandardButton.Yes and self._worker is not None:
-            self._worker.cancel()   # type: ignore[union-attr]
+            self._worker.cancel()  # type: ignore[union-attr]
 
     def _on_finished(self, result: object) -> None:
         """Route completed result to preview or error based on success flag.
@@ -152,7 +151,7 @@ class StepProcessing(QWidget):
         Also writes result into session so downstream steps can read it.
         """
         self._session.pipeline_result = result
-        if result.success:              # type: ignore[union-attr]
+        if result.success:  # type: ignore[union-attr]
             self.route_to_preview.emit(result)
         else:
             self.route_to_error.emit(result)

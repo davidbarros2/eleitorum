@@ -5,16 +5,17 @@ restart/quit signal emission, and "e mais N erros" suffix for >20 failures.
 
 All test data is synthetic (no real personal data per CLAUDE.md privacy constraint).
 """
+
 from __future__ import annotations
 
 import pathlib
 import types
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from PySide6.QtCore import QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QApplication, QStackedWidget
+from PySide6.QtWidgets import QStackedWidget
 
 from eleitorum.core.errors import FailureRow
 from eleitorum.ui.session import SessionModel
@@ -111,8 +112,7 @@ class TestStepDone:
     def test_step_done_error_lists_first_20_failures(self, step) -> None:
         """With 25 failures, error text shows 20 lines + '…e mais 5 erros' suffix."""
         failures = [
-            FailureRow(i, "mecanografico", f"F{i}", f"Erro sintetico {i}")
-            for i in range(1, 26)
+            FailureRow(i, "mecanografico", f"F{i}", f"Erro sintetico {i}") for i in range(1, 26)
         ]
         result = _make_error_result(failures=failures)
         step.show_error(result)
@@ -121,7 +121,9 @@ class TestStepDone:
         text = step._error_text.toPlainText()
         lines = [l for l in text.split("\n") if l.strip()]
         # Should have 20 failure lines + 1 "e mais" line
-        assert len(lines) == 21, f"Expected 21 lines (20 failures + suffix), got {len(lines)}: {lines}"
+        assert len(lines) == 21, (
+            f"Expected 21 lines (20 failures + suffix), got {len(lines)}: {lines}"
+        )
         assert "mais 5 erros" in text, f"'mais 5 erros' not found in: {text}"
 
     def test_step_done_open_folder_uses_QDesktopServices(self, step) -> None:
@@ -142,7 +144,9 @@ class TestStepDone:
         assert isinstance(url, QUrl)
         # The URL should contain the parent folder path
         url_str = url.toLocalFile().replace("\\", "/")
-        assert "sintetico" in url_str or "temp" in url_str, f"Expected parent folder in URL: {url_str}"
+        assert "sintetico" in url_str or "temp" in url_str, (
+            f"Expected parent folder in URL: {url_str}"
+        )
 
     def test_step_done_open_folder_in_error_mode_points_to_error_log(self, step) -> None:
         """In error mode, Abrir pasta opens error_log_path.parent."""
@@ -158,7 +162,9 @@ class TestStepDone:
         assert len(called_urls) == 1
         url_str = called_urls[0].toLocalFile().replace("\\", "/")
         # Should point to parent folder of error_log_path (logs/sintetico/)
-        assert "sintetico" in url_str or "logs" in url_str, f"Expected error log parent in URL: {url_str}"
+        assert "sintetico" in url_str or "logs" in url_str, (
+            f"Expected error log parent in URL: {url_str}"
+        )
 
     def test_step_done_processar_outro_emits_restart_signal(self, step, qtbot) -> None:
         """Clicking 'Processar outro ficheiro' emits restart_clicked signal."""
@@ -169,6 +175,7 @@ class TestStepDone:
 
         with qtbot.waitSignal(step.restart_clicked, timeout=1000):
             from PySide6.QtCore import Qt as _Qt
+
             qtbot.mouseClick(step._success_restart_btn, _Qt.MouseButton.LeftButton)
 
     def test_step_done_sair_emits_quit_signal(self, step, qtbot) -> None:
@@ -178,6 +185,7 @@ class TestStepDone:
 
         with qtbot.waitSignal(step.quit_clicked, timeout=1000):
             from PySide6.QtCore import Qt as _Qt
+
             qtbot.mouseClick(step._success_quit_btn, _Qt.MouseButton.LeftButton)
 
     def test_step_done_error_mode_has_no_sair_button(self, step) -> None:

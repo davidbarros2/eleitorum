@@ -13,6 +13,7 @@ Security note (T-02-03-01): extension whitelist check via SUPPORTED_EXTENSIONS
 runs BEFORE any I/O. The actual file is opened later by readers.py. DropZone
 only emits the absolute path string — no file contents are read here.
 """
+
 from __future__ import annotations
 
 import pathlib

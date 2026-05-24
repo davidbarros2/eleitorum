@@ -55,7 +55,10 @@ class TestCreateApp:
 
         app_py = (
             pathlib.Path(__file__).parent.parent.parent.parent
-            / "src" / "eleitorum" / "ui" / "app.py"
+            / "src"
+            / "eleitorum"
+            / "ui"
+            / "app.py"
         )
         source = app_py.read_text(encoding="utf-8")
         lines = source.splitlines()
@@ -64,16 +67,14 @@ class TestCreateApp:
         # Use strip() to skip comment/docstring lines (they don't start with 'app.')
         fusion_line = next(
             (
-                i for i, ln in enumerate(lines)
+                i
+                for i, ln in enumerate(lines)
                 if ln.strip().startswith("app.setStyle") and "Fusion" in ln
             ),
             None,
         )
         apply_theme_line = next(
-            (
-                i for i, ln in enumerate(lines)
-                if ln.strip().startswith("apply_theme(")
-            ),
+            (i for i, ln in enumerate(lines) if ln.strip().startswith("apply_theme(")),
             None,
         )
 
@@ -84,8 +85,6 @@ class TestCreateApp:
             f"setStyle at line {fusion_line + 1}, apply_theme at line {apply_theme_line + 1}."
         )
 
-    def test_create_app_applies_initial_stylesheet(
-        self, configured_app: QApplication
-    ) -> None:
+    def test_create_app_applies_initial_stylesheet(self, configured_app: QApplication) -> None:
         """create_app() must apply either LIGHT_QSS or DARK_QSS; stylesheet must be non-empty."""
         assert configured_app.styleSheet() != ""

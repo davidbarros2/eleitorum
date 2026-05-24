@@ -3,6 +3,7 @@
 Tests verify BRAND-02 compliance: white E on #a21a1c rounded square (16% corner
 radius), valid SVG XML, Inter font directory structure, and OFL license text.
 """
+
 from __future__ import annotations
 
 import pathlib
@@ -40,9 +41,7 @@ class TestResources:
         assert _ICON_SVG.exists(), f"icon.svg not found at {_ICON_SVG}"
         root = _parse_svg()
         # Root element should be svg
-        assert "svg" in _strip_ns(root.tag).lower(), (
-            f"Root element is not SVG: {root.tag}"
-        )
+        assert "svg" in _strip_ns(root.tag).lower(), f"Root element is not SVG: {root.tag}"
 
     def test_icon_svg_has_accent_color(self) -> None:
         """icon.svg must contain the literal hex #a21a1c (background rect fill)."""
@@ -56,9 +55,8 @@ class TestResources:
         or as a <path> with white fill."""
         content = _ICON_SVG.read_text(encoding="utf-8")
         # Check for a <text> element with white fill containing the letter E
-        has_white_text_e = (
-            "<text" in content
-            and ("fill=\"#FFFFFF\"" in content or "fill=\"white\"" in content)
+        has_white_text_e = "<text" in content and (
+            'fill="#FFFFFF"' in content or 'fill="white"' in content
         )
         assert has_white_text_e, (
             "icon.svg must contain a <text> element with white fill (#FFFFFF or white)"
@@ -68,10 +66,7 @@ class TestResources:
         """SVG <rect> must have rx attribute approximately 16% of 256 = ~41 (range 40–42)."""
         root = _parse_svg()
         # Find rect elements (with or without namespace)
-        rects = (
-            root.findall(f"{{{_SVG_NS}}}rect")
-            + root.findall("rect")
-        )
+        rects = root.findall(f"{{{_SVG_NS}}}rect") + root.findall("rect")
         assert rects, "icon.svg has no <rect> element"
 
         rect = rects[0]
@@ -81,9 +76,7 @@ class TestResources:
         # rx can be "41", "40.96", or "16%" — accept both numeric and percentage forms
         if rx_attr.endswith("%"):
             pct = float(rx_attr.rstrip("%"))
-            assert 15 <= pct <= 17, (
-                f"rx='{{rx_attr}}' percentage not in expected range [15%, 17%]"
-            )
+            assert 15 <= pct <= 17, "rx='{rx_attr}' percentage not in expected range [15%, 17%]"
         else:
             rx_val = float(rx_attr)
             assert 40 <= rx_val <= 42, (

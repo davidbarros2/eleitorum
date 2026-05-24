@@ -12,6 +12,7 @@ Security note: ``key`` is supplied by step_upload code — only "caderno" and
 "elegiveis" are used. No user-supplied content flows through this widget
 (T-02-03-02 accepted).
 """
+
 from __future__ import annotations
 
 from PySide6.QtCore import Qt, Signal

@@ -12,12 +12,12 @@ inside try/finally blocks with no local references held beyond the dispatch call
 The widget's ``dragEnterEvent`` / ``dropEvent`` are also tested by calling the
 handlers directly to verify the property and signal contracts in isolation.
 """
+
 from __future__ import annotations
 
 import pathlib
 
-import pytest
-from PySide6.QtCore import QMimeData, QPoint, QUrl, Qt
+from PySide6.QtCore import QMimeData, QPoint, Qt, QUrl
 from PySide6.QtWidgets import QApplication
 
 from eleitorum.ui.widgets.drop_zone import DropZone
@@ -131,9 +131,7 @@ class TestDropZone:
         emitted_path = blocker.args[0]
         assert pathlib.Path(emitted_path) == xlsx_path
 
-    def test_drop_zone_drag_leave_resets_active(
-        self, qtbot, tmp_path: pathlib.Path
-    ) -> None:
+    def test_drop_zone_drag_leave_resets_active(self, qtbot, tmp_path: pathlib.Path) -> None:
         """dragLeaveEvent resets drag_active to False after dragEnterEvent set it True."""
         dz = DropZone()
         qtbot.addWidget(dz)
@@ -148,9 +146,7 @@ class TestDropZone:
         _send_drag_leave(dz)
         assert dz.property("drag_active") is False
 
-    def test_drop_zone_drop_resets_active(
-        self, qtbot, tmp_path: pathlib.Path
-    ) -> None:
+    def test_drop_zone_drop_resets_active(self, qtbot, tmp_path: pathlib.Path) -> None:
         """After a valid drop, drag_active resets to False."""
         dz = DropZone()
         qtbot.addWidget(dz)

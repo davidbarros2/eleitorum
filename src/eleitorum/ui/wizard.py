@@ -67,9 +67,9 @@ class WizardController(QObject):
     # Stack indices — sequential, matches insertion order in __init__
     STEP_TYPE: int = 0
     STEP_UPLOAD: int = 1
-    STEP_SHEET: int = 2        # conditional; skipped on single-sheet files
+    STEP_SHEET: int = 2  # conditional; skipped on single-sheet files
     STEP_COLUMNS: int = 3
-    STEP_PROCESSING: int = 4   # not a user-visible numbered step
+    STEP_PROCESSING: int = 4  # not a user-visible numbered step
     STEP_PREVIEW: int = 5
     STEP_DONE: int = 6
 
@@ -385,7 +385,7 @@ class WizardController(QObject):
             self.STEP_UPLOAD: 2,
             self.STEP_SHEET: 3 if self._multi_sheet_path else 2,  # only shown on multi-sheet path
             self.STEP_COLUMNS: 4 if self._multi_sheet_path else 3,
-            self.STEP_PROCESSING: 4 if self._multi_sheet_path else 3,  # same as COLUMNS (not incremented)
+            self.STEP_PROCESSING: 4 if self._multi_sheet_path else 3,  # same as COLUMNS
             self.STEP_PREVIEW: 5 if self._multi_sheet_path else 4,
             self.STEP_DONE: 6 if self._multi_sheet_path else 5,
         }
@@ -416,9 +416,7 @@ class WizardController(QObject):
             self._navbar.set_proximo_text(BTN_PROXIMO)
 
         # Próximo enabled based on step completion (or always True for some steps)
-        if current == self.STEP_PROCESSING:
-            self._navbar.set_proximo_enabled(False)
-        elif current == self.STEP_DONE:
+        if current == self.STEP_PROCESSING or current == self.STEP_DONE:
             self._navbar.set_proximo_enabled(False)
         else:
             # Poll is_complete() on current step widget

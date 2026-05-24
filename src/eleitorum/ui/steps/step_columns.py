@@ -13,6 +13,7 @@ Security note (T-02-04-03): QComboBox currentIndex() is bounded by the items
 it was populated with; items come exclusively from session.column_headers so
 indices are always valid.
 """
+
 from __future__ import annotations
 
 from PySide6.QtWidgets import (
@@ -71,9 +72,7 @@ class StepColumns(QWidget):
         layout.addWidget(title)
 
         # No-detection warning (initially hidden; shown in manual mode)
-        self._no_detection_label = QLabel(
-            ERR_NO_DETECTION_HEADING + "\n" + ERR_NO_DETECTION_BODY
-        )
+        self._no_detection_label = QLabel(ERR_NO_DETECTION_HEADING + "\n" + ERR_NO_DETECTION_BODY)
         self._no_detection_label.setObjectName("noDetectionLabel")
         self._no_detection_label.setWordWrap(True)
         self._no_detection_label.setVisible(False)
@@ -142,12 +141,12 @@ class StepColumns(QWidget):
 
         # Wire Alterar to open the combo in-place
         alterar_btn.clicked.connect(
-            lambda checked=False, c=combo, v=value_label, b=alterar_btn: self._on_alterar_clicked(c, v, b)
+            lambda checked=False, c=combo, v=value_label, b=alterar_btn: self._on_alterar_clicked(
+                c, v, b
+            )
         )
         # Wire combo changes to session.column_map
-        combo.currentIndexChanged.connect(
-            lambda idx, key=map_key: self._on_combo_changed(key, idx)
-        )
+        combo.currentIndexChanged.connect(lambda idx, key=map_key: self._on_combo_changed(key, idx))
 
         return row
 
@@ -195,7 +194,8 @@ class StepColumns(QWidget):
         if mec_idx is not None and headers and mec_idx < len(headers):
             col_name = headers[mec_idx]
             if high:
-                self._mec_value_label.setText(COL_MAPPING_HIGH.format(name=col_name, role="mecanográfica"))
+                msg = COL_MAPPING_HIGH.format(name=col_name, role="mecanográfica")
+                self._mec_value_label.setText(msg)
             else:
                 self._mec_value_label.setText(COL_MAPPING_LOW.format(name=col_name))
         self._mec_value_label.setVisible(True)
@@ -207,7 +207,8 @@ class StepColumns(QWidget):
         if name_idx is not None and headers and name_idx < len(headers):
             col_name = headers[name_idx]
             if high:
-                self._name_value_label.setText(COL_MAPPING_HIGH.format(name=col_name, role="do nome"))
+                msg = COL_MAPPING_HIGH.format(name=col_name, role="do nome")
+                self._name_value_label.setText(msg)
             else:
                 self._name_value_label.setText(COL_MAPPING_LOW.format(name=col_name))
         self._name_value_label.setVisible(True)

@@ -11,6 +11,7 @@ The ``if __name__ == "__main__"`` guard delegates to ``main()`` via
 ``raise SystemExit(main())`` so the process exit code is propagated correctly
 when the app is run as a module or via the console script entry point.
 """
+
 from __future__ import annotations
 
 import argparse

@@ -110,9 +110,7 @@ class TestMainWindow:
 
     def test_main_window_menu_bar_has_three_top_menus(self, main_window) -> None:  # noqa: ANN001
         """Menu bar must contain Ficheiro, Ver, and Ajuda top-level menus."""
-        top_menu_titles = [
-            m.title() for m in main_window.menuBar().findChildren(QMenu)
-        ]
+        top_menu_titles = [m.title() for m in main_window.menuBar().findChildren(QMenu)]
         assert MENU_FILE in top_menu_titles
         assert MENU_VIEW in top_menu_titles
         assert MENU_HELP in top_menu_titles
@@ -122,8 +120,7 @@ class TestMainWindow:
         from eleitorum.ui.strings import MENU_REINICIAR, MENU_SAIR  # noqa: PLC0415
 
         ficheiro_menus = [
-            m for m in main_window.menuBar().findChildren(QMenu)
-            if m.title() == MENU_FILE
+            m for m in main_window.menuBar().findChildren(QMenu) if m.title() == MENU_FILE
         ]
         assert ficheiro_menus, f"No menu titled '{MENU_FILE}' found"
         ficheiro = ficheiro_menus[0]
@@ -133,7 +130,9 @@ class TestMainWindow:
         assert MENU_SAIR in action_texts
 
     def test_main_window_close_event_persists_geometry(
-        self, main_window, qtbot  # noqa: ANN001
+        self,
+        main_window,
+        qtbot,  # noqa: ANN001
     ) -> None:
         """closeEvent must save window/geometry to QSettings."""
         settings = main_window._settings
@@ -150,7 +149,9 @@ class TestMainWindow:
         assert settings.value("window/geometry", None, type=bytes) is not None
 
     def test_main_window_first_run_shows_welcome_dialog(
-        self, qtbot, monkeypatch  # noqa: ANN001
+        self,
+        qtbot,
+        monkeypatch,  # noqa: ANN001
     ) -> None:
         """WelcomeDialog.exec() must be called once when first_run_shown is False."""
         exec_calls: list = []
@@ -176,7 +177,9 @@ class TestMainWindow:
         assert len(exec_calls) == 1
 
     def test_main_window_subsequent_run_does_not_show_welcome(
-        self, qtbot, monkeypatch  # noqa: ANN001
+        self,
+        qtbot,
+        monkeypatch,  # noqa: ANN001
     ) -> None:
         """WelcomeDialog.exec() must NOT be called when first_run_shown is True."""
         exec_calls: list = []
@@ -205,7 +208,10 @@ class TestMainWindow:
         """AST check: every self._settings.value() call in main_window.py must include type=."""
         main_window_path = (
             pathlib.Path(__file__).parent.parent.parent.parent
-            / "src" / "eleitorum" / "ui" / "main_window.py"
+            / "src"
+            / "eleitorum"
+            / "ui"
+            / "main_window.py"
         )
         source = main_window_path.read_text(encoding="utf-8")
         tree = ast.parse(source)
@@ -228,8 +234,6 @@ class TestMainWindow:
             # Verify 'type' keyword argument is present
             has_type_kwarg = any(kw.arg == "type" for kw in node.keywords)
             if not has_type_kwarg:
-                violations.append(
-                    f"Line {node.lineno}: self._settings.value() missing type= kwarg"
-                )
+                violations.append(f"Line {node.lineno}: self._settings.value() missing type= kwarg")
 
         assert violations == [], "\n".join(violations)

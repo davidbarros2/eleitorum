@@ -10,6 +10,7 @@ inspect/reset from any thread.
 Reset target: WIZ-10 (Reiniciar) resets the wizard by replacing the session
 instance with a fresh SessionModel() — no fields need explicit clearing.
 """
+
 from __future__ import annotations
 
 import dataclasses

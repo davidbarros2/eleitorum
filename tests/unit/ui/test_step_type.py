@@ -2,13 +2,12 @@
 
 All test data is synthetic per Eleitorum.md §14.1 (no real personal data).
 """
+
 from __future__ import annotations
 
-import pytest
-
 from eleitorum.ui.session import SessionModel
-from eleitorum.ui.strings import STEP_1_TITLE
 from eleitorum.ui.steps.step_type import StepType
+from eleitorum.ui.strings import STEP_1_TITLE
 
 
 class TestStepType:
@@ -26,6 +25,7 @@ class TestStepType:
 
         # Find stepTitle label
         from PySide6.QtWidgets import QLabel
+
         labels = step.findChildren(QLabel)
         title_labels = [l for l in labels if l.objectName() == "stepTitle"]
         assert len(title_labels) == 1

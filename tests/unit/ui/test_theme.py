@@ -4,10 +4,8 @@ Tests verify: QSS string contents, dynamic property selectors, focus pseudo-
 class, detect_system_theme return values, apply_theme behavior, and WCAG AA
 contrast ratios for primary text/background pairs (APP-09).
 """
+
 from __future__ import annotations
-
-import math
-
 
 # ---------------------------------------------------------------------------
 # WCAG 2.1 contrast ratio helpers (no external library — pure stdlib)
@@ -88,7 +86,7 @@ class TestTheme:
 
     def test_both_themes_contain_dynamic_property_selectors(self) -> None:
         """Both QSS strings must include OptionCard[selected="true"] and DropZone[drag_active="true"]."""
-        from eleitorum.ui.theme import LIGHT_QSS, DARK_QSS
+        from eleitorum.ui.theme import DARK_QSS, LIGHT_QSS
 
         for name, qss in [("LIGHT_QSS", LIGHT_QSS), ("DARK_QSS", DARK_QSS)]:
             assert 'OptionCard[selected="true"]' in qss, (
@@ -100,7 +98,7 @@ class TestTheme:
 
     def test_both_themes_contain_focus_pseudo(self) -> None:
         """Both QSS strings must include a :focus rule (APP-17 visible focus ring)."""
-        from eleitorum.ui.theme import LIGHT_QSS, DARK_QSS
+        from eleitorum.ui.theme import DARK_QSS, LIGHT_QSS
 
         for name, qss in [("LIGHT_QSS", LIGHT_QSS), ("DARK_QSS", DARK_QSS)]:
             assert ":focus" in qss, f"{name} missing :focus pseudo-class rule"
@@ -118,7 +116,8 @@ class TestTheme:
     def test_apply_theme_sets_stylesheet(self, qapp) -> None:
         """apply_theme() sets the QApplication stylesheet to the correct QSS."""
         from PySide6.QtWidgets import QApplication
-        from eleitorum.ui.theme import apply_theme, LIGHT_QSS, DARK_QSS
+
+        from eleitorum.ui.theme import DARK_QSS, LIGHT_QSS, apply_theme
 
         apply_theme("dark")
         assert QApplication.instance().styleSheet() == DARK_QSS
@@ -133,13 +132,9 @@ class TestTheme:
     def test_light_palette_passes_wcag_aa_for_primary_text(self) -> None:
         """APP-09: #1A1A1A on #FAFAFA must have contrast ratio >= 4.5 (WCAG AA)."""
         ratio = _contrast_ratio("#1A1A1A", "#FAFAFA")
-        assert ratio >= 4.5, (
-            f"WCAG AA FAIL (light): #1A1A1A on #FAFAFA ratio={ratio:.2f} < 4.5"
-        )
+        assert ratio >= 4.5, f"WCAG AA FAIL (light): #1A1A1A on #FAFAFA ratio={ratio:.2f} < 4.5"
 
     def test_dark_palette_passes_wcag_aa_for_primary_text(self) -> None:
         """APP-09: #F5F5F5 on #1A1A1A must have contrast ratio >= 4.5 (WCAG AA)."""
         ratio = _contrast_ratio("#F5F5F5", "#1A1A1A")
-        assert ratio >= 4.5, (
-            f"WCAG AA FAIL (dark): #F5F5F5 on #1A1A1A ratio={ratio:.2f} < 4.5"
-        )
+        assert ratio >= 4.5, f"WCAG AA FAIL (dark): #F5F5F5 on #1A1A1A ratio={ratio:.2f} < 4.5"

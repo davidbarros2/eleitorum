@@ -196,9 +196,7 @@ class MainWindow(QMainWindow):
         self._settings.setValue("app/theme", new_theme)
 
         # Update menu label to reflect the new opposite
-        self._theme_action.setText(
-            MENU_TEMA_ESCURO if new_theme == "light" else MENU_TEMA_CLARO
-        )
+        self._theme_action.setText(MENU_TEMA_ESCURO if new_theme == "light" else MENU_TEMA_CLARO)
 
     # ------------------------------------------------------------------
     # Geometry persistence (APP-04)

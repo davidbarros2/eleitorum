@@ -3,9 +3,9 @@
 Tests verify: construction, QSS dynamic property toggling, signal emission,
 mouse + keyboard activation, and focus policy.
 """
+
 from __future__ import annotations
 
-import pytest
 from PySide6.QtCore import Qt
 
 from eleitorum.ui.widgets.option_card import OptionCard

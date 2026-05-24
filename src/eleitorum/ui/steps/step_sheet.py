@@ -11,6 +11,7 @@ UI spec. Single-selection only.
 Session write: sheet_name (str) — the raw (unformatted) sheet name from the
 workbook, stored on currentItemChanged signal.
 """
+
 from __future__ import annotations
 
 from PySide6.QtCore import Qt
@@ -24,7 +25,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from eleitorum.core.readers import SheetInfo
 from eleitorum.ui.session import SessionModel
 from eleitorum.ui.strings import (
     SHEET_PICKER_EMPTY_SUFFIX,
@@ -93,9 +93,8 @@ class StepSheet(QWidget):
             if info.is_empty:
                 display_text = info.name + SHEET_PICKER_EMPTY_SUFFIX
             else:
-                display_text = (
-                    info.name + " " + SHEET_PICKER_ROWS_TEMPLATE.format(rows=info.approximate_row_count)
-                )
+                rows_str = SHEET_PICKER_ROWS_TEMPLATE.format(rows=info.approximate_row_count)
+                display_text = info.name + " " + rows_str
 
             item = QListWidgetItem(display_text)
             # Store raw name for session write (display text ≠ raw name)

@@ -61,10 +61,10 @@ class PipelineWorker(QThread):
         worker.cancel()
     """
 
-    progress = Signal(int, int)   # (current_row, total_rows)
-    finished = Signal(object)     # PipelineResult on success or validation failure
-    error = Signal(str)           # PT-PT message for unexpected exceptions only
-    cancelled = Signal()          # emitted when cancel flag triggered
+    progress = Signal(int, int)  # (current_row, total_rows)
+    finished = Signal(object)  # PipelineResult on success or validation failure
+    error = Signal(str)  # PT-PT message for unexpected exceptions only
+    cancelled = Signal()  # emitted when cancel flag triggered
 
     def __init__(
         self,

@@ -5,9 +5,9 @@ log toggle, and next_button_label override.
 
 All test data is synthetic (no real personal data per CLAUDE.md privacy constraint).
 """
+
 from __future__ import annotations
 
-import dataclasses
 import types
 
 import pytest
@@ -18,8 +18,6 @@ from eleitorum.ui.strings import (
     BTN_GRAVAR,
     BTN_VER_DETALHES_ABRIR,
     BTN_VER_DETALHES_FECHAR,
-    PREVIEW_TOTAL_ROWS,
-    PREVIEW_TRANSFORMATIONS,
 )
 
 
@@ -64,7 +62,7 @@ class TestStepPreview:
 
     def test_step_preview_constructs(self, step) -> None:
         """StepPreview builds with title, summary labels, optional detalhes button, table, log view."""
-        from PySide6.QtWidgets import QLabel, QPushButton, QTableWidget, QTextEdit
+        from PySide6.QtWidgets import QLabel, QPushButton, QTableWidget
 
         # Step title
         title = step.findChild(QLabel, "stepTitle")
@@ -114,9 +112,12 @@ class TestStepPreview:
 
         # Find any label that contains the row count
         from PySide6.QtWidgets import QLabel
+
         labels = step.findChildren(QLabel)
         texts = [lbl.text() for lbl in labels]
-        assert any("123" in t for t in texts), f"Row count 123 not found in any label. Labels: {texts}"
+        assert any("123" in t for t in texts), (
+            f"Row count 123 not found in any label. Labels: {texts}"
+        )
 
     def test_step_preview_summary_shows_transformation_count(self, step, session) -> None:
         """Summary text contains transformations_applied count."""
@@ -129,6 +130,7 @@ class TestStepPreview:
         step.populate_from_session()
 
         from PySide6.QtWidgets import QLabel
+
         labels = step.findChildren(QLabel)
         texts = [lbl.text() for lbl in labels]
         assert any("7" in t for t in texts), f"Transformation count 7 not found. Labels: {texts}"

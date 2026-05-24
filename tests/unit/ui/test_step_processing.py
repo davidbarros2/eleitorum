@@ -5,6 +5,7 @@ dialog per D-01 spec, worker signal connections, and routing signals.
 
 All test data is synthetic (no real personal data per CLAUDE.md privacy constraint).
 """
+
 from __future__ import annotations
 
 import types
@@ -38,7 +39,7 @@ class TestStepProcessing:
 
     def test_step_processing_constructs(self, step) -> None:
         """StepProcessing builds with title, progress bar, label and cancel button."""
-        from PySide6.QtWidgets import QLabel, QProgressBar, QPushButton
+        from PySide6.QtWidgets import QLabel, QPushButton
 
         # Title label with correct objectName
         title = step.findChild(QLabel, "stepTitle")
@@ -55,7 +56,6 @@ class TestStepProcessing:
 
         # Cancel button
         assert hasattr(step, "_cancel_btn"), "_cancel_btn attribute missing"
-        from PySide6.QtWidgets import QPushButton
         assert isinstance(step._cancel_btn, QPushButton)
 
     def test_step_processing_initial_state_indeterminate(self, step) -> None:

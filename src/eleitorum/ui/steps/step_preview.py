@@ -8,6 +8,7 @@ QTextEdit with the full log content inline below the summary panel.
 Requirements: WIZ-05 (scrollable preview ~50 rows before save), D-03 (Ver detalhes
 inline collapsible QTextEdit max 150px).
 """
+
 from __future__ import annotations
 
 from PySide6.QtCore import Qt
@@ -30,7 +31,6 @@ from eleitorum.ui.strings import (
     BTN_VER_DETALHES_FECHAR,
     PREVIEW_TOTAL_ROWS,
     PREVIEW_TRANSFORMATIONS,
-    PREVIEW_WARNINGS,
     STEP_4_TITLE,
 )
 
@@ -112,9 +112,7 @@ class StepPreview(QWidget):
             return
 
         # Update summary labels
-        self._summary_rows_label.setText(
-            PREVIEW_TOTAL_ROWS.format(n=result.rows_processed)
-        )
+        self._summary_rows_label.setText(PREVIEW_TOTAL_ROWS.format(n=result.rows_processed))
         self._summary_transforms_label.setText(
             PREVIEW_TRANSFORMATIONS.format(m=result.transformations_applied)
         )

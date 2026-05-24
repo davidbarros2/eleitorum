@@ -3,6 +3,7 @@
 Tests verify the Qt-free data contract: all fields present, defaults None,
 mutable (not frozen), no PySide6 imports.
 """
+
 from __future__ import annotations
 
 import ast
@@ -72,24 +73,22 @@ class TestSessionModel:
 
     def test_session_model_has_no_pyside6_imports(self) -> None:
         """session.py must never import from PySide6 (Qt-free contract)."""
+
         import eleitorum.ui.session as _mod
-        import importlib
 
         src = pathlib.Path(_mod.__file__).read_text(encoding="utf-8")
         tree = ast.parse(src)
         pyside_imports = [
             node.module
             for node in ast.walk(tree)
-            if isinstance(node, ast.ImportFrom) and node.module
-            and "PySide6" in node.module
+            if isinstance(node, ast.ImportFrom) and node.module and "PySide6" in node.module
         ]
-        assert not pyside_imports, (
-            f"PySide6 imports found in session.py: {pyside_imports}"
-        )
+        assert not pyside_imports, f"PySide6 imports found in session.py: {pyside_imports}"
 
     def test_session_model_is_dataclass(self) -> None:
         """SessionModel must be decorated with @dataclasses.dataclass."""
         import dataclasses
+
         from eleitorum.ui.session import SessionModel
 
         assert dataclasses.is_dataclass(SessionModel)
@@ -99,6 +98,7 @@ class TestSessionModel:
     def test_session_model_field_names(self) -> None:
         """SessionModel has exactly the required field names."""
         import dataclasses
+
         from eleitorum.ui.session import SessionModel
 
         field_names = {f.name for f in dataclasses.fields(SessionModel)}
@@ -112,6 +112,4 @@ class TestSessionModel:
             "sheets",
             "column_headers",
         }
-        assert required.issubset(field_names), (
-            f"Missing fields: {required - field_names}"
-        )
+        assert required.issubset(field_names), f"Missing fields: {required - field_names}"

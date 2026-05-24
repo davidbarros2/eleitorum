@@ -71,10 +71,7 @@ class TestAboutDialog:
         texts = [lbl.text() for lbl in labels]
 
         # Find a label that contains both the app name and version
-        heading_match = any(
-            APP_NAME in text and __version__ in text
-            for text in texts
-        )
+        heading_match = any(APP_NAME in text and __version__ in text for text in texts)
         assert heading_match, (
             f"No QLabel found containing both '{APP_NAME}' and '{__version__}'. "
             f"Labels found: {texts}"

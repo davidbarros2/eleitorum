@@ -19,17 +19,15 @@ Icons: QStyle.StandardPixmap.SP_DialogApplyButton (success) and
 Requirements: WIZ-07 (success screen), WIZ-08 (error screen), APP-19 (icons
 paired with text for accessibility).
 """
+
 from __future__ import annotations
 
-import pathlib
-
-from PySide6.QtCore import Signal, QUrl
+from PySide6.QtCore import QUrl, Signal
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QSizePolicy,
     QStackedWidget,
     QStyle,
     QTextEdit,
@@ -43,11 +41,9 @@ from eleitorum.ui.strings import (
     BTN_PROCESSAR_OUTRO,
     BTN_SAIR,
     DONE_ERROR_BODY,
-    DONE_ERROR_HEADING,
     DONE_PRONTO,
     DONE_SUCCESS_SUMMARY,
     STEP_DONE_ERROR_TITLE,
-    STEP_DONE_SUCCESS_TITLE,
 )
 
 # Max failures shown in error text before "…e mais N erros" suffix
@@ -93,8 +89,8 @@ class StepDone(QWidget):
         self._stack = QStackedWidget()
         root_layout.addWidget(self._stack)
 
-        self._stack.addWidget(self._build_success_page())   # index 0
-        self._stack.addWidget(self._build_error_page())     # index 1
+        self._stack.addWidget(self._build_success_page())  # index 0
+        self._stack.addWidget(self._build_error_page())  # index 1
 
         # Start on success page
         self._stack.setCurrentIndex(0)
@@ -209,7 +205,7 @@ class StepDone(QWidget):
             self._success_path_label.setText("")
         self._success_summary.setText(
             DONE_SUCCESS_SUMMARY.format(
-                rows=result.rows_processed,       # type: ignore[union-attr]
+                rows=result.rows_processed,  # type: ignore[union-attr]
                 changes=result.transformations_applied,  # type: ignore[union-attr]
             )
         )
@@ -221,9 +217,7 @@ class StepDone(QWidget):
         failures = result.failures  # type: ignore[union-attr]
         lines: list[str] = []
         for f in failures[:_MAX_FAILURES_SHOWN]:
-            lines.append(
-                f"Linha {f.row_index}: {f.column_name} = '{f.value}' — {f.message_pt}"
-            )
+            lines.append(f"Linha {f.row_index}: {f.column_name} = '{f.value}' — {f.message_pt}")
         if len(failures) > _MAX_FAILURES_SHOWN:
             remaining = len(failures) - _MAX_FAILURES_SHOWN
             lines.append(f"…e mais {remaining} erros.")

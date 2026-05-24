@@ -3,11 +3,10 @@
 Tests verify: button presence, signal emission, and public API methods.
 All tests use qtbot for PySide6 widget lifecycle management.
 """
+
 from __future__ import annotations
 
-import pytest
 from PySide6.QtCore import Qt
-from PySide6.QtTest import QTest
 
 from eleitorum.ui.widgets.navbar import NavBar
 

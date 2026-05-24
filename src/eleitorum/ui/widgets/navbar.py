@@ -9,6 +9,7 @@ without touching internal button objects.
 
 Security note: no user-supplied content flows through this widget.
 """
+
 from __future__ import annotations
 
 from PySide6.QtCore import Signal

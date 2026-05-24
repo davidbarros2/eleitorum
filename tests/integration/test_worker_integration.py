@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import pathlib
 
-import pytest
 from pytestqt.qtbot import QtBot
 
 from eleitorum.ui.worker import PipelineWorker
@@ -50,9 +49,7 @@ def test_worker_happy_path_caderno(qtbot: QtBot, tmp_path: pathlib.Path) -> None
     assert out.exists(), "output CSV must be created on success"
 
 
-def test_worker_duplicate_mec_emits_finished_failure(
-    qtbot: QtBot, tmp_path: pathlib.Path
-) -> None:
+def test_worker_duplicate_mec_emits_finished_failure(qtbot: QtBot, tmp_path: pathlib.Path) -> None:
     """Duplicate mec → pipeline validation failure → finished(result) with success=False.
 
     Requirements: D-01 (rejection integration test), TST-05 (pipeline + worker integration).
@@ -75,9 +72,5 @@ def test_worker_duplicate_mec_emits_finished_failure(
     worker.wait()
 
     result = blocker.args[0]
-    assert result.success is False, (
-        "expected failure for duplicate-mec caderno fixture"
-    )
-    assert not out.exists(), (
-        "output CSV must NOT be created when the pipeline rejects the input"
-    )
+    assert result.success is False, "expected failure for duplicate-mec caderno fixture"
+    assert not out.exists(), "output CSV must NOT be created when the pipeline rejects the input"

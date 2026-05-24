@@ -7,6 +7,7 @@ Mirrors Phase 1's errors.py pattern: centralized, typed, PT-PT only.
 All copy sourced from 02-UI-SPEC.md Copywriting Contract, Error States, and
 Empty States sections.
 """
+
 from __future__ import annotations
 
 # ---------------------------------------------------------------------------
@@ -73,9 +74,7 @@ PROCESSING_PROGRESS: str = "A validar linha {current} de {total}…"
 # Confirmation dialogs
 # ---------------------------------------------------------------------------
 
-CONFIRM_CANCEL: str = (
-    "Tem a certeza que quer cancelar? O processamento será interrompido."
-)
+CONFIRM_CANCEL: str = "Tem a certeza que quer cancelar? O processamento será interrompido."
 
 
 # ---------------------------------------------------------------------------
@@ -93,19 +92,13 @@ DROP_ZONE_PLACEHOLDER: str = "Arraste o ficheiro para aqui"
 ERR_UNSUPPORTED_EXT: str = (
     "O formato '{ext}' não é suportado. Formatos aceites: XLSX, XLSM, XLS, ODS, CSV, TSV."
 )
-ERR_FILE_OPEN: str = (
-    "Não foi possível ler o ficheiro. Feche-o noutro programa e tente novamente."
-)
+ERR_FILE_OPEN: str = "Não foi possível ler o ficheiro. Feche-o noutro programa e tente novamente."
 ERR_OUTPUT_SAME_AS_INPUT: str = (
     "O destino não pode ser o mesmo ficheiro que o original. Escolha outro local."
 )
-ERR_OUTPUT_OPEN: str = (
-    "Não foi possível gravar o ficheiro. Feche-o no Excel e tente novamente."
-)
+ERR_OUTPUT_OPEN: str = "Não foi possível gravar o ficheiro. Feche-o no Excel e tente novamente."
 ERR_OUTPUT_EXISTS_PROMPT: str = "Já existe um ficheiro com esse nome. Substituir?"
-ERR_NO_DETECTION_HEADING: str = (
-    "Não foi possível detetar as colunas automaticamente."
-)
+ERR_NO_DETECTION_HEADING: str = "Não foi possível detetar as colunas automaticamente."
 ERR_NO_DETECTION_BODY: str = "Por favor, escolha quais usar:"
 
 
@@ -116,9 +109,7 @@ ERR_NO_DETECTION_BODY: str = "Por favor, escolha quais usar:"
 OPTION_CADERNO_HEADING: str = "Caderno Eleitoral"
 OPTION_CADERNO_DESC: str = "Lista de votantes elegíveis a participar numa eleição"
 OPTION_ELEGIVEIS_HEADING: str = "Lista de Elegíveis"
-OPTION_ELEGIVEIS_DESC: str = (
-    "Lista de candidatos ou opções disponíveis numa eleição"
-)
+OPTION_ELEGIVEIS_DESC: str = "Lista de candidatos ou opções disponíveis numa eleição"
 
 
 # ---------------------------------------------------------------------------
@@ -127,8 +118,7 @@ OPTION_ELEGIVEIS_DESC: str = (
 
 OPEN_DIALOG_TITLE: str = "Escolher ficheiro de entrada"
 OPEN_DIALOG_FILTER: str = (
-    "Ficheiros suportados (*.xlsx *.xlsm *.xls *.ods *.csv *.tsv);;"
-    "Todos os ficheiros (*.*)"
+    "Ficheiros suportados (*.xlsx *.xlsm *.xls *.ods *.csv *.tsv);;Todos os ficheiros (*.*)"
 )
 SAVE_DIALOG_TITLE: str = "Gravar ficheiro de saída"
 SAVE_DIALOG_FILTER: str = "Ficheiro CSV (*.csv);;Todos os ficheiros (*.*)"
@@ -162,9 +152,7 @@ MENU_SOBRE: str = "Sobre…"
 # About dialog (APP-15)
 # ---------------------------------------------------------------------------
 
-ABOUT_DESCRIPTION: str = (
-    "Utilitário para normalização de ficheiros eleitorais."
-)
+ABOUT_DESCRIPTION: str = "Utilitário para normalização de ficheiros eleitorais."
 ABOUT_LICENSE: str = "Distribuído sob a licença MIT."
 ABOUT_REPO_LINK_LABEL: str = "Repositório no GitHub"
 
