@@ -60,7 +60,7 @@ class DropZone(QFrame):
     # Drag event overrides
     # ------------------------------------------------------------------
 
-    def dragEnterEvent(self, event) -> None:  # type: ignore[override]
+    def dragEnterEvent(self, event) -> None:
         """Accept the drag if the first URL has a supported extension."""
         if event.mimeData().hasUrls():
             urls = event.mimeData().urls()
@@ -72,11 +72,11 @@ class DropZone(QFrame):
                     return
         event.ignore()
 
-    def dragLeaveEvent(self, event) -> None:  # type: ignore[override]
+    def dragLeaveEvent(self, event) -> None:
         """Reset drag_active when the drag leaves the widget."""
         self._set_active(False)
 
-    def dropEvent(self, event) -> None:  # type: ignore[override]
+    def dropEvent(self, event) -> None:
         """Accept a valid drop and emit file_dropped with the absolute path."""
         self._set_active(False)
         if event.mimeData().hasUrls():

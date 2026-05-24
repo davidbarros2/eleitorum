@@ -97,12 +97,12 @@ class OptionCard(QFrame):
     # Event overrides
     # ------------------------------------------------------------------
 
-    def mousePressEvent(self, event) -> None:  # type: ignore[override]
+    def mousePressEvent(self, event) -> None:
         """Left-click selects the card."""
         self.set_selected(True)
         super().mousePressEvent(event)
 
-    def keyPressEvent(self, event) -> None:  # type: ignore[override]
+    def keyPressEvent(self, event) -> None:
         """Space / Return / Enter activates the card (APP-17 keyboard access)."""
         if event.key() in (Qt.Key.Key_Space, Qt.Key.Key_Return, Qt.Key.Key_Enter):
             self.set_selected(True)

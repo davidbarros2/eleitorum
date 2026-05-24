@@ -197,7 +197,7 @@ class StepDone(QWidget):
     def show_success(self, result: object) -> None:
         """Switch to success page and populate with result data."""
         self._result_for_open = result
-        output_path = result.output_path  # type: ignore[union-attr]
+        output_path = result.output_path  # type: ignore[attr-defined]
         if output_path is not None:
             self._success_path_label.setText(output_path.name)
             self._success_path_label.setToolTip(str(output_path))
@@ -205,8 +205,8 @@ class StepDone(QWidget):
             self._success_path_label.setText("")
         self._success_summary.setText(
             DONE_SUCCESS_SUMMARY.format(
-                rows=result.rows_processed,  # type: ignore[union-attr]
-                changes=result.transformations_applied,  # type: ignore[union-attr]
+                rows=result.rows_processed,  # type: ignore[attr-defined]
+                changes=result.transformations_applied,  # type: ignore[attr-defined]
             )
         )
         self._stack.setCurrentIndex(0)
@@ -214,7 +214,7 @@ class StepDone(QWidget):
     def show_error(self, result: object) -> None:
         """Switch to error page and populate with failure list."""
         self._result_for_open = result
-        failures = result.failures  # type: ignore[union-attr]
+        failures = result.failures  # type: ignore[attr-defined]
         lines: list[str] = []
         for f in failures[:_MAX_FAILURES_SHOWN]:
             lines.append(f"Linha {f.row_index}: {f.column_name} = '{f.value}' — {f.message_pt}")
@@ -235,10 +235,10 @@ class StepDone(QWidget):
 
         if self._stack.currentIndex() == 1:
             # Error page — open error log folder
-            target = self._result_for_open.error_log_path  # type: ignore[union-attr]
+            target = self._result_for_open.error_log_path  # type: ignore[attr-defined]
         else:
             # Success page — open output folder
-            target = self._result_for_open.output_path  # type: ignore[union-attr]
+            target = self._result_for_open.output_path  # type: ignore[attr-defined]
 
         if target is not None:
             QDesktopServices.openUrl(QUrl.fromLocalFile(str(target.parent)))

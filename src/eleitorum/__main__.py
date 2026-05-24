@@ -31,7 +31,10 @@ def _check_version_flag() -> None:
     if args.version:
         from eleitorum.version import __version__
 
-        sys.stdout.write(f"EleitorUM {__version__}\n")
+        try:
+            sys.stdout.write(f"EleitorUM {__version__}\n")
+        except (AttributeError, OSError):
+            pass  # stdout is None in --windowed PyInstaller builds
         sys.exit(0)
 
 

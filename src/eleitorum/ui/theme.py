@@ -489,7 +489,7 @@ def apply_theme(theme: str) -> None:
     qss = DARK_QSS if theme == "dark" else LIGHT_QSS
     app = QApplication.instance()
     if app is not None:
-        app.setStyleSheet(qss)
+        app.setStyleSheet(qss)  # type: ignore[attr-defined]
 
 
 def detect_system_theme() -> str:
@@ -505,7 +505,7 @@ def detect_system_theme() -> str:
     app = QApplication.instance()
     if app is None:
         return "light"
-    hints = app.styleHints()
+    hints = app.styleHints()  # type: ignore[attr-defined]
     cs = hints.colorScheme()
     if cs == Qt.ColorScheme.Dark:
         return "dark"
