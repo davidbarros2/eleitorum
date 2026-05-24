@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Core Pipeline** - All Qt-free processing: file readers, encoding detection, header/column detection, transformation rules, validation, output writer, log builder, custom exceptions, and PT-PT error messages — with ≥90% unit-test coverage before Phase 2 starts (completed 2026-05-23)
 - [ ] **Phase 2: UI Scaffold + Wizard Steps** - QApplication setup, QStackedWidget + SessionModel + NavBar, QThread worker, all six wizard steps, theme system (light + dark), menu bar, About dialog, first-run welcome screen, window chrome, and QSettings persistence
 - [x] **Phase 3: Integration, End-to-End Testing + Fixtures** - Wire pipeline to UI, integration tests for both output types, synthetic fixture generators for all 15 fixture types, pytest-qt smoke tests per wizard step, and byte-exact output assertions (completed 2026-05-23)
-- [ ] **Phase 4: Build, CI, Packaging + Distribution Artifacts** - PyInstaller spec and build script, icon generation, font and plugin bundling, Windows PE metadata, GitHub Actions CI/CD, SHA-256 checksum, CHANGELOG v1.0.0, and all repository documentation files
+- [x] **Phase 4: Build, CI, Packaging + Distribution Artifacts** - PyInstaller spec and build script, icon generation, font and plugin bundling, Windows PE metadata, GitHub Actions CI/CD, SHA-256 checksum, CHANGELOG v1.0.0, and all repository documentation files (completed 2026-05-24)
 
 ## Phase Details
 
@@ -131,7 +131,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 04-05-PLAN.md — GitHub Actions CI/CD: ci.yml (push-to-main quality gate) and release.yml (v1.0.0 tag build + smoke test + release publication)
+- [x] 04-05-PLAN.md — GitHub Actions CI/CD: ci.yml (push-to-main quality gate) and release.yml (v1.0.0 tag build + smoke test + release publication)
 
 ## Progress
 
@@ -143,4 +143,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Core Pipeline | 5/5 | Complete    | 2026-05-23 |
 | 2. UI Scaffold + Wizard Steps | 6/6 | Complete    | 2026-05-23 |
 | 3. Integration, End-to-End Testing + Fixtures | 1/1 | Complete    | 2026-05-23 |
-| 4. Build, CI, Packaging + Distribution Artifacts | 4/5 | In Progress|  |
+| 4. Build, CI, Packaging + Distribution Artifacts | 5/5 | Complete   | 2026-05-24 |
