@@ -206,12 +206,12 @@ class MainWindow(QMainWindow):
         """Restore window geometry from QSettings if available."""
         geom = self._settings.value("window/geometry", None, type=bytes)
         if geom:
-            self.restoreGeometry(geom)
+            self.restoreGeometry(geom)  # type: ignore[arg-type]
         state = self._settings.value("window/state", None, type=bytes)
         if state:
-            self.restoreState(state)
+            self.restoreState(state)  # type: ignore[arg-type]
 
-    def closeEvent(self, event) -> None:  # type: ignore[override]
+    def closeEvent(self, event) -> None:
         """Persist window geometry and state before closing (APP-04)."""
         self._settings.setValue("window/geometry", self.saveGeometry())
         self._settings.setValue("window/state", self.saveState())

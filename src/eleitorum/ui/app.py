@@ -42,7 +42,7 @@ def create_app() -> QApplication:
         The configured QApplication instance.
     """
     # Reuse an existing QApplication instance if one already exists (e.g. in tests)
-    app = QApplication.instance() or QApplication(sys.argv)
+    app: QApplication = QApplication.instance() or QApplication(sys.argv)  # type: ignore[assignment]
 
     # Set application identity (used by QSettings to scope storage)
     app.setApplicationName(APP_NAME)

@@ -73,7 +73,7 @@ class PipelineWorker(QThread):
         output_path: object,
         parent: object = None,
     ) -> None:
-        super().__init__(parent)  # type: ignore[call-overload]
+        super().__init__(parent)  # type: ignore[arg-type]
         self._source = source
         self._output_type = output_type
         self._output_path = output_path

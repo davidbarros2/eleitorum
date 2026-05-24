@@ -272,7 +272,7 @@ class WizardController(QObject):
         source = self._session.source_path
         output_type = self._session.output_type or "caderno"
         worker = PipelineWorker(
-            source=source,
+            source=source,  # type: ignore[arg-type]
             output_type=output_type,
             output_path=None,  # dry-run — never writes
         )
@@ -291,7 +291,7 @@ class WizardController(QObject):
         - On accepted path: stores session.output_path, persists last_directory,
           starts second PipelineWorker with the confirmed output path.
         """
-        last_dir = self._settings.value("app/last_directory", "", type=str)
+        last_dir: str = self._settings.value("app/last_directory", "", type=str)  # type: ignore[assignment]
         source_path = self._session.source_path
         output_type = self._session.output_type or "caderno"
         suggested_name = f"{source_path.stem}_{output_type}.csv" if source_path else "saida.csv"
@@ -331,7 +331,7 @@ class WizardController(QObject):
             self._session.output_path = chosen_path
 
             worker = PipelineWorker(
-                source=source_path,
+                source=source_path,  # type: ignore[arg-type]
                 output_type=output_type,
                 output_path=chosen_path,
             )

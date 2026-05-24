@@ -47,6 +47,16 @@ class StepColumns(QWidget):
     is_complete() always returns True (Próximo always enabled — WIZ-04 spec).
     """
 
+    # Declared here because _build_mapping_row sets them via setattr()
+    _mec_row: QFrame
+    _name_row: QFrame
+    _mec_value_label: QLabel
+    _mec_alterar_btn: QPushButton
+    _mec_combo: QComboBox
+    _name_value_label: QLabel
+    _name_alterar_btn: QPushButton
+    _name_combo: QComboBox
+
     def __init__(
         self,
         session: SessionModel,
