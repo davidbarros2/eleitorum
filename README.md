@@ -1,3 +1,7 @@
+**EleitorUM** is a Windows desktop utility that normalises electoral roll and eligibility list files. It accepts Excel and text formats (XLSX, XLS, ODS, CSV, TSV), validates and transforms the data according to strict rules, and produces a byte-exact CSV output with no manual fixing required.
+
+---
+
 # EleitorUM
 
 > Utilitário Windows para normalizar cadernos eleitorais e listas de elegíveis.
@@ -5,7 +9,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-green)](LICENSE)
 [![Plataforma: Windows](https://img.shields.io/badge/plataforma-Windows%2010%2F11-0078D4?logo=windows)](https://www.microsoft.com/windows)
-[![Estado: Em Desenvolvimento](https://img.shields.io/badge/estado-em%20desenvolvimento-orange)]()
+[![Estado: v1.0.0](https://img.shields.io/badge/estado-v1.0.0-brightgreen)]()
 
 O **EleitorUM** automatiza a preparação de cadernos eleitorais e listas de elegíveis — uma tarefa hoje feita manualmente no Excel e no Notepad. Aceita qualquer ficheiro Excel ou texto (XLSX, XLS, ODS, CSV, TSV), valida e normaliza os dados segundo regras precisas, e produz um CSV byte-exact acompanhado de um log detalhado de todas as alterações.
 
@@ -51,7 +55,25 @@ O **EleitorUM** automatiza a preparação de cadernos eleitorais e listas de ele
 | 1 — Core Pipeline | Leitura, detecção, transformação, validação, output, logging — Qt-free | ✅ Concluída |
 | 2 — Interface Gráfica | Wizard PySide6, pré-visualização, temas claro/escuro | ✅ Concluída |
 | 3 — Testes de Integração | Cobertura ponta-a-ponta, fixtures sintéticos | ✅ Concluída |
-| 4 — Build e Distribuição | PyInstaller `.exe`, CI/CD, v1.0.0 | ⏳ Pendente |
+| 4 — Build e Distribuição | PyInstaller `.exe`, CI/CD, v1.0.0 | ✅ Concluída |
+
+---
+
+## Instalação
+
+Descarregue `EleitorUM-1.0.0-win64.zip` da [página de lançamentos](https://github.com/davidbarros2/eleitorum/releases/tag/v1.0.0), extraia o ZIP e execute `EleitorUM.exe`. Não é necessário instalar Python.
+
+### Verificação de integridade (opcional)
+
+```powershell
+# Verificar SHA-256
+(Get-FileHash EleitorUM-1.0.0-win64.zip -Algorithm SHA256).Hash.ToLower()
+```
+Compare com o conteúdo de `EleitorUM-1.0.0-win64.zip.sha256`.
+
+### Aviso de segurança
+
+O Windows pode apresentar um aviso SmartScreen na primeira execução (o executável não tem assinatura de código). Clique em "Mais informações" → "Executar assim mesmo" para prosseguir.
 
 ---
 
