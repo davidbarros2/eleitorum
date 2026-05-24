@@ -10,7 +10,6 @@ import ast
 import pathlib
 import re
 
-
 # Required string constant names per 02-02-PLAN.md <behavior>
 REQUIRED_CONSTANTS = [
     "STEP_1_TITLE",
@@ -69,7 +68,6 @@ REQUIRED_CONSTANTS = [
     "ABOUT_DESCRIPTION",
     "ABOUT_LICENSE",
     "ABOUT_REPO_LINK_LABEL",
-    "UMINHO_DISCLAIMER",
     "WELCOME_HEADING",
     "WELCOME_BODY",
     "DONE_PRONTO",

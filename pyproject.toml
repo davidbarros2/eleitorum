@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eleitorum"
-version = "0.1.0"
-description = "Windows desktop utility to normalize electoral roll and eligibility list files for Universidade do Minho"
+version = "1.0.0"
+description = "Windows desktop utility to normalize electoral roll and eligibility list files"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 license = { text = "MIT" }
@@ -25,6 +25,11 @@ dev = [
     "mypy==2.1.0",
     "ruff==0.15.14",
     "pytest-qt==4.5.0",
+    "pyinstaller==6.20.0",
+    "svglib==1.6.0",
+    "reportlab==4.4.10",
+    "Pillow==12.1.1",
+    "pip-audit==2.10.0",
 ]
 
 [tool.setuptools.packages.find]

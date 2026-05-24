@@ -7,8 +7,7 @@ WelcomeDialog:
 
 AboutDialog:
   - Modal QDialog for Ajuda → Sobre… (APP-15).
-  - Contains APP_NAME + version heading, PT-PT description, UMinho disclaimer
-    (verbatim from Eleitorum.md §3.5 via strings.UMINHO_DISCLAIMER), MIT license
+  - Contains APP_NAME + version heading, PT-PT description, MIT license
     note, and repository link via QLabel.setOpenExternalLinks(True).
 
 Security note (T-02-06-06): the repository link URL is a compile-time constant
@@ -34,7 +33,6 @@ from eleitorum.ui.strings import (
     ABOUT_LICENSE,
     ABOUT_REPO_LINK_LABEL,
     BTN_COMECAR,
-    UMINHO_DISCLAIMER,
     WELCOME_BODY,
     WELCOME_HEADING,
 )
@@ -87,12 +85,11 @@ class WelcomeDialog(QDialog):
 
 
 class AboutDialog(QDialog):
-    """About dialog showing app info, disclaimer, and license (APP-15).
+    """About dialog showing app info and license (APP-15).
 
     Opened via Ajuda → Sobre… menu item.  Contains:
     - ``APP_NAME v__version__`` heading
     - PT-PT description (ABOUT_DESCRIPTION)
-    - UMinho disclaimer (verbatim UMINHO_DISCLAIMER from Eleitorum.md §3.5)
     - MIT license note
     - Repository link as clickable QLabel with setOpenExternalLinks(True)
     """
@@ -117,12 +114,6 @@ class AboutDialog(QDialog):
         description = QLabel(ABOUT_DESCRIPTION)
         description.setWordWrap(True)
         layout.addWidget(description)
-
-        # UMinho disclaimer — verbatim from Eleitorum.md §3.5
-        disclaimer = QLabel(UMINHO_DISCLAIMER)
-        disclaimer.setWordWrap(True)
-        disclaimer.setObjectName("mutedText")
-        layout.addWidget(disclaimer)
 
         # MIT license note
         license_lbl = QLabel(ABOUT_LICENSE)
