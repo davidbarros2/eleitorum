@@ -31,13 +31,13 @@ jobs:
 
       - name: Smoke test — --version
         run: |
-          & dist\EleitorUM\EleitorUM.exe --version
-          $code = $LASTEXITCODE
-          if ($code -ne 0) {
-            Write-Error "EleitorUM.exe --version exited $code"
+          $proc = Start-Process "dist\EleitorUM\EleitorUM.exe" -ArgumentList "--version" -Wait -PassThru
+          Write-Host "Exit code: $($proc.ExitCode)"
+          if ($proc.ExitCode -ne 0) {
+            Write-Error "Smoke test failed: EleitorUM.exe --version exited $($proc.ExitCode)"
             exit 1
           }
-          Write-Host "Smoke test passed (exit code 0)"
+          Write-Host "Smoke test passed"
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
