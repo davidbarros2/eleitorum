@@ -63,6 +63,10 @@ O **EleitorUM** automatiza a preparação de cadernos eleitorais e listas de ele
 
 Descarregue `EleitorUM-1.0.0-win64.zip` da [página de lançamentos](https://github.com/davidbarros2/eleitorum/releases/tag/v1.0.0), extraia o ZIP e execute `EleitorUM.exe`. Não é necessário instalar Python.
 
+### Guia de Testes
+
+Para um guia passo-a-passo de instalação e testes end-to-end, incluindo ficheiros de teste e lista de verificação, consulte o **[Guia de Testes](GUIA_DE_TESTES.md)**.
+
 ### Verificação de integridade (opcional)
 
 ```powershell

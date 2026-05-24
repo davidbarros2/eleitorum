@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-24T09:26:51Z",
+  "phase": null,
+  "phase_name": "post-milestone — layman testing guide",
+  "phase_dir": null,
+  "plan": null,
+  "task": null,
+  "total_tasks": null,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Write GUIA_DE_TESTES.md — comprehensive PT-PT end-to-end testing guide for non-technical tester", "status": "done", "commit": "pending"},
+    {"id": 2, "name": "Update README.md — add link to testing guide in the Instalação section", "status": "done", "commit": "pending"}
+  ],
+  "remaining_tasks": [
+    {"id": 3, "name": "Commit documentation changes", "status": "not_started"},
+    {"id": 4, "name": "Push main branch to GitHub (triggers CI)", "status": "not_started"},
+    {"id": 5, "name": "Create and push v1.0.0 tag (triggers release.yml — builds EXE, creates GitHub Release with ZIP)", "status": "not_started"}
+  ],
+  "blockers": [],
+  "human_actions_pending": [
+    {"action": "Make the GitHub repository public (github.com/davidbarros2/eleitorum → Settings → Change visibility → Public)", "context": "Repo is currently private; must be public for the tester to access the release and download the EXE", "blocking": true},
+    {"action": "Update GitHub repository description via Settings → About → Description (suggested: 'Windows desktop utility to normalise electoral roll and eligibility list files')", "context": "GitHub repo description and topics cannot be set via git push — must be done in GitHub web UI", "blocking": false},
+    {"action": "Add GitHub Topics via Settings → About → Topics (suggested: python, windows, pyside6, pyinstaller, csv, data-transformation)", "context": "Improves discoverability", "blocking": false},
+    {"action": "Test the application by following GUIA_DE_TESTES.md from another workstation and return with findings (tests A–N)", "context": "All phases are automated-verified; 4 human checks (--version, UI, release workflow, EXE launch) remain pending", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "Testing guide written in PT-PT (not English)", "rationale": "App is entirely in PT-PT; target testers are Portuguese-speaking UMinho staff; David can read PT-PT", "phase": "post-04"},
+    {"decision": "Test data provided as inline copy-paste content in Notepad, not pre-built binary files", "rationale": "Tester receives only the EXE ZIP from GitHub Releases — no access to repo files without public repo; Notepad approach is self-contained and works for any layman", "phase": "post-04"},
+    {"decision": "14 tests (A–N) covering all 7 deferred manual checks plus 7 additional functional/edge-case tests", "rationale": "Deferred checks from phases 2–4 are checks A–G (updated F); added I–N for completeness: unsupported format, validation errors, multi-sheet, output format, --version, GitHub release", "phase": "post-04"}
+  ],
+  "uncommitted_files": ["GUIA_DE_TESTES.md", "README.md", ".planning/HANDOFF.json", ".planning/.continue-here.md"],
+  "next_action": "Commit all pending files, push main branch, create and push v1.0.0 tag to trigger GitHub Actions release workflow",
+  "context_notes": "All 4 development phases complete and verified. This session added the layman testing guide and README link. The critical blocker for the tester is having a downloadable EXE: the v1.0.0 tag must be pushed to trigger release.yml, which builds the EXE via PyInstaller on windows-latest and attaches the ZIP to a GitHub Release. Then David makes the repo public and tests from another workstation."
+}
