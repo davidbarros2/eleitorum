@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
-status: executing
-last_updated: "2026-05-24T00:05:23.729Z"
-last_activity: 2026-05-24 -- Phase 04 execution started
+status: awaiting-user-testing
+stopped_at: session resumed 2026-05-25 — awaiting David's manual testing
+last_updated: "2026-05-25T00:00:00.000Z"
+last_activity: 2026-05-24 -- v1.0.0 tag pushed, GitHub Release published with EXE
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 17
-  completed_plans: 12
-  percent: 71
+  completed_plans: 17
+  percent: 100
 ---
 
 # Project State
@@ -20,38 +21,38 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-23)
 
 **Core value:** Receive an arbitrary input file, validate it, transform it into the exact format required by the electoral system, and save the result — zero manual fixing required afterward.
-**Current focus:** Phase 04 — build-ci-packaging-distribution
+**Current focus:** Post-milestone — awaiting manual testing from another workstation
 
 ## Current Position
 
-Phase: 04 (build-ci-packaging-distribution) — EXECUTING
-Plan: 1 of 5
-Status: Executing Phase 04
-Last activity: 2026-05-24 -- Phase 04 execution started
+Phase: ALL COMPLETE (4/4)
+Plan: ALL COMPLETE (17/17)
+Status: Awaiting manual testing (GUIA_DE_TESTES.md)
+Last activity: 2026-05-24 -- v1.0.0 GitHub Release published (EleitorUM-1.0.0-win64.zip + sha256)
 
-Progress: [█████░░░░░] 50%
+Progress: [██████████] 100% (dev complete)
 
-## Performance Metrics
+## What Has Been Done
 
-**Velocity:**
+- All 4 development phases complete and verified
+- `GUIA_DE_TESTES.md` written — 14 tests (A–N) in PT-PT for a non-technical tester
+- `README.md` updated with link to testing guide
+- `v1.0.0` tag pushed → GitHub Actions succeeded → GitHub Release created:
+  - `EleitorUM-1.0.0-win64.zip` (Windows standalone EXE)
+  - `EleitorUM-1.0.0-win64.zip.sha256`
 
-- Total plans completed: 6
-- Average duration: —
-- Total execution time: 0.0 hours
+### Quick Tasks Completed
 
-**By Phase:**
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260525-q6z | Fix "Próximo" button never enables after user interacts on steps 1–3 | 2026-05-25 | 8b17e41 | [260525-q6z-fix-proximo-button-not-enabling-on-step-](./quick/260525-q6z-fix-proximo-button-not-enabling-on-step-/) |
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 01 | 5 | - | - |
-| 03 | 1 | - | - |
+## Pending Human Actions
 
-**Recent Trend:**
-
-- Last 5 plans: —
-- Trend: —
-
-*Updated after each plan completion*
+1. **BLOCKING** — Make GitHub repo public: github.com/davidbarros2/eleitorum → Settings → Change visibility → Public
+   (Without this, the tester cannot access the release)
+2. Test from another workstation following `GUIA_DE_TESTES.md` (tests A–N)
+3. Return with pass/fail findings for final assessment
 
 ## Accumulated Context
 
@@ -65,17 +66,19 @@ Recent decisions affecting current work:
 - [Init]: stdlib `csv` for all output, never `pandas.to_csv` — byte-exact control over BOM, CRLF, quoting
 - [Init]: One-folder (`--onedir`) ZIP as primary build artifact — benchmark cold-start before considering `--onefile`
 - [Init]: charset-normalizer over chardet — MIT license, 10-100x faster, avoids chardet v7 licensing issue
+- [Post-04]: Testing guide in PT-PT, 14 tests (A–N) covering all deferred manual checks + functional edge cases
+- [Post-04]: Test data provided as Notepad copy-paste (not pre-built files) — tester has only the EXE ZIP
 
 ### Pending Todos
 
-None yet.
+None.
 
-### Blockers/Concerns
+### Open Questions (to resolve during testing)
 
-- [Open question]: BOM in output requires product owner validation against live electoral platform before v1.0.0 tag
-- [Open question]: F/D/B cross-prefix uniqueness rule must be confirmed against UMinho HR documentation
-- [Open question]: Eligiveis sort key (full designation string vs. surname-first) must be confirmed with product owner
-- [Open question]: Valid mecanografico prefixes list exhaustiveness must be confirmed before implementation of VAL-01
+- BOM in output — does the electoral platform accept it? (Test K covers this)
+- F/D/B cross-prefix uniqueness rule — must be confirmed against UMinho HR docs
+- Eligiveis sort key — full designation string vs. surname-first?
+- Valid mecanografico prefixes list exhaustiveness (VAL-01)
 
 ## Deferred Items
 
@@ -85,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T00:00:00.000Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-build-ci-packaging-distribution/04-CONTEXT.md
+Last session: 2026-05-25
+Stopped at: Fixed Próximo button reactivity bug — awaiting further functional feedback from David
+Resume file: None
