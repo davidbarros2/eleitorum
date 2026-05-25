@@ -46,6 +46,7 @@ Progress: [██████████] 100% (dev complete)
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260525-q6z | Fix "Próximo" button never enables after user interacts on steps 1–3 | 2026-05-25 | 8b17e41 | [260525-q6z-fix-proximo-button-not-enabling-on-step-](./quick/260525-q6z-fix-proximo-button-not-enabling-on-step-/) |
+| 260525-fix-step3-column-headers | Fix Step 3 empty column dropdowns and ignored manual column picks | 2026-05-25 | 860b590 | [260525-fix-step3-column-headers](./quick/260525-fix-step3-column-headers/) |
 
 ## Pending Human Actions
 
