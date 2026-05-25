@@ -124,6 +124,7 @@ class WizardController(QObject):
         self._step_type.completion_changed.connect(self._update_navbar_for_current_step)
         self._step_upload.completion_changed.connect(self._update_navbar_for_current_step)
         self._step_sheet.completion_changed.connect(self._update_navbar_for_current_step)
+        self._step_columns.completion_changed.connect(self._update_navbar_for_current_step)
 
         # Connect step_processing routing signals
         self._step_processing.route_to_preview.connect(self._on_processing_to_preview)
@@ -196,6 +197,7 @@ class WizardController(QObject):
         self._session.sheets = None
         self._session.column_headers = None
         self._session.pre_detection = None
+        self._session.raw_preview_rows = None
 
         self._multi_sheet_path = False
         self._stack.setCurrentIndex(self.STEP_TYPE)
@@ -273,6 +275,10 @@ class WizardController(QObject):
                 read_result = _readers.read_input(path, sheet_name=sheet)
 
             all_rows = read_result.rows
+
+            # Store first 20 raw rows for visual column picker
+            self._session.raw_preview_rows = [list(r) for r in all_rows[:20]]
+
             if not all_rows:
                 self._session.column_headers = []
                 self._session.pre_detection = {"detection_method": "manual"}
@@ -297,8 +303,10 @@ class WizardController(QObject):
                 "detection_method": col_mapping.detection_method,
             }
         except Exception:
-            # Any read/detection error: leave column_headers as empty list so
-            # the combos are at least shown (manual mode) rather than crashing.
+            # Any read/detection error: leave raw_preview_rows and column_headers
+            # empty so the picker shows manual mode rather than crashing.
+            if not self._session.raw_preview_rows:
+                self._session.raw_preview_rows = []
             if not self._session.column_headers:
                 self._session.column_headers = []
             self._session.pre_detection = {"detection_method": "manual"}
@@ -436,10 +444,16 @@ class WizardController(QObject):
     # ------------------------------------------------------------------
 
     def _on_processing_to_preview(self, result: object) -> None:
-        """Route successful dry-run result to STEP_PREVIEW."""
+        """Route successful pipeline result to STEP_PREVIEW (dry-run) or STEP_DONE (write)."""
         self._session.pipeline_result = result
-        self._step_preview.populate_from_session()
-        self._stack.setCurrentIndex(self.STEP_PREVIEW)
+        if getattr(result, "output_path", None) is not None:
+            # Actual write completed — advance to success screen
+            self._step_done.show_success(result)
+            self._stack.setCurrentIndex(self.STEP_DONE)
+        else:
+            # Dry-run — show preview for review before save
+            self._step_preview.populate_from_session()
+            self._stack.setCurrentIndex(self.STEP_PREVIEW)
         self._update_navbar_for_current_step()
         self._update_step_indicator()
 

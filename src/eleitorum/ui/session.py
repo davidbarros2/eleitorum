@@ -42,6 +42,10 @@ class SessionModel:
                         header_row_index, mec_col_index, name_col_index,
                         detection_method. Populated by WizardController before
                         STEP_COLUMNS is shown; consumed by StepColumns.
+        raw_preview_rows: First ~20 raw rows from the input file (as lists of
+                        cell values). Used by the visual column picker in
+                        StepColumns to show actual data alongside assignment
+                        controls.
     """
 
     output_type: Literal["caderno", "elegiveis"] | None = None
@@ -53,3 +57,4 @@ class SessionModel:
     sheets: Any | None = None
     column_headers: list[str] | None = None
     pre_detection: dict[str, Any] | None = None
+    raw_preview_rows: list[list] | None = None

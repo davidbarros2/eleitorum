@@ -109,6 +109,7 @@ class PipelineWorker(QThread):
                 self._output_type,  # type: ignore[arg-type]
                 self._output_path,  # type: ignore[arg-type]
                 progress_cb=self._progress_cb,
+                write_success_log=False,  # log available in result.log_entries; no file written
             )
             self.finished.emit(result)
         except PipelineCancelledError:

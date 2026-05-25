@@ -54,8 +54,8 @@ BTN_SAIR: str = "Sair"  # step 6 success secondary action
 BTN_PROCESSAR_OUTRO: str = "Processar outro ficheiro"  # step 6 primary action
 BTN_ABRIR_PASTA: str = "Abrir pasta"  # step 6 open output folder
 BTN_ALTERAR: str = "Alterar"  # step 3 column mapping inline link
-BTN_VER_DETALHES_ABRIR: str = "Ver detalhes"  # step 4 expand log
-BTN_VER_DETALHES_FECHAR: str = "Fechar detalhes"  # step 4 collapse log
+BTN_VER_LOG: str = "Ver log"
+BTN_FECHAR_LOG: str = "Fechar log"
 BTN_ESCOLHER_FICHEIRO: str = "ou escolher ficheiro…"  # step 2 file picker button
 BTN_CONFIRM_CANCEL: str = "Sim, cancelar"  # D-01 confirmation dialog
 BTN_CONTINUE: str = "Não, continuar"  # D-01 decline cancel
@@ -194,9 +194,30 @@ COL_MAPPING_LOW: str = "A coluna {name} foi selecionada. Pode alterar."
 
 
 # ---------------------------------------------------------------------------
+# Column picker (step 3) — new visual table picker
+# ---------------------------------------------------------------------------
+
+COL_PICKER_INSTRUCTIONS: str = (
+    "Clique no cabeçalho de cada coluna para a atribuir ao campo pretendido."
+)
+COL_PICKER_INSTRUCTIONS_ELEGIVEIS: str = (
+    "Clique no cabeçalho da coluna que contém os nomes."
+)
+COL_PICKER_NO_DATA: str = "Não foi possível carregar os dados do ficheiro."
+COL_PICKER_MENU_MEC: str = "Nº Mecanográfico"
+COL_PICKER_MENU_NOME: str = "Nome"
+COL_PICKER_HEADER_MEC: str = "[MEC] {name}"
+COL_PICKER_HEADER_NOME: str = "[NOME] {name}"
+COL_PICKER_COL_LABEL: str = "Coluna {n}"
+COL_PICKER_MISSING_MEC: str = "Selecione a coluna do número mecanográfico."
+COL_PICKER_MISSING_NOME: str = "Selecione a coluna do nome."
+
+
+# ---------------------------------------------------------------------------
 # Preview (step 4)
 # ---------------------------------------------------------------------------
 
 PREVIEW_TOTAL_ROWS: str = "Total de linhas: {n}"
-PREVIEW_TRANSFORMATIONS: str = "Alterações aplicadas: {m}"
-PREVIEW_WARNINGS: str = "Atenção: {k} linhas com avisos"
+PREVIEW_COL_MEC: str = "Nº Mecanográfico"
+PREVIEW_COL_NOME: str = "Nome"
+PREVIEW_COL_CATEGORIA: str = "Categoria"

@@ -35,11 +35,15 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+_LOG_VIEW_MAX_HEIGHT: int = 200
+
 from eleitorum.ui.session import SessionModel
 from eleitorum.ui.strings import (
     BTN_ABRIR_PASTA,
+    BTN_FECHAR_LOG,
     BTN_PROCESSAR_OUTRO,
     BTN_SAIR,
+    BTN_VER_LOG,
     DONE_ERROR_BODY,
     DONE_PRONTO,
     DONE_SUCCESS_SUMMARY,
@@ -123,6 +127,18 @@ class StepDone(QWidget):
         self._success_summary = QLabel("")
         layout.addWidget(self._success_summary)
 
+        # "Ver log" toggle button
+        self._ver_log_btn = QPushButton(BTN_VER_LOG)
+        self._ver_log_btn.setFlat(True)
+        layout.addWidget(self._ver_log_btn)
+
+        # Log view — max height, initially hidden
+        self._success_log_view = QTextEdit()
+        self._success_log_view.setReadOnly(True)
+        self._success_log_view.setMaximumHeight(_LOG_VIEW_MAX_HEIGHT)
+        self._success_log_view.setVisible(False)
+        layout.addWidget(self._success_log_view)
+
         layout.addStretch()
 
         # Button row
@@ -142,6 +158,7 @@ class StepDone(QWidget):
         self._success_open_folder_btn.clicked.connect(self._on_open_folder_clicked)
         self._success_restart_btn.clicked.connect(self.restart_clicked)
         self._success_quit_btn.clicked.connect(self.quit_clicked)
+        self._ver_log_btn.clicked.connect(self._on_ver_log_clicked)
 
         return page
 
@@ -209,6 +226,11 @@ class StepDone(QWidget):
                 changes=result.transformations_applied,  # type: ignore[attr-defined]
             )
         )
+        # Populate log view from result entries; reset toggle state
+        log_entries: list[str] = getattr(result, "log_entries", [])
+        self._success_log_view.setPlainText("\n".join(log_entries))
+        self._success_log_view.setVisible(False)
+        self._ver_log_btn.setText(BTN_VER_LOG)
         self._stack.setCurrentIndex(0)
 
     def show_error(self, result: object) -> None:
@@ -227,6 +249,12 @@ class StepDone(QWidget):
     # ------------------------------------------------------------------
     # Private slots
     # ------------------------------------------------------------------
+
+    def _on_ver_log_clicked(self) -> None:
+        """Toggle the log view visibility and button text."""
+        visible = self._success_log_view.isVisible()
+        self._success_log_view.setVisible(not visible)
+        self._ver_log_btn.setText(BTN_FECHAR_LOG if not visible else BTN_VER_LOG)
 
     def _on_open_folder_clicked(self) -> None:
         """Open the output folder (success) or error log folder (error) in Explorer."""

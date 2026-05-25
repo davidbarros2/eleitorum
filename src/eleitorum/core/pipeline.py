@@ -134,6 +134,7 @@ def run_pipeline(
     *,
     progress_cb: Callable[[int, int], None] | None = None,
     overwrite_allowed: bool = False,
+    write_success_log: bool = True,
 ) -> PipelineResult:
     """Main pipeline entry point. Qt-free.
 
@@ -166,6 +167,7 @@ def run_pipeline(
             overwrite_allowed=overwrite_allowed,
             builder=builder,
             intended_error_target=intended_error_target,
+            write_success_log=write_success_log,
         )
     except EleitorumError as e:
         builder.add("ERRO", format_error_message(e))
@@ -184,6 +186,7 @@ def _execute_pipeline(
     overwrite_allowed: bool,
     builder: elt_logging.LogBuilder,
     intended_error_target: pathlib.Path,
+    write_success_log: bool = True,
 ) -> PipelineResult:
     """Inner pipeline logic — all EleitorumError exceptions propagate to run_pipeline."""
 
@@ -498,7 +501,7 @@ def _execute_pipeline(
         "FIM",
         f"Processamento concluido com sucesso. {len(change_records)} alteracoes.",
     )
-    log_path = elt_logging.write_log_file(builder, output_path)
+    log_path = elt_logging.write_log_file(builder, output_path) if write_success_log else None
 
     # ------------------------------------------------------------------
     # Step 28: return success result

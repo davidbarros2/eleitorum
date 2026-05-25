@@ -1,61 +1,56 @@
-"""Step 3 — Column mapping with auto-detection and manual override (WIZ-04, DET-07).
+"""Step 3 — Visual column picker: raw data table with clickable column headers (WIZ-04, DET-07).
 
-Pre-populates the mapping from session.pipeline_result.detection when detection
-succeeded. Falls back to manual QComboBox mode when detection_method == 'manual'
-or pipeline_result is absent.
+Shows the raw file rows in a QTableWidget. Clicking a column header opens a
+QMenu to assign that column as "Nº Mecanográfico" or "Nome". The header
+label updates after each assignment to show the current role.
 
-DET-07: mecanográfico mapping row is hidden when session.output_type == 'elegiveis'.
+DET-07: "Nº Mecanográfico" menu item is hidden when session.output_type == 'elegiveis'.
 
-Session write: column_map (dict[str, int]) — maps 'mecanografico' and 'name'
-to the currently selected column index. Written on every QComboBox change.
+Session write: column_map (dict[str, int | None]) — maps 'mecanografico' and 'name'
+to the selected column index. Written on every assignment change.
 
-Security note (T-02-04-03): QComboBox currentIndex() is bounded by the items
-it was populated with; items come exclusively from session.column_headers so
-indices are always valid.
+is_complete(): True when required columns are assigned (both for caderno, name only
+for elegiveis). completion_changed emitted after every change so the NavBar updates.
 """
 
 from __future__ import annotations
 
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import (
-    QComboBox,
-    QFrame,
-    QHBoxLayout,
+    QAbstractItemView,
     QLabel,
-    QPushButton,
+    QMenu,
+    QTableWidget,
+    QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
 
 from eleitorum.ui.session import SessionModel
 from eleitorum.ui.strings import (
-    BTN_ALTERAR,
-    COL_MAPPING_HIGH,
-    COL_MAPPING_LOW,
-    ERR_NO_DETECTION_BODY,
-    ERR_NO_DETECTION_HEADING,
+    COL_PICKER_COL_LABEL,
+    COL_PICKER_HEADER_MEC,
+    COL_PICKER_HEADER_NOME,
+    COL_PICKER_INSTRUCTIONS,
+    COL_PICKER_INSTRUCTIONS_ELEGIVEIS,
+    COL_PICKER_MENU_MEC,
+    COL_PICKER_MENU_NOME,
+    COL_PICKER_NO_DATA,
     STEP_3_TITLE,
 )
 
-# Confidence threshold: 'synonym' → high; anything else → low
-_HIGH_CONFIDENCE_METHODS: frozenset[str] = frozenset({"synonym"})
+_MAX_PREVIEW_ROWS: int = 20
 
 
 class StepColumns(QWidget):
-    """Step 3: column mapping — auto-detected or manual (WIZ-04, DET-07).
+    """Step 3: visual column picker via clickable table headers (WIZ-04, DET-07).
 
     Session writes: column_map dict keyed by 'mecanografico' and 'name'.
-    is_complete() always returns True (Próximo always enabled — WIZ-04 spec).
+    is_complete() returns True only when required columns are assigned.
     """
 
-    # Declared here because _build_mapping_row sets them via setattr()
-    _mec_row: QFrame
-    _name_row: QFrame
-    _mec_value_label: QLabel
-    _mec_alterar_btn: QPushButton
-    _mec_combo: QComboBox
-    _name_value_label: QLabel
-    _name_alterar_btn: QPushButton
-    _name_combo: QComboBox
+    completion_changed = Signal()
 
     def __init__(
         self,
@@ -63,8 +58,10 @@ class StepColumns(QWidget):
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
-
         self._session = session
+        self._mec_col: int | None = None
+        self._name_col: int | None = None
+        self._file_headers: list[str] = []
         self._setup_ui()
 
     # ------------------------------------------------------------------
@@ -76,213 +73,170 @@ class StepColumns(QWidget):
         layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(16)
 
-        # Step title
         title = QLabel(STEP_3_TITLE)
         title.setObjectName("stepTitle")
         layout.addWidget(title)
 
-        # No-detection warning (initially hidden; shown in manual mode)
-        self._no_detection_label = QLabel(ERR_NO_DETECTION_HEADING + "\n" + ERR_NO_DETECTION_BODY)
-        self._no_detection_label.setObjectName("noDetectionLabel")
-        self._no_detection_label.setWordWrap(True)
-        self._no_detection_label.setVisible(False)
-        layout.addWidget(self._no_detection_label)
+        self._instructions = QLabel(COL_PICKER_INSTRUCTIONS)
+        self._instructions.setWordWrap(True)
+        layout.addWidget(self._instructions)
 
-        # Mecanográfico mapping row (hidden for elegíveis — DET-07)
-        self._mec_row = self._build_mapping_row(
-            row_label="Coluna mecanográfica:",
-            combo_attr="_mec_combo",
-            value_attr="_mec_value_label",
-            alterar_attr="_mec_alterar_btn",
-            map_key="mecanografico",
-        )
-        layout.addWidget(self._mec_row)
+        self._no_data_label = QLabel(COL_PICKER_NO_DATA)
+        self._no_data_label.setVisible(False)
+        layout.addWidget(self._no_data_label)
 
-        # Name mapping row
-        self._name_row = self._build_mapping_row(
-            row_label="Coluna do nome:",
-            combo_attr="_name_combo",
-            value_attr="_name_value_label",
-            alterar_attr="_name_alterar_btn",
-            map_key="name",
-        )
-        layout.addWidget(self._name_row)
-
-        layout.addStretch()
-
-    def _build_mapping_row(
-        self,
-        row_label: str,
-        combo_attr: str,
-        value_attr: str,
-        alterar_attr: str,
-        map_key: str,
-    ) -> QFrame:
-        """Build a single mapping row: label + value QLabel + Alterar btn + QComboBox."""
-        row = QFrame()
-        h_layout = QHBoxLayout(row)
-        h_layout.setContentsMargins(0, 0, 0, 0)
-        h_layout.setSpacing(8)
-
-        # Row header label
-        header = QLabel(row_label)
-        h_layout.addWidget(header)
-
-        # Detected value label (shown in auto mode)
-        value_label = QLabel("—")
-        value_label.setObjectName(f"{map_key}ValueLabel")
-        h_layout.addWidget(value_label)
-        setattr(self, value_attr, value_label)
-
-        # Alterar button (shown in auto mode; hidden in manual mode)
-        alterar_btn = QPushButton(BTN_ALTERAR)
-        alterar_btn.setObjectName(f"{map_key}AlterarBtn")
-        h_layout.addWidget(alterar_btn)
-        setattr(self, alterar_attr, alterar_btn)
-
-        # QComboBox (hidden initially; shown in manual mode or after Alterar click)
-        combo = QComboBox()
-        combo.setObjectName(f"{map_key}Combo")
-        combo.setVisible(False)
-        h_layout.addWidget(combo)
-        setattr(self, combo_attr, combo)
-
-        h_layout.addStretch()
-
-        # Wire Alterar to open the combo in-place
-        alterar_btn.clicked.connect(
-            lambda checked=False, c=combo, v=value_label, b=alterar_btn: self._on_alterar_clicked(
-                c, v, b
-            )
-        )
-        # Wire combo changes to session.column_map
-        combo.currentIndexChanged.connect(lambda idx, key=map_key: self._on_combo_changed(key, idx))
-
-        return row
+        self._table = QTableWidget()
+        self._table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self._table.horizontalHeader().setStretchLastSection(True)
+        self._table.horizontalHeader().sectionClicked.connect(self._on_header_clicked)
+        layout.addWidget(self._table, stretch=1)
 
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
 
     def populate_from_session(self) -> None:
-        """Read detection results and column headers from session; populate UI.
+        """Read raw rows and detection results from session; populate table.
 
-        Detection present and method != 'manual': auto mode (show value labels).
-        Detection absent or method == 'manual': manual mode (show combos, heading).
-        DET-07: hide mec_row if session.output_type == 'elegiveis'.
+        Detects header row index from session.pre_detection to derive
+        file-level column names. Initialises column assignments from
+        auto-detection when detection_method != 'manual'.
+        DET-07: 'mecanografico' role suppressed for elegiveis output type.
         """
-        headers: list[str] = self._session.column_headers or []
-        det: dict = {}
-        if self._session.pipeline_result is not None:
-            det = getattr(self._session.pipeline_result, "detection", {}) or {}
-        elif self._session.pre_detection is not None:
-            det = self._session.pre_detection
+        output_type = self._session.output_type or "caderno"
+        self._instructions.setText(
+            COL_PICKER_INSTRUCTIONS_ELEGIVEIS if output_type == "elegiveis" else COL_PICKER_INSTRUCTIONS
+        )
 
-        detection_method = det.get("detection_method", "manual")
-        has_detection = bool(det) and detection_method != "manual"
+        raw_rows: list[list] = self._session.raw_preview_rows or []
+        det: dict = self._session.pre_detection or {}
 
-        if has_detection:
-            self._enter_auto_mode(det, headers)
+        if not raw_rows:
+            self._table.setVisible(False)
+            self._no_data_label.setVisible(True)
+            # Still mark as complete so the user isn't blocked
+            self._mec_col = None
+            self._name_col = None
+            self._sync_session_column_map()
+            return
+
+        self._table.setVisible(True)
+        self._no_data_label.setVisible(False)
+
+        rows_to_show = raw_rows[:_MAX_PREVIEW_ROWS]
+        ncols = max((len(r) for r in rows_to_show), default=0)
+
+        # Build file-level column names from the detected header row (if any)
+        header_idx = det.get("header_row_index")
+        if header_idx is not None and header_idx < len(rows_to_show):
+            raw_header = rows_to_show[header_idx]
+            self._file_headers = [
+                str(c).strip() if c is not None else "" for c in raw_header
+            ]
         else:
-            self._enter_manual_mode(headers)
+            self._file_headers = []
 
-        # DET-07: hide mecanográfico row for elegíveis
-        self._mec_row.setVisible(self._session.output_type != "elegiveis")
+        # Pad file_headers to ncols
+        while len(self._file_headers) < ncols:
+            self._file_headers.append("")
 
-    # ------------------------------------------------------------------
-    # Private helpers
-    # ------------------------------------------------------------------
+        # Pre-populate column assignments from auto-detection
+        detection_method = det.get("detection_method", "manual")
+        if detection_method != "manual":
+            self._mec_col = det.get("mec_col_index") if output_type != "elegiveis" else None
+            self._name_col = det.get("name_col_index")
+        else:
+            self._mec_col = None
+            self._name_col = None
 
-    def _enter_auto_mode(self, det: dict, headers: list[str]) -> None:
-        """Show pre-detected values; hide manual combos and no-detection message."""
-        self._no_detection_label.setVisible(False)
+        self._sync_session_column_map()
 
-        mec_idx = det.get("mec_col_index")
-        name_idx = det.get("name_col_index")
-        method = det.get("detection_method", "")
-        high = method in _HIGH_CONFIDENCE_METHODS
+        # Populate table rows
+        self._table.setRowCount(len(rows_to_show))
+        self._table.setColumnCount(ncols)
 
-        # Populate mec value label
-        if mec_idx is not None and headers and mec_idx < len(headers):
-            col_name = headers[mec_idx]
-            if high:
-                msg = COL_MAPPING_HIGH.format(name=col_name, role="mecanográfica")
-                self._mec_value_label.setText(msg)
-            else:
-                self._mec_value_label.setText(COL_MAPPING_LOW.format(name=col_name))
-        self._mec_value_label.setVisible(True)
-        self._mec_alterar_btn.setVisible(True)
-        self._mec_combo.setVisible(False)
-        self._populate_combo(self._mec_combo, headers)
+        for r_idx, row in enumerate(rows_to_show):
+            for c_idx in range(ncols):
+                cell = row[c_idx] if c_idx < len(row) else None
+                item = QTableWidgetItem(str(cell) if cell is not None else "")
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                self._table.setItem(r_idx, c_idx, item)
 
-        # Populate name value label
-        if name_idx is not None and headers and name_idx < len(headers):
-            col_name = headers[name_idx]
-            if high:
-                msg = COL_MAPPING_HIGH.format(name=col_name, role="do nome")
-                self._name_value_label.setText(msg)
-            else:
-                self._name_value_label.setText(COL_MAPPING_LOW.format(name=col_name))
-        self._name_value_label.setVisible(True)
-        self._name_alterar_btn.setVisible(True)
-        self._name_combo.setVisible(False)
-        self._populate_combo(self._name_combo, headers)
-
-        # Initialize session.column_map from detected indices
-        self._session.column_map = {
-            "mecanografico": mec_idx if mec_idx is not None else 0,
-            "name": name_idx if name_idx is not None else 0,
-        }
-
-    def _enter_manual_mode(self, headers: list[str]) -> None:
-        """Show no-detection message and open combos immediately."""
-        self._no_detection_label.setVisible(True)
-
-        self._mec_value_label.setVisible(False)
-        self._mec_alterar_btn.setVisible(False)
-        self._mec_combo.setVisible(True)
-        self._populate_combo(self._mec_combo, headers)
-
-        self._name_value_label.setVisible(False)
-        self._name_alterar_btn.setVisible(False)
-        self._name_combo.setVisible(True)
-        self._populate_combo(self._name_combo, headers)
-
-        # Initialize session.column_map from current indices
-        self._session.column_map = {
-            "mecanografico": self._mec_combo.currentIndex(),
-            "name": self._name_combo.currentIndex(),
-        }
-
-    def _populate_combo(self, combo: QComboBox, headers: list[str]) -> None:
-        """Populate a QComboBox with the column headers without triggering signals."""
-        combo.blockSignals(True)
-        combo.clear()
-        for h in headers:
-            combo.addItem(h)
-        combo.blockSignals(False)
-
-    def _on_alterar_clicked(
-        self,
-        combo: QComboBox,
-        value_label: QLabel,
-        alterar_btn: QPushButton,
-    ) -> None:
-        """Hide value label, show QComboBox for in-place edit."""
-        value_label.setVisible(False)
-        alterar_btn.setVisible(False)
-        combo.setVisible(True)
-
-    def _on_combo_changed(self, map_key: str, index: int) -> None:
-        """Write updated column index to session.column_map."""
-        if self._session.column_map is None:
-            self._session.column_map = {}
-        self._session.column_map[map_key] = index
+        self._update_header_labels()
 
     # ------------------------------------------------------------------
     # NavBar contract
     # ------------------------------------------------------------------
 
     def is_complete(self) -> bool:
-        """Always True — Próximo is always enabled once step is visible (WIZ-04)."""
-        return True
+        """True when all required columns are assigned."""
+        output_type = self._session.output_type or "caderno"
+        if output_type == "elegiveis":
+            return self._name_col is not None
+        return self._mec_col is not None and self._name_col is not None
+
+    # ------------------------------------------------------------------
+    # Private helpers
+    # ------------------------------------------------------------------
+
+    def _col_display_name(self, col_idx: int) -> str:
+        """Return the display name for a column: file header or 'Coluna N'."""
+        if col_idx < len(self._file_headers) and self._file_headers[col_idx]:
+            return self._file_headers[col_idx]
+        return COL_PICKER_COL_LABEL.format(n=col_idx + 1)
+
+    def _update_header_labels(self) -> None:
+        """Refresh the QTableWidget horizontal header labels."""
+        for col_idx in range(self._table.columnCount()):
+            name = self._col_display_name(col_idx)
+            if col_idx == self._mec_col:
+                label = COL_PICKER_HEADER_MEC.format(name=name)
+            elif col_idx == self._name_col:
+                label = COL_PICKER_HEADER_NOME.format(name=name)
+            else:
+                label = name
+            item = self._table.horizontalHeaderItem(col_idx)
+            if item is None:
+                item = QTableWidgetItem(label)
+                self._table.setHorizontalHeaderItem(col_idx, item)
+            else:
+                item.setText(label)
+
+    def _sync_session_column_map(self) -> None:
+        """Write current column assignments to session.column_map."""
+        self._session.column_map = {
+            "mecanografico": self._mec_col,
+            "name": self._name_col,
+        }
+
+    def _on_header_clicked(self, col_idx: int) -> None:
+        """Show a QMenu to assign this column to a role."""
+        output_type = self._session.output_type or "caderno"
+        menu = QMenu(self)
+
+        if output_type == "caderno":
+            act_mec = menu.addAction(COL_PICKER_MENU_MEC)
+        else:
+            act_mec = None
+
+        act_nome = menu.addAction(COL_PICKER_MENU_NOME)
+
+        chosen = menu.exec(QCursor.pos())
+        if chosen is None:
+            return
+
+        if act_mec is not None and chosen == act_mec:
+            # Clear any column previously assigned as mec
+            self._mec_col = col_idx
+            # If this column was the name column, free it
+            if self._name_col == col_idx:
+                self._name_col = None
+        elif chosen == act_nome:
+            self._name_col = col_idx
+            # If this column was the mec column, free it
+            if self._mec_col == col_idx:
+                self._mec_col = None
+
+        self._update_header_labels()
+        self._sync_session_column_map()
+        self.completion_changed.emit()
