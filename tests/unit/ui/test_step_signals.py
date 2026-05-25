@@ -93,12 +93,13 @@ class TestStepUploadCompletionChanged:
 
         xlsx_path = _make_synthetic_xlsx(tmp_path / "sintetico_erro_teste.xlsx")
 
+        def _raise_eleitorumerror(p):  # noqa: ANN001
+            raise EleitorumError("Erro de teste sintético")
+
         # Monkeypatch list_sheets to raise EleitorumError
         monkeypatch.setattr(
             "eleitorum.ui.steps.step_upload.list_sheets",
-            lambda p: (_ for _ in ()).throw(
-                EleitorumError("Erro de teste sintético", "Erro de teste sintético")
-            ),
+            _raise_eleitorumerror,
         )
 
         session = SessionModel()

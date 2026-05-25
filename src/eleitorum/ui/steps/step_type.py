@@ -10,6 +10,7 @@ and Reiniciar flows — WIZ-10).
 
 from __future__ import annotations
 
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from eleitorum.ui.session import SessionModel
@@ -29,6 +30,8 @@ class StepType(QWidget):
     Receives a SessionModel, mutates session.output_type in-place,
     and exposes is_complete() so the NavBar can enable/disable Próximo.
     """
+
+    completion_changed = Signal()
 
     def __init__(
         self,
@@ -102,6 +105,7 @@ class StepType(QWidget):
             self._card_elegiveis.set_selected(False)
         else:
             self._card_caderno.set_selected(False)
+        self.completion_changed.emit()
 
     # ------------------------------------------------------------------
     # NavBar contract

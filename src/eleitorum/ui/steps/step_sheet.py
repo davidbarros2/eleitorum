@@ -14,7 +14,7 @@ workbook, stored on currentItemChanged signal.
 
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QAbstractItemView,
@@ -41,6 +41,8 @@ class StepSheet(QWidget):
 
     Session write: sheet_name (str) set on item selection.
     """
+
+    completion_changed = Signal()
 
     def __init__(
         self,
@@ -119,6 +121,7 @@ class StepSheet(QWidget):
             self._session.sheet_name = current.data(Qt.ItemDataRole.UserRole)
         else:
             self._session.sheet_name = None
+        self.completion_changed.emit()
 
     # ------------------------------------------------------------------
     # NavBar contract

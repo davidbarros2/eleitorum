@@ -66,14 +66,14 @@ class TestWizardNavbarReactivity:
         assert stack.currentIndex() == WizardController.STEP_TYPE
 
         # Before selection: Próximo disabled
-        assert navbar._proximo_btn.isEnabled() is False
+        assert navbar._btn_proximo.isEnabled() is False
 
         # Trigger selection directly on the step widget
         wizard._step_type._on_selection("caderno")
 
         # After emission through completion_changed → _update_navbar_for_current_step,
         # Próximo must now be enabled
-        assert navbar._proximo_btn.isEnabled() is True
+        assert navbar._btn_proximo.isEnabled() is True
 
     def test_step_upload_completion_changed_connected(
         self,
@@ -107,13 +107,13 @@ class TestWizardNavbarReactivity:
         wizard._update_navbar_for_current_step()
 
         # Before file: Próximo disabled
-        assert navbar._proximo_btn.isEnabled() is False
+        assert navbar._btn_proximo.isEnabled() is False
 
         # Simulate file received
         wizard._step_upload._on_file_received(str(xlsx_path))
 
         # After emission: Próximo must be enabled
-        assert navbar._proximo_btn.isEnabled() is True
+        assert navbar._btn_proximo.isEnabled() is True
 
     def test_step_sheet_completion_changed_connected(
         self,
@@ -140,10 +140,10 @@ class TestWizardNavbarReactivity:
         wizard._update_navbar_for_current_step()
 
         # Before selection: Próximo disabled
-        assert navbar._proximo_btn.isEnabled() is False
+        assert navbar._btn_proximo.isEnabled() is False
 
         # Simulate sheet selection
         wizard._step_sheet._list.setCurrentRow(0)
 
         # After emission: Próximo must be enabled
-        assert navbar._proximo_btn.isEnabled() is True
+        assert navbar._btn_proximo.isEnabled() is True

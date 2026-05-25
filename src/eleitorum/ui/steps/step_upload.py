@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import pathlib
 
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QFileDialog,
     QLabel,
@@ -40,6 +41,8 @@ class StepUpload(QWidget):
 
     Session writes: source_path (pathlib.Path), sheets (list[SheetInfo]).
     """
+
+    completion_changed = Signal()
 
     def __init__(
         self,
@@ -130,11 +133,13 @@ class StepUpload(QWidget):
         try:
             sheets = list_sheets(p)
             self._session.sheets = sheets
+            self.completion_changed.emit()
         except EleitorumError as err:
             # T-02-04-02: display message_pt only — never a traceback
             self._show_error(err.message_pt)
             self._session.source_path = None
             self._file_name_label.setText("")
+            self.completion_changed.emit()
 
     # ------------------------------------------------------------------
     # Private helpers

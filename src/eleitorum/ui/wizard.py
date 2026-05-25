@@ -117,6 +117,11 @@ class WizardController(QObject):
         navbar.anterior_clicked.connect(self.on_anterior)
         navbar.cancelar_clicked.connect(self.on_cancelar)
 
+        # Reactively update NavBar when a step's completion state changes
+        self._step_type.completion_changed.connect(self._update_navbar_for_current_step)
+        self._step_upload.completion_changed.connect(self._update_navbar_for_current_step)
+        self._step_sheet.completion_changed.connect(self._update_navbar_for_current_step)
+
         # Connect step_processing routing signals
         self._step_processing.route_to_preview.connect(self._on_processing_to_preview)
         self._step_processing.route_to_error.connect(self._on_processing_to_error)
@@ -428,8 +433,3 @@ class WizardController(QObject):
 
         # Cancelar only visible on STEP_PROCESSING (D-01)
         self._navbar.set_cancel_visible(current == self.STEP_PROCESSING)
-
-        # Connect/disconnect proximo to navbar based on current step to
-        # keep is_complete() polling responsive: use step-widget signals where
-        # available (step_type, step_upload, step_sheet have session-write slots)
-        # For steps without signals, Próximo enable state is set once on navigate.
