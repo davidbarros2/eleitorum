@@ -61,6 +61,10 @@ class PipelineSource:
     # override CSV delimiter; None = auto (';' for .csv, '\t' for .tsv)
     csv_delimiter: str | None = None
     encoding: str | None = None  # override INP-07 detection (rare; for testing)
+    # When manual columns are given, use this header row index instead of 0.
+    # Set by WizardController from its pre-scan result so the pipeline and the
+    # wizard agree on which row is the header.
+    manual_header_row_index: int | None = None
 
 
 @dataclasses.dataclass
@@ -255,11 +259,17 @@ def _execute_pipeline(
     # ------------------------------------------------------------------
     # Step 10: header detection
     # ------------------------------------------------------------------
-    manual_mapping = src.manual_mec_col is not None and src.manual_name_col is not None
+    # For caderno: both columns must be specified to use manual mapping.
+    # For elegiveis: mec column is always None (DET-07), so name column alone suffices.
+    manual_mapping = (
+        src.manual_name_col is not None
+        and (output_type == "elegiveis" or src.manual_mec_col is not None)
+    )
 
     header_row_index: int
     if manual_mapping:
-        header_row_index = 0
+        # Use the wizard-provided header row index when available; fall back to 0.
+        header_row_index = src.manual_header_row_index if src.manual_header_row_index is not None else 0
     else:
         _detected_index = detection.detect_header_row(all_rows)
         if _detected_index is None:

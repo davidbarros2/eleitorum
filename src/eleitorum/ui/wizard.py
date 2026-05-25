@@ -33,6 +33,9 @@ from PySide6.QtWidgets import (
     QStackedWidget,
 )
 
+from eleitorum.core import detection as _detection
+from eleitorum.core import readers as _readers
+from eleitorum.core.pipeline import PipelineSource
 from eleitorum.ui.session import SessionModel
 from eleitorum.ui.steps.step_columns import StepColumns
 from eleitorum.ui.steps.step_done import StepDone
@@ -192,6 +195,7 @@ class WizardController(QObject):
         self._session.output_path = None
         self._session.sheets = None
         self._session.column_headers = None
+        self._session.pre_detection = None
 
         self._multi_sheet_path = False
         self._stack.setCurrentIndex(self.STEP_TYPE)
@@ -227,10 +231,12 @@ class WizardController(QObject):
                 return self.STEP_SHEET
             # Single-sheet or non-multi: skip sheet step
             self._multi_sheet_path = False
+            self._populate_column_headers()
             self._step_columns.populate_from_session()
             return self.STEP_COLUMNS
 
         if current == self.STEP_SHEET:
+            self._populate_column_headers()
             self._step_columns.populate_from_session()
             return self.STEP_COLUMNS
 
@@ -242,6 +248,60 @@ class WizardController(QObject):
 
         # Default: sequential +1 (STEP_COLUMNS → ... handled separately)
         return min(current + 1, self.STEP_DONE)
+
+    def _populate_column_headers(self) -> None:
+        """Read the source file, detect the header row, and populate session.column_headers
+        and session.pre_detection before STEP_COLUMNS is shown.
+
+        Uses the same delimiter logic as the pipeline (semicolon for .csv, tab for .tsv).
+        Falls back gracefully on any I/O or detection error so the wizard never crashes.
+        """
+        path = self._session.source_path
+        sheet = self._session.sheet_name
+        output_type = self._session.output_type or "caderno"
+
+        if path is None:
+            return
+
+        try:
+            ext = path.suffix.lower()
+            if ext == ".csv":
+                read_result = _readers.read_csv_like(path, delimiter=";")
+            elif ext == ".tsv":
+                read_result = _readers.read_csv_like(path, delimiter="\t")
+            else:
+                read_result = _readers.read_input(path, sheet_name=sheet)
+
+            all_rows = read_result.rows
+            if not all_rows:
+                self._session.column_headers = []
+                self._session.pre_detection = {"detection_method": "manual"}
+                return
+
+            header_idx = _detection.detect_header_row(all_rows)
+            if header_idx is None:
+                header_idx = 0  # no synonym match — use first row as best-effort
+
+            header_row = all_rows[header_idx]
+            self._session.column_headers = [
+                str(cell).strip() if cell is not None else "" for cell in header_row
+            ]
+
+            data_rows = all_rows[header_idx + 1 :]
+            col_mapping = _detection.detect_columns(header_row, data_rows, output_type)  # type: ignore[arg-type]
+
+            self._session.pre_detection = {
+                "header_row_index": header_idx,
+                "mec_col_index": col_mapping.mec_col_index,
+                "name_col_index": col_mapping.name_col_index,
+                "detection_method": col_mapping.detection_method,
+            }
+        except Exception:
+            # Any read/detection error: leave column_headers as empty list so
+            # the combos are at least shown (manual mode) rather than crashing.
+            if not self._session.column_headers:
+                self._session.column_headers = []
+            self._session.pre_detection = {"detection_method": "manual"}
 
     def _compute_previous(self, current: int) -> int:
         """Return the previous stack index from ``current``.
@@ -272,12 +332,36 @@ class WizardController(QObject):
     # Pipeline wiring
     # ------------------------------------------------------------------
 
+    def _build_pipeline_source(self, output_type: str) -> PipelineSource:
+        """Build a PipelineSource from current session state.
+
+        Passes the column map chosen by the user in StepColumns so the pipeline
+        honours manual overrides. Also forwards the header row index from the
+        wizard's pre-scan so the pipeline and the UI agree on which row is the
+        header.
+        """
+        column_map = self._session.column_map or {}
+        pre_det = self._session.pre_detection or {}
+
+        # For elegiveis there is no mecanografico column (DET-07).
+        manual_mec = column_map.get("mecanografico") if output_type != "elegiveis" else None
+        manual_name = column_map.get("name")
+        header_row_index = pre_det.get("header_row_index")
+
+        return PipelineSource(
+            path=self._session.source_path,  # type: ignore[arg-type]
+            sheet_name=self._session.sheet_name,
+            manual_mec_col=manual_mec,
+            manual_name_col=manual_name,
+            manual_header_row_index=header_row_index,
+        )
+
     def _start_dry_run(self) -> None:
         """Construct a dry-run PipelineWorker (output_path=None) and start it."""
-        source = self._session.source_path
         output_type = self._session.output_type or "caderno"
+        source = self._build_pipeline_source(output_type)
         worker = PipelineWorker(
-            source=source,  # type: ignore[arg-type]
+            source=source,
             output_type=output_type,
             output_path=None,  # dry-run — never writes
         )
@@ -335,8 +419,9 @@ class WizardController(QObject):
             self._settings.setValue("app/last_directory", str(chosen_path.parent))
             self._session.output_path = chosen_path
 
+            source = self._build_pipeline_source(output_type)
             worker = PipelineWorker(
-                source=source_path,  # type: ignore[arg-type]
+                source=source,
                 output_type=output_type,
                 output_path=chosen_path,
             )

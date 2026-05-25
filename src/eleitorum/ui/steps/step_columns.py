@@ -175,6 +175,8 @@ class StepColumns(QWidget):
         det: dict = {}
         if self._session.pipeline_result is not None:
             det = getattr(self._session.pipeline_result, "detection", {}) or {}
+        elif self._session.pre_detection is not None:
+            det = self._session.pre_detection
 
         detection_method = det.get("detection_method", "manual")
         has_detection = bool(det) and detection_method != "manual"
